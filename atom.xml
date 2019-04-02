@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://liuhusen.com/"/>
-  <updated>2019-03-22T03:14:57.769Z</updated>
+  <updated>2019-04-02T03:33:26.078Z</updated>
   <id>https://liuhusen.com/</id>
   
   <author>
@@ -15,6 +15,100 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mysql存储过程和oracle存储过程对比</title>
+    <link href="https://liuhusen.com/2018/12/30/mysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%92%8Coracle%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%AF%B9%E6%AF%94/"/>
+    <id>https://liuhusen.com/2018/12/30/mysql存储过程和oracle存储过程对比/</id>
+    <published>2018-12-29T18:01:30.000Z</published>
+    <updated>2019-04-02T03:33:26.078Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>区别如下：       1      创建存储过程语句不同：           ORACLE：  create or replace procedure P_ADD_FAC(id_fac_cd  IN ES_FAC_UNIT.FAC_CD%TYPE) is               MYSQL：   DROP PROCEDURE IF EXISTS `SD_USER_P_ADD_USR`;create procedure P_ADD_FAC(id_fac_cd  varchar(100))                注释：1.在创建存储过程时如果存在同名的存储过程,会删除老的存储过程.                      oracle使用create or replace.                     mysql使用先删除老的存储过程,然后再创建新的存储过程.                  2. oracle 存储过程可以定义在package中,也可以定义在Procedures中. 如果定义在包中,                     一个包中可以包含多个存储过程和方法.如果定义在Procedures中,存储过程中不可以定义多个存储过程.                      Mysql  存储过程中不可以定义多个存储过程.                   3. oracle中字符串类型可以使用varchar2.                       Mysql 需要使用varchar                  4. Oracle中参数varchar长度不是必须的,                     Mysql中参数varchar长度是必须的, 比如varchar(100)       2    创建函数语句不同：            ORACLE： CREATE OR REPLACEFUNCTION F_ROLE_FACS_GRP(                       ii_role_int_key IN SD_ROLE.ROLE_INT_KEY%TYPE                      ) RETURN VARCHAR2               MYSQL： DROP FUNCTION IF EXISTS `SD_ROLE_F_ROLE_FACS_GRP`;                      CREATE  FUNCTION `SD_ROLE_F_ROLE_FACS_GRP`(                       ii_role_int_key INTEGER(10)                      ) RETURNS varchar(1000)               注释：        1.在创建函数时如果存在同名的函数,会删除老的函数.                          oracle使用create or replace.                        mysql使用先删除老的函数,然后再创建新的函数.                      2. oracle 函数可以定义在package中,也可以定义在Functions中. 如果定义在包中,一个包中可以包含多个存储过程和函数.如果定义在Functions中,每个函数只能定义一个函数.                         Mysql  Functions不可以定义多个函数.                       3.  oracle返回值用return.                           Mysql返回值用returns.       3    传入参数写法不同：           ORACLE：procedure P_ADD_FAC(                   id_fac_cd  IN ES_FAC_UNIT.FAC_CD%TYPE)               MYSQL： create procedure P_ADD_FAC(                   (in) id_fac_cd  varchar(100))              注释：    1. oracle存储过程参数可以定义为表的字段类型.                     Mysql存储过程不支持这种定义方法.需要定义变量的实际类型和长度.                  2. oracle 参数类型in/out/inout写在参数名后面.                      Mysql  参数类型in/out/inout写在参数名前面.                  3. oracle 参数类型in/out/inout 都必须写.                     Mysql  参数类型如果是in,则可以省略. 如果是out或inout则不能省略.                  注意: mysql中指定参数为IN, OUT, 或INOUT 只对PROCEDURE是合法的。（FUNCTION参数总是被认为是IN参数） RETURNS字句只能对FUNCTION做指定，对函数而言这是强制的。它用来指定函数的返回类型，而且函数体必须包含一个RETURN value语句。                    function func_name(                             gw_id  in(out)  varchar2 )    create function func_name(                         gw_id varchar（100))      4    包的声明方式：           ORACLE：create or replace package/package body package name               MYSQL： 拆分成多个存储过程或函数               注释： oracle可以创建包,包中可以包含多个存储过程和方法.                   mysql没有没有包这个概念,可以分别创建存储过程和方法. 每个存储过程或方法都需要放在一个文件中.                   例1: 方法命名                   oracle 中SD_FACILITY_PKG.F_SEARCH_FAC                   to mysql SD_FACILITY_F_SEARCH_FAC                   例2: 过程命名                  oracle 中SD_FACILITY_PKG.P_ADD_FAC                  to mysql SD_FACILITY_P_ADD_FAC       5    存储过程返回语句不一样：          ORACLE：return;              MYSQL： LEAVE proc; (proc 代表最外层的begin end)              注释：  oracle存储过程和方法都可以使用return退出当前过程和方法.                   Mysql存储过程中只能使用leave退出当前存储过程.不可以使用return.                   Mysql方法可以使用return退出当前方法.       6    存储过程异常处理不一样：          ORACLE：EXCEPTION                  WHEN OTHERS THEN                  ROLLBACK ;                  ov_rtn_msg := c_sp_name||&apos;(&apos;|| li_debug_pos ||&apos;):&apos;||                      TO_CHAR(SQLCODE)||&apos;: &apos;||SUBSTR(SQLERRM,1,100);              MYSQL：    DECLARE EXIT HANDLER FOR  SQLEXCEPTION                    BEGIN                      ROLLBACK ;                      set ov_rtn_msg = concat(c_sp_name,&apos;(&apos;, li_debug_pos ,&apos;):&apos;,                          TO_CHAR(SQLCODE),&apos;: &apos;,SUBSTR(SQLERRM,1,100));                   END;              注释： oracle : 内部异常不需要定义,在存储过程或函数末尾写上EXCEPTION后,后面的部分即为异常处理的部分.                            oracle可以定义自定义异常,自定义异常需要使用raise关键字抛出异常后,才可以在EXCEPTION中捕获.                  mysql: mysql内部异常也需要先定义,在定义的同时也需要实现异常的功能.                             目前mysql不支持自定义异常.       7    过程和函数的声明变量的位置不同：            ORACLE：声明变量在begin…end体之前              MYSQL：    声明变量在begin...end体内，begin之后其他任何内容之前    　      8    NO_DATA_FOUND异常处理：          ORACLE：EXCEPTION                  WHEN NO_DATA_FOUND THEN                      oi_rtn_cd := 1;                      ov_rtn_msg := SD_COMMON.P_GET_MSG(&apos;DP-CBM-01100a-016&apos;,                                                       li_sub_rtn_cd,                                                       lv_sub_rtn_msg);              MYSQL：    使用FOUND_ROWS()代替NO_DATA_FOUND.           注释：    oracle中:                           NO_DATA_FOUND是游标的一个属性.                           当select没有查到数据就会出现 no data found 的异常，程序不会向下执行.                  Mysql:                           没有NO_DATA_FOUND这个属性.但可是使用FOUND_ROWS()方法得到select语句查询出来的数据.                          如果FOUND_ROWS()得到的值为0,就进入异常处理逻辑.       9    在存储过程中调用存储过程方式的不同：          ORACLE：Procedure_Name(参数);              MYSQL：    Call Procedure_Name(参数);              注释：MYSQL存储过程调用存储过程，需要使用Call pro_name(参数).                  Oracle调用存储过程直接写存储过程名就可以了.       10    抛异常的方式不同：          ORACLE：RAISE Exception_Name;          MYSQL：    待续。。。。。。。。            </code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;区别如下： 
+
+      1      创建存储过程语句不同：
+
+           ORACLE：  create or replace procedure P_ADD_FAC(id_fac_cd  IN ES_FAC_UNIT.FAC_CD%TYPE
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://liuhusen.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="存储过程" scheme="https://liuhusen.com/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/"/>
+    
+      <category term="数据库相关操作" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql存储过程------其他相关操作</title>
+    <link href="https://liuhusen.com/2018/12/09/mysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B------%E5%85%B6%E4%BB%96%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/"/>
+    <id>https://liuhusen.com/2018/12/09/mysql存储过程------其他相关操作/</id>
+    <published>2018-12-09T02:03:30.000Z</published>
+    <updated>2019-04-02T03:02:25.141Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>操作如下：           CREATE TABLE `tstudent4` (            `id` int(15) NOT NULL,            `Sname` varchar(32) DEFAULT NULL,            `sex` char(1) DEFAULT NULL,            `cardID` int(12) DEFAULT NULL,            `Birthday` date DEFAULT NULL,            `Email` varchar(40) DEFAULT NULL,            `Class` varchar(20) DEFAULT NULL,            `enterTime` datetime DEFAULT NULL,            `cmos_modify_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),            PRIMARY KEY (`id`),            KEY `pri_stuid` (`id`),            KEY `idx_cmos_modify_time` (`cmos_modify_time`)          ) ENGINE=InnoDB DEFAULT CHARSET=utf8          ----------------------------------------------------------------------          DELIMITER $$          CREATE PROCEDURE `testStudent`( IN iCount INT)          BEGIN                  DECLARE i INT;                  DECLARE    inum INT;                  DECLARE    iid INT;                  start transaction;                  SET i =1;                  SELECT COUNT(0) INTO inum FROM tstudent4;                  IF inum &gt; 1                      THEN SELECT MAX(id) INTO inum FROM tstudent4;                  END IF;                  WHILE i &lt;= iCount DO                  INSERT tstudent4 VALUES (                      inum+i,                      CONCAT(&apos;李长青&apos;,inum+i),                      IF(CEIL(RAND()*10)%2=0,&apos;男&apos;,&apos;女&apos;),                      CEIL(RAND()*100000000),                      CONCAT(CONVERT(CEIL(RAND()*10)+1980,CHAR(4)),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*12),                      CHAR(2)),2,&apos;0&apos;),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*28),CHAR(2)),2,&apos;0&apos;)),                      CONCAT(CONCAT(&apos;lichangqing&apos;,inum+i),&apos;@hotmail.com&apos;),                      CASE CEIL(RAND()*3) WHEN 1 THEN &apos;网络与网站开发&apos; WHEN 2 THEN &apos;计算机科学技术&apos; ELSE &apos;性能巧匠训练营&apos; END,                      NOW(),CURRENT_TIMESTAMP(3));                  SET i = i + 1;                  END WHILE;                  commit;                  SET i =CEIL(RAND()*iCount);                  SELECT id INTO iid FROM tstudent4 ORDER BY RAND() LIMIT 1;                   UPDATE tstudent4 SET sname=CONCAT(&apos;张芳敏&apos;,id), cardID=CEIL(RAND()*100000000) WHERE id between iid and  iid+i;                  SET i =CEIL(RAND()*iCount);                  SELECT id INTO iid FROM tstudent4 ORDER BY RAND() LIMIT 1;                   delete from tstudent4 WHERE id between iid and  iid+i;              END$$          DELIMITER ;          ----------------------------清理2小时前的binlog日志--------------------------------------------、          DELIMITER $$          CREATE  PROCEDURE `clearlog`()          BEGIN                  PURGE MASTER LOGS BEFORE DATE_SUB(CURRENT_TIME, INTERVAL 2 HOUR);          END$$          DELIMITER ;          -----------------------------mysql相关设置开关--------------------------------------          SHOW VARIABLES LIKE &apos;event_scheduler&apos;          SET GLOBAL event_scheduler = 1;          SHOW VARIABLES LIKE &apos;autocommit&apos;          set session autocommit = 0;          --设置safe update模式          SHOW VARIABLES LIKE &apos;SQL_SAFE_UPDATES&apos;;          set SQL_SAFE_UPDATES = 1;          ----------------------------创建事务--------------------------------------------          CREATE  EVENT `example_event2`           ON SCHEDULE EVERY 10 SECOND STARTS CURRENT_TIMESTAMP           ON COMPLETION NOT PRESERVE ENABLE           DO call testStudent(100);          -------------------binlog相关--------------------------------------------------------          show global variables like &apos;gtid_%&apos;;     //查询gtid信息：          show global variables like &apos;server_uuid&apos;;  //查看机器uuid：          中断存储过程或者事务          show processlist；          kill  id          show binlog events in &apos;mysql-bin.000002&apos;;   //查看指定binlog文件的内容          show binary logs;  //获取binlog列表          show  master logs;  //查询日志          --------------------------------------DDL操作-----------------------------------------------          CREATE TABLE `testtab` (            `id` int(15) NOT NULL,            `Sname` varchar(10) DEFAULT NULL,            `sex` char(1) DEFAULT NULL,            `cardID` int(12) DEFAULT NULL,            `Birthday` date DEFAULT NULL,            `Email` varchar(40) DEFAULT NULL            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;          插入列：          ALTER TABLE testtab ADD testdate DATETIME DEFAULT NOW();             更新列类型：          ALTER TABLE testtab MODIFY  testdate varchar(12) DEFAULT NULL COMMENT &apos;测试列更新&apos;;          更新列名：          ALTER TABLE testtab change  testdate changecol int(12);          删除列：          ALTER TABLE testtab DROP changecol;          创建主键：          alter table testtab add primary key(id);          全文索引：          CREATE  FULLTEXT INDEX IDX_KSD  ON  testtab (email);          普通索引：          CREATE   INDEX IDX_NAME  ON  testtab (sname);          唯一索引：          CREATE UNIQUE  INDEX IDX_STUNAME  ON  testtab (sname);          组合索引：          CREATE INDEX MultiIdx   ON testtab (id,sname);          主键索引：          CREATE   INDEX IDX_ID  ON  testtab (id);          BTREE索引：          CREATE   INDEX IDX_cardid USING BTREE  ON  testtab (cardID);          删除索引：          DROP INDEX  IDX_KSD  ON testtab ;          DROP INDEX  IDX_NAME  ON testtab ;          DROP INDEX  IDX_STUNAME  ON testtab ;          DROP INDEX  MultiIdx  ON testtab ;          DROP INDEX  IDX_ID  ON testtab ;          DROP INDEX  IDX_cardid  ON testtab ;          删除主键：          alter table testtab drop primary key;          重命名表：          rename table testtab to tsrenmtabl;          删除表：          DROP TABLE tsrenmtabl;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;操作如下： 
+          CREATE TABLE `tstudent4` (
+            `id` int(15) NOT NULL,
+            `Sname` varchar(32) DEFAULT NULL,
+    
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://liuhusen.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="存储过程" scheme="https://liuhusen.com/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/"/>
+    
+      <category term="数据库相关操作" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql存储过程------批量建表删表</title>
+    <link href="https://liuhusen.com/2018/12/08/mysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B------%E6%89%B9%E9%87%8F%E5%BB%BA%E8%A1%A8%E5%88%A0%E8%A1%A8/"/>
+    <id>https://liuhusen.com/2018/12/08/mysql存储过程------批量建表删表/</id>
+    <published>2018-12-08T05:01:30.000Z</published>
+    <updated>2019-04-02T03:00:19.461Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>操作如下：       CREATE TABLE `tstudent4` (        `studentID` int(15) NOT NULL,        `Sname` varchar(64) DEFAULT NULL,        `sex` char(1) DEFAULT NULL,        `cardID` varchar(20) DEFAULT NULL,        `Birthday` date DEFAULT NULL,        `Email` varchar(40) DEFAULT NULL,        `Class` varchar(20) DEFAULT NULL,        `enterTime` datetime DEFAULT NULL,        `remarks` mediumtext,        `cmos_modify_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),        PRIMARY KEY (`studentID`),        KEY `pri_stuid` (`studentID`),        KEY `idx_cmos_modify_time` (`cmos_modify_time`)      ) ENGINE=InnoDB DEFAULT CHARSET=utf8      ----------------------------------------------------------------------      DELIMITER $$      CREATE PROCEDURE `addStudent4`( IN iCount INT)      BEGIN              DECLARE i INT;              DECLARE    inum INT;              SET i =1;              SELECT COUNT(0) INTO inum FROM tstudent4;              IF inum &gt; 1                  THEN SELECT MAX(studentID) INTO inum FROM tstudent4;              END IF;              start transaction;              WHILE i &lt;= iCount DO              INSERT tstudent4 VALUES (                  inum+i,                  CONCAT(&apos;阿兰&apos;,inum+i),                  IF(CEIL(RAND()*10)%2=0,&apos;男&apos;,&apos;女&apos;),                  RPAD(CONVERT(CEIL(RAND()*1000000000000000000),CHAR(18)),18,&apos;0&apos;),                  CONCAT(CONVERT(CEIL(RAND()*10)+1980,CHAR(4)),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*12),                  CHAR(2)),2,&apos;0&apos;),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*28),CHAR(2)),2,&apos;0&apos;)),                  CONCAT(CONCAT(&apos;alan&apos;,inum+i),&apos;@hotmail.com&apos;),                  CASE CEIL(RAND()*3) WHEN 1 THEN &apos;网络与网站开发&apos; WHEN 2 THEN &apos;计算机科学技术&apos; ELSE &apos;汇编语言初入门&apos; END,                  NOW(),&apos;河南省郑州市金水区第一实验小学一年级一班&apos;,                  CURRENT_TIMESTAMP(3));              SET i = i + 1;              END WHILE;              commit;          END$$      DELIMITER ;      -------------------------------------------------------------------      DELIMITER $$      CREATE PROCEDURE `upStudent4`(IN iCount INT)      BEGIN              DECLARE    iid INT;              DECLARE    i INT;              SET i =CEIL(RAND()*iCount)+100;              SELECT studentID INTO iid FROM tstudent4 ORDER BY RAND() LIMIT 1;               UPDATE tstudent4 SET cardID=RPAD(CONVERT(CEIL(RAND()*1000000000000000000),CHAR(18)),18,&apos;0&apos;) WHERE studentID between iid and  iid+i;          END$$      DELIMITER ;      -----------------------------------------------------------------------      DELIMITER $$      CREATE  PROCEDURE `teststudent4`()      BEGIN              DECLARE    iid INT;              DECLARE    i INT;              SET i =CEIL(RAND()*200)+100;              CALL `addStudent4`(5000);              CALL `upStudent4`(200);              SELECT min(studentID) INTO iid FROM tstudent4;              DELETE FROM  tstudent4 WHERE studentID between iid and  iid+i;          END$$      DELIMITER ;      ------------------------------------------------------------------------      CREATE  EVENT `example_event2`       ON SCHEDULE EVERY 10 SECOND STARTS CURRENT_TIMESTAMP       ON COMPLETION NOT PRESERVE ENABLE       DO call teststudent4();      ---------------批量建表----------------------------------      DELIMITER $$      CREATE  PROCEDURE `createTables`( IN table_pre VARCHAR(20),IN iCount INT)      BEGIN              DECLARE i INT;              DECLARE table_name VARCHAR(20);                DECLARE sql_text VARCHAR(2000);               SET i=0;              SET table_name=&apos;&apos;;              SET sql_text=&apos;&apos;;              WHILE i&lt;iCount DO                  #IF i&lt;10 THEN SET table_name=CONCAT(table_pre,i);                      #    ELSE SET table_name=CONCAT(table_pre,i);                      #END IF;                  SET table_name=CONCAT(table_pre,i);                  SET sql_text=CONCAT(&apos;CREATE TABLE &apos;, table_name, &apos;(                   id INT(11) NOT NULL COMMENT \&apos;用户id\&apos; AUTO_INCREMENT,                   userName VARCHAR(32)  COMMENT \&apos;用户名\&apos;,                   service INT(11) DEFAULT 0 COMMENT \&apos;服务\&apos;,                   passportUserName VARCHAR(32)  COMMENT \&apos;y\&apos;,                   email  VARCHAR(32) COMMENT \&apos;email\&apos;,                   phone  VARCHAR(15) COMMENT \&apos;电话\&apos;,                       trueName  VARCHAR(12) COMMENT \&apos;真实姓名\&apos;,                       idNumber  VARCHAR(18) COMMENT \&apos;身份证\&apos;,                       nickName  VARCHAR(32) COMMENT \&apos;昵称\&apos;,                       maxMsgId  INT(18) COMMENT \&apos;消息id\&apos;,                       gameIds  VARCHAR(32)DEFAULT null COMMENT \&apos;昵称？\&apos;,                       crmVip  INT(11) COMMENT \&apos;消息id\&apos;,                       status  INT(11) COMMENT \&apos;状态\&apos;,                       updateTime  Date COMMENT \&apos;更新时间\&apos;,                  bigHead  VARCHAR(200)DEFAULT null COMMENT \&apos;bigHead\&apos;,                  smallHead  VARCHAR(200)DEFAULT null COMMENT \&apos;smallHead\&apos;,                  cmos_modify_time datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),                  PRIMARY KEY (id),                  KEY idx_cmos_modify_time (cmos_modify_time)                    ) ENGINE=INNODB DEFAULT CHARSET=utf8&apos; );                  SELECT sql_text;                   SET @sql_text=sql_text;                  PREPARE stmt FROM @sql_text;                  EXECUTE stmt;                  DEALLOCATE PREPARE stmt;                    SET i=i+1;              END WHILE;          END$$      DELIMITER ;      ---------------批量删表----------------------------------      DELIMITER $$      CREATE  PROCEDURE `delTables`( IN table_pre VARCHAR(20),IN iCount INT)      BEGIN              DECLARE i INT;              DECLARE table_name VARCHAR(50);                DECLARE sql_text VARCHAR(2000);               SET i=0;              SET table_name=&apos;&apos;;              SET sql_text=&apos;&apos;;              WHILE i&lt;iCount DO                  SET table_name=CONCAT(table_pre,i);                  SET sql_text=CONCAT(&apos;DROP TABLE IF EXISTS &apos;, table_name, &apos;;&apos; );                  SELECT sql_text;                   SET @sql_text=sql_text;                  PREPARE stmt FROM @sql_text;                  EXECUTE stmt;                  DEALLOCATE PREPARE stmt;                    SET i=i+1;              END WHILE;          END$$      DELIMITER ;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;操作如下： 
+
+      CREATE TABLE `tstudent4` (
+        `studentID` int(15) NOT NULL,
+        `Sname` varchar(64) DEFAULT NULL,
+        
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://liuhusen.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="存储过程" scheme="https://liuhusen.com/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/"/>
+    
+      <category term="数据库相关操作" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/"/>
+    
+  </entry>
   
   <entry>
     <title>多线程访问成员变量与局部变量</title>
@@ -71,27 +165,29 @@
   </entry>
   
   <entry>
-    <title>Solr单机版服务搭建</title>
-    <link href="https://liuhusen.com/2018/10/08/Solr%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/"/>
-    <id>https://liuhusen.com/2018/10/08/Solr搜索引擎在代码中的简单入门使用介绍/</id>
-    <published>2018-10-08T05:01:30.000Z</published>
-    <updated>2019-03-01T06:48:45.132Z</updated>
+    <title>常见框架单例、多例与线程安全性总结</title>
+    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93/"/>
+    <id>https://liuhusen.com/2018/08/08/常见框架单例、多例与线程安全性总结/</id>
+    <published>2018-08-08T05:01:30.000Z</published>
+    <updated>2019-03-22T03:23:51.435Z</updated>
     
-    <content type="html"><![CDATA[<p>   Solr服务搭建<br>      1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。<br>      2、搭建步骤：<br>            第一步： 把solr的压缩包上传到Linux系统<br>            第二步： 解压solr<br>            第三步： 安装Tomcat，解压缩即可。<br>            第四步： 把solr部署到Tomcat下。<br>            第五步： 解压缩war包。启动<br>            第六步： 把/root/solr-4.10.3/example/lib/ext 目录下的所有的jar包，添加到 solr 工程中。<br>            [root@localhost ext]# pwd<br>            /root/solr-4.10.3/example/lib/ext<br>            [root@localhost ext]# cp* /usr/local/solr/tomcat/webapps/solr/WEB-INF/lib/<br>            第七步： 创建一个 solrhome. /exanple/solr 目录就是一个 solrhome. 复制此目录到 /usr/local/solr/solrhome<br>            [root@localhost example]# pwd<br>            /root/solr-4.10.3/example<br>            [root@localhost example]# cp -r solr /usr/local/solr/solrhome<br>            [root@localhost example]#<br>            第八步：关联solr及solrhome。需要修改solr工程的web.xml文件<br>             <img src="/2018/10/08/Solr搜索引擎在代码中的简单入门使用介绍/Solr单机版服务搭建/01.png" alt="你想输入的替代文字"><br>            第九步：启动Tomcat<br>                    <a href="http://192.168.25.154:8080/solr/" target="_blank" rel="noopener">http://192.168.25.154:8080/solr/</a><br>                    和windows下的配置完全一样。</p>]]></content>
+    <content type="html"><![CDATA[<pre><code>   单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是线程安全的;若有可能影响，则是线程不安全的。现在对 HttpServlet、HttpSession、SpingMVC、Struts2 中的 Action、Hibernate 中的 SessionFactory与 Session，进行总结。 (1)HttpServlet    其是单例的。即无论多少用户访问同一个业务，如 LoginServlet，Web 容器只会创建一个该 Servlet 实例。而该实例是允许多用户访问的。    若 Servlet 中包含成员变量，则每个用户对于成员变量的修改，均会影响到其他用户所看到的该变量的值，所以这时是线程不安全的。    若不包含成员变量，则是线程安全的。(2)HttpSession    其是多例的。Web 容器会为每个用户开辟一个 Session，多个用户会有多个 Session。而每个用户只能访问自己的 Session。    所以，对于 Session 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。(3)SpingMVC Controller    Spring MVC Controller默认是单例的：    单例的原因有二：    1、为了性能。    2、不需要多例。    如果需要多例，则需要在Controller类上加注解 @Scope(“prototype”)(4)Struts2 的 Action    其是多例的。对于同一个业务，例如 LoginAction，系统会为每一个用户创建一个LoginAction 的实例，    并使其成员变量 username 与 password 接收用户 交的数据。同一用户只能访问自己的 Action。    所以，对于 Action 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (5)Hibernate 的 SessionFactory    其是单例的。无论多少用户访问该项目，系统只会创建一个 SessionFactory 对象，即这个对象是可以被所有用户访问的。    SessionFactory实现类中所包含的成员变量基本都是 final常量，即任何用户均不能修改。所以，也就不存在用户的修改对其他用户的影响问题了，所以是线程安全的。 (6)Hibernate 的 Session    其是多例的。系统会为每个用户创建一个 Sessio。    Session 的实现类中定义了很多的非 final 成员变量，一个事务对成员变量所做的修改，会影响到另一个事务对同一数据的访问结果，所以是线程不安全的。 </code></pre>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;   Solr服务搭建&lt;br&gt;      1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。&lt;br&gt;      2、搭建步骤：&lt;br&gt;            第一步： 把solr的压缩包上传到Linux系统&lt;br&gt;    
+        &lt;pre&gt;&lt;code&gt;   单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。
+
+线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是
       
     
     </summary>
     
-      <category term="服务搭建" scheme="https://liuhusen.com/categories/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
     
     
-      <category term="Solr单机版服务搭建" scheme="https://liuhusen.com/tags/Solr%E5%8D%95%E6%9C%BA%E7%89%88%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+      <category term="多例，多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E4%BE%8B%EF%BC%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
@@ -121,33 +217,6 @@
   </entry>
   
   <entry>
-    <title>常见框架单例、多例与线程安全性总结</title>
-    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93/"/>
-    <id>https://liuhusen.com/2018/08/08/常见框架单例、多例与线程安全性总结/</id>
-    <published>2018-08-08T05:01:30.000Z</published>
-    <updated>2019-03-22T03:23:51.435Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>   单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是线程安全的;若有可能影响，则是线程不安全的。现在对 HttpServlet、HttpSession、SpingMVC、Struts2 中的 Action、Hibernate 中的 SessionFactory与 Session，进行总结。 (1)HttpServlet    其是单例的。即无论多少用户访问同一个业务，如 LoginServlet，Web 容器只会创建一个该 Servlet 实例。而该实例是允许多用户访问的。    若 Servlet 中包含成员变量，则每个用户对于成员变量的修改，均会影响到其他用户所看到的该变量的值，所以这时是线程不安全的。    若不包含成员变量，则是线程安全的。(2)HttpSession    其是多例的。Web 容器会为每个用户开辟一个 Session，多个用户会有多个 Session。而每个用户只能访问自己的 Session。    所以，对于 Session 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。(3)SpingMVC Controller    Spring MVC Controller默认是单例的：    单例的原因有二：    1、为了性能。    2、不需要多例。    如果需要多例，则需要在Controller类上加注解 @Scope(“prototype”)(4)Struts2 的 Action    其是多例的。对于同一个业务，例如 LoginAction，系统会为每一个用户创建一个LoginAction 的实例，    并使其成员变量 username 与 password 接收用户 交的数据。同一用户只能访问自己的 Action。    所以，对于 Action 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (5)Hibernate 的 SessionFactory    其是单例的。无论多少用户访问该项目，系统只会创建一个 SessionFactory 对象，即这个对象是可以被所有用户访问的。    SessionFactory实现类中所包含的成员变量基本都是 final常量，即任何用户均不能修改。所以，也就不存在用户的修改对其他用户的影响问题了，所以是线程安全的。 (6)Hibernate 的 Session    其是多例的。系统会为每个用户创建一个 Sessio。    Session 的实现类中定义了很多的非 final 成员变量，一个事务对成员变量所做的修改，会影响到另一个事务对同一数据的访问结果，所以是线程不安全的。 </code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;   单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。
-
-线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是
-      
-    
-    </summary>
-    
-      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
-    
-    
-      <category term="多例，多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E4%BE%8B%EF%BC%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
     <title>redis的安装与集群搭建</title>
     <link href="https://liuhusen.com/2018/02/08/redis%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"/>
     <id>https://liuhusen.com/2018/02/08/redis的安装与集群搭建/</id>
@@ -170,6 +239,35 @@
     
     
       <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于Hexo更换git账号的步骤记录</title>
+    <link href="https://liuhusen.com/2017/06/08/%E5%85%B3%E4%BA%8EHexo%E6%9B%B4%E6%8D%A2git%E8%B4%A6%E5%8F%B7%E7%9A%84%E6%AD%A5%E9%AA%A4%E8%AE%B0%E5%BD%95/"/>
+    <id>https://liuhusen.com/2017/06/08/关于Hexo更换git账号的步骤记录/</id>
+    <published>2017-06-08T05:01:30.000Z</published>
+    <updated>2019-04-02T02:42:14.207Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>操作如下：   1.编辑_config.yml(在\hexo下)。你在部署时，要把下面的都换成你的账号名。      deploy:        type: git        repo: git@github.com:liuhusen/liuhusen.github.io.git          branch: master   2.更换你本地的git用户名和邮箱，命令如下         查看当前用户名：git config user.name         查看当前邮箱（注册git账号的邮箱）：git config user.email         更改用户名：git config --global user.name &quot;liuhusen&quot;         更改邮箱：git config --global user.email &quot;l_Striving@163.com&quot;  3.生成你的ssh密钥，命令如下：        生成密钥： ssh-keygen -t rsa -C &quot;l_Striving@163.com&quot;        三次回车，设置密码为空        将生成的C:\Users\Administrator.ssh目录下的id_rsa.pub添加到github上  4. 清理：hexo c     生成静态资源： hexo g      推送到git上：  hexo d     重新在git上设置你的访问域名     设置完毕，大功告成！</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;操作如下： 
+  1.编辑_config.yml(在\hexo下)。你在部署时，要把下面的都换成你的账号名。
+      deploy:
+        type: git
+        repo: git@github.com:liuhusen/liuh
+      
+    
+    </summary>
+    
+      <category term="其他" scheme="https://liuhusen.com/categories/%E5%85%B6%E4%BB%96/"/>
+    
+    
+      <category term="hexo" scheme="https://liuhusen.com/tags/hexo/"/>
     
   </entry>
   
@@ -208,32 +306,36 @@
   </entry>
   
   <entry>
-    <title>MySQL的表以及数据备份</title>
-    <link href="https://liuhusen.com/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
-    <id>https://liuhusen.com/2017/05/26/MySQL的表以及数据备份/</id>
+    <title>接口传输时对乱码的处理</title>
+    <link href="https://liuhusen.com/2017/05/26/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86/"/>
+    <id>https://liuhusen.com/2017/05/26/接口传输时对乱码的处理/</id>
     <published>2017-05-26T11:57:47.000Z</published>
-    <updated>2018-10-28T19:14:11.519Z</updated>
+    <updated>2019-04-02T02:51:36.941Z</updated>
     
-    <content type="html"><![CDATA[<p>   备份表方法：  此方法索引和increment值也会同步</p><pre><code>CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据</code></pre><p>   若只复制表中的部分内容的同时定义表中的字段信息：<br>                 CREATE TABLE tb_cab_bak<br>                  (<br>                  – 对copy的表中的ID进行主键约束<br>                 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY<br>                   )<br>                 AS<br>                 ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );</p>]]></content>
+    <content type="html"><![CDATA[<pre><code>传输前编码：// 先对用户名进行解码得到%E7%8E%8B%E6%8C%AF%E5%9B%BD 这样的形式username = URLEncoder.encode(username, &quot;ISO-8859-1&quot;);获取后解码：username = URLDecoder.decode(username, &quot;UTF-8&quot;);System.out.println(&quot;乱码解决后用户名：&quot; + username)</code></pre>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;   备份表方法：  此方法索引和increment值也会同步&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表
+        &lt;pre&gt;&lt;code&gt;传输前编码：
+// 先对用户名进行解码得到%E7%8E%8B%E6%8C%AF%E5%9B%BD 这样的形式
+username = URLEncoder.encode(username, &amp;quot;ISO-8859-1&amp;quot;);
 
-INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
+获取后解码：
+us
       
     
     </summary>
     
-      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
+      <category term="接口传输" scheme="https://liuhusen.com/categories/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
     
     
-      <category term="MySQL" scheme="https://liuhusen.com/tags/MySQL/"/>
+      <category term="接口传输" scheme="https://liuhusen.com/tags/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
     
-      <category term="数据备份" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
+      <category term="post请求传输" scheme="https://liuhusen.com/tags/post%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
+    
+      <category term="get请求传输" scheme="https://liuhusen.com/tags/get%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
     
   </entry>
   
@@ -269,6 +371,36 @@ INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
   </entry>
   
   <entry>
+    <title>MySQL的表以及数据备份</title>
+    <link href="https://liuhusen.com/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
+    <id>https://liuhusen.com/2017/05/26/MySQL的表以及数据备份/</id>
+    <published>2017-05-26T11:57:47.000Z</published>
+    <updated>2018-10-28T19:14:11.519Z</updated>
+    
+    <content type="html"><![CDATA[<p>   备份表方法：  此方法索引和increment值也会同步</p><pre><code>CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据</code></pre><p>   若只复制表中的部分内容的同时定义表中的字段信息：<br>                 CREATE TABLE tb_cab_bak<br>                  (<br>                  – 对copy的表中的ID进行主键约束<br>                 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY<br>                   )<br>                 AS<br>                 ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   备份表方法：  此方法索引和increment值也会同步&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表
+
+INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
+    
+    
+      <category term="MySQL" scheme="https://liuhusen.com/tags/MySQL/"/>
+    
+      <category term="数据备份" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
+    
+  </entry>
+  
+  <entry>
     <title>自学编程成功概率有多少可能</title>
     <link href="https://liuhusen.com/2017/05/26/%E5%85%B3%E4%BA%8E/"/>
     <id>https://liuhusen.com/2017/05/26/关于/</id>
@@ -292,37 +424,6 @@ INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
       <category term="编程" scheme="https://liuhusen.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="感悟" scheme="https://liuhusen.com/tags/%E6%84%9F%E6%82%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>接口传输时对乱码的处理和post与个体的区别</title>
-    <link href="https://liuhusen.com/2017/05/26/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86%E5%92%8Cpost%E4%B8%8E%E4%B8%AA%E4%BD%93%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>https://liuhusen.com/2017/05/26/接口传输时对乱码的处理和post与个体的区别/</id>
-    <published>2017-05-26T11:57:47.000Z</published>
-    <updated>2019-01-31T09:23:33.724Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;;表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;字段建唯一索引：create index idx_province_id on 表名 (表字段 );                               上为索引                create index 字段的索引 on 表名 (表字段 );               删除字段的索引：alter table 表名 drop index idx_province_id ;                                        上为索引                alter table 表名 drop 字段的索引 ;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &amp;apos;字段描述&amp;apos;;
-
-表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;
-      
-    
-    </summary>
-    
-      <category term="接口传输" scheme="https://liuhusen.com/categories/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
-    
-    
-      <category term="接口传输" scheme="https://liuhusen.com/tags/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
-    
-      <category term="post请求传输" scheme="https://liuhusen.com/tags/post%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
-    
-      <category term="get请求传输" scheme="https://liuhusen.com/tags/get%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
     
   </entry>
   
@@ -494,91 +595,6 @@ $(&amp;quot;#id&amp;quot;).val(&amp;apos;变量名&amp;apos;)   // 赋值
       <category term="建库建表建索引建视图" scheme="https://liuhusen.com/tags/%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BB%BA%E8%A7%86%E5%9B%BE/"/>
     
       <category term="备份数据库" scheme="https://liuhusen.com/tags/%E5%A4%87%E4%BB%BD%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mysql进行大数据量查询的性能优化</title>
-    <link href="https://liuhusen.com/2016/03/26/Mysql%E8%BF%9B%E8%A1%8C%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
-    <id>https://liuhusen.com/2016/03/26/Mysql进行大数据量查询的性能优化/</id>
-    <published>2016-03-26T10:50:43.000Z</published>
-    <updated>2018-10-28T18:34:10.274Z</updated>
-    
-    <content type="html"><![CDATA[<p>数据库设计方面：</p><p>1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。</p><p>2、应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描。<br>             如： select id from t where num is null<br>             可以在num上设置默认值0，确保表中num列没有null值，然后这样查询： select id from t where num=0</p><p>3、并不是所有索引对查询都有效，SQL是根据表中数据来进行查询优化的，当索引列有大量数据重复时,查询可能不会去利用索引，如一表中有字段sex，male、female几乎各一半，</p><pre><code>那么即使在sex上建了索引也对查询效率起不了作用。</code></pre><p>4、索引并不是越多越好，索引固然可以提高相应的 select 的效率，但同时也降低了 insert 及 update 的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重</p><pre><code>考虑，视具体情况而定。一个表的索引数最好不要超过6个，若太多则应考虑一些不常使用到的列上建的索引是否有必要。</code></pre><p>5、应尽可能的避免更新索引数据列，因为索引数据列的顺序就是表记录的物理存储顺序，一旦该列值改变将导致整个表记录的顺序的调整，会耗费相当大的资源。若应用系统需要频<br>  繁更新索引数据列，那么需要考虑是否应将该索引建为索引。</p><p>6、尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连接时会逐个比较字符串中每</p><pre><code>一个字符，而对于数字型而言只需要比较一次就够了。</code></pre><p>7、尽可能的使用 varchar/nvarchar 代替 char/nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。</p><p>8、避免频繁创建和删除临时表，以减少系统表资源的消耗。</p><p>9、临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。</p><p>10、在新建临时表时，如果一次性插入数据量很大，那么可以使用 select into 代替 create table，避免造成大量 log ，以提高速度；如果数据量不大，为了缓和系统表的资源，应先                    create table，然后insert。</p><p>11、如果使用到了临时表，在存储过程的最后务必将所有的临时表显式删除，先 truncate table ，然后 drop table ，这样可以避免系统表的较长时间锁定。</p><p>SQL语句方面：</p><p>1、应尽量避免在 where 子句中使用!=或&lt;&gt;操作符，否则将引擎放弃使用索引而进行全表扫描。</p><p>2、应尽量避免在 where 子句中使用 or 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描<br>             如： select id from t where num=10 or num=20<br>             可以这样查询： select id from t where num=10 union all select id from t where num=20</p><p>3、in 和 not in 也要慎用，否则会导致全表扫描。<br>             如： select id from t where num in(1,2,3)<br>             对于连续的数值，能用 between 就不要用 in 了： select id from t where num between 1 and 3</p><p>4、下面的查询也将导致全表扫描： select id from t where name like ‘%abc%’</p><p>5、如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。</p><pre><code>然而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。        如下面语句将进行全表扫描： select id from t where num=@num         可以改为强制查询使用索引： select id from t with(index(索引名)) where num=@num</code></pre><p>6、应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。<br>             如： select id from t where num/2=100<br>             应改为: select id from t where num=100*2 </p><p>7、应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。<br>             如： select id from t where substring(name,1,3)=’abc’   ——name以abc开头的id<br>                     select id from t where datediff(day,createdate,’2005-11-30′)=0  ——‘2005-11-30’生成的id<br>             应改为：<br>                     select id from t where name like ‘abc%’<br>                     select id from t where createdate&gt;=’2005-11-30′ and createdate&lt;’2005-12-1′ </p><p>8、不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。</p><p>9、不要写一些没有意义的查询，如需要生成一个空表结构： select col1,col2 into #t from t where 1=0 这类代码不会返回任何结果集，但是会消耗系统资源的，</p><pre><code>应改成这样： create table #t(„)</code></pre><p>10、很多时候用 exists 代替 in 是一个好的选择： select num from a where num in(select num from b) </p><pre><code>用下面的语句替换： select num from a where exists(select 1 from b where num=a.num) </code></pre><p>11、任何地方都不要使用 select <em> from t ，用具体的字段列表代替“</em>”，不要返回用不到的任何字段。</p><p>12、尽量避免使用游标，因为游标的效率较差，如果游标操作的数据超过1万行，那么就应该考虑改写。</p><p>13、尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。</p><p>14、尽量避免大事务操作，提高系统并发能力。</p><p>java方面：</p><p>1、尽可能的少造对象。</p><p>2、合理摆正系统设计的位置。大量数据操作，和少量数据操作一定是分开的。大量的数据操作，肯定不是ORM框架搞定的。</p><p>3、使用jDBC链接数据库操作数据。</p><p>4、控制好内存，让数据流起来，而不是全部读到内存再处理，而是边读取边处理。</p><p>5、合理利用内存，有的数据要缓存</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;数据库设计方面：&lt;/p&gt;
-&lt;p&gt;1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。&lt;/p&gt;
-&lt;p&gt;2、应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描。&lt;br&gt; 
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
-    
-    
-      <category term="大数据量查询" scheme="https://liuhusen.com/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%9F%A5%E8%AF%A2/"/>
-    
-      <category term="查询优化" scheme="https://liuhusen.com/tags/%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96/"/>
-    
-      <category term="sql语句优化" scheme="https://liuhusen.com/tags/sql%E8%AF%AD%E5%8F%A5%E4%BC%98%E5%8C%96/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>javascript实现锁定网页、密码解锁效果（屏幕保护效果）</title>
-    <link href="https://liuhusen.com/2015/12/10/javascript%E5%AE%9E%E7%8E%B0%E9%94%81%E5%AE%9A%E7%BD%91%E9%A1%B5%E3%80%81%E5%AF%86%E7%A0%81%E8%A7%A3%E9%94%81%E6%95%88%E6%9E%9C%EF%BC%88%E5%B1%8F%E5%B9%95%E4%BF%9D%E6%8A%A4%E6%95%88%E6%9E%9C/"/>
-    <id>https://liuhusen.com/2015/12/10/javascript实现锁定网页、密码解锁效果（屏幕保护效果/</id>
-    <published>2015-12-10T09:20:30.000Z</published>
-    <updated>2018-10-31T01:59:56.097Z</updated>
-    
-    <content type="html"><![CDATA[<p> 功能描述：打开一个网站的网页，过指定时间不动作，就会锁定页面，隐藏内容容器，显示一个容器用于输入密码，输入正确的密码来解锁。锁定后即使用户刷新页面，还是保留原来的状态。如已经锁定的，需要继续锁定，否则显示内容。<br> 示例代码如下，通过document.onmouseover来实现多少分钟没有动作，使用计时器来实现。<br>（此处建议，将下列方法单独提取到一个公共的js中，然后再引用到页面上）</p><p>&lt;!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN” “<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;" target="_blank" rel="noopener">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</a></p><html xmlns="http://www.w3.org/1999/xhtml"><br><head><meta name="generator" content="Hexo 3.8.0"><br>    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><br>    <title>javascript实现系统屏幕保护效果(锁定网页)</title><br></head><br><br><body><br>    <div id="dvContent">内容<br>内容<br>内容<br>内容<br>内容<br>内容</div><br>    <div id="dvPassword" style="display:none">请输入解锁密码：<input type="password" id="txtPwd"><input type="button" value="确定" onclick="check()"></div><br>    <script><br>      if (document.cookie.indexOf(‘lock=1’) != -1) ShowContent(false);<br>      var delay = 10 * 1000,timer;//10s后锁定，修改delay为你需要的时间，单位毫秒<br>      function startTimer() {<br>        clearTimeout(timer);<br>        timer = setTimeout(TimerHandler, delay);<br>      }<br>      function TimerHandler() {<br>        document.cookie = ‘lock=1’;<br>        document.onmousemove = null;//锁定后移除鼠标移动事件<br>        ShowContent(false);<br>      }<br>      function ShowContent(show) {<br>        document.getElementById(‘dvContent’).style.display = show ? ‘block’ : ‘none’;<br>        document.getElementById(‘dvPassword’).style.display = show ? ‘none’ : ‘block’;<br>      }<br>      function check() {<br>        if (document.getElementById(‘txtPwd’).value == ‘123’) {<br>          document.cookie = ‘lock=0’;<br>          ShowContent(true);<br>          startTimer()//重新计时<br>          document.onmousemove = startTimer; //重新绑定鼠标移动事件<br>        }<br>        else alert(‘密码输入错误！！’);<br>      }<br>      window.onload = function () {<br>        document.onmousemove = startTimer;<br>        startTimer();<br>      }<br>    </script><br></body><br></html>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt; 功能描述：打开一个网站的网页，过指定时间不动作，就会锁定页面，隐藏内容容器，显示一个容器用于输入密码，输入正确的密码来解锁。锁定后即使用户刷新页面，还是保留原来的状态。如已经锁定的，需要继续锁定，否则显示内容。&lt;br&gt; 示例代码如下，通过document.onmouseo
-      
-    
-    </summary>
-    
-      <category term="javascript" scheme="https://liuhusen.com/categories/javascript/"/>
-    
-    
-      <category term="javascript页面效果" scheme="https://liuhusen.com/tags/javascript%E9%A1%B5%E9%9D%A2%E6%95%88%E6%9E%9C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>JS中常用的各类正则表达式以及使用方式收录</title>
-    <link href="https://liuhusen.com/2015/11/18/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%90%84%E7%B1%BB%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E6%94%B6%E5%BD%95/"/>
-    <id>https://liuhusen.com/2015/11/18/常用的各类正则表达式以及使用方式收录/</id>
-    <published>2015-11-18T04:30:52.000Z</published>
-    <updated>2018-10-31T02:48:40.536Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>效果上建议查看下面第二部分，如果自定义多变情况，建议使用第一部分；选择合适自己的加入自己的js中</code></pre><p>第一部分： 适用于更适合自己需求的自定义校验方式<br> 特殊字符判断正则表达式<br>        var regEn = /[`~!@#$%^&amp;*()_+&lt;&gt;?:”{},.\/;’[]]/im;<br>        var regCn = /[·！#￥（）：；“”‘、，|《。》？、【】[]]/im;<br>        var re = /([-])\1{1}/;<br> //判断是否包含符合上述的正则表达式（定义一个js内方法校验特殊字符，使用该方法时调用即可）<br>        var isSpecialCharacter = function (characterStr,itemName) {<br>            if(regEn.test(characterStr) || regCn.test(characterStr)) {<br>                crossAPI.tips(itemName+”此处为描述信息，自己随便写！”, 3000);<br>                return true;<br>            }<br>            if(re.test(characterStr))<br>            {<br>                crossAPI.tips(itemName+”此处为描述信息，自己随便写！”, 3000);<br>                return true;<br>            }<br>            return false;<br>        }<br>第二部分： 文本框输入内容控制 更好的效果是input加上onkeyup，onbeforepaste，onblur，onkeydown等事件<br>           使用：建议先定义好需要的正则表达式，再在事件中使用 如：自定义正则表达式.test(“要校验的变量名”)</p><pre><code>整数或者小数：^[0-9]+\.{0,1}[0-9]{0,2}$只能输入数字：&quot;^[0-9]*$&quot;。只能输入n位的数字：&quot;^\d{n}$&quot;。只能输入至少n位的数字：&quot;^\d{n,}$&quot;。只能输入m~n位的数字：。&quot;^\d{m,n}$&quot;只能输入零和非零开头的数字：&quot;^(0|[1-9][0-9]*)$&quot;。只能输入有两位小数的正实数：&quot;^[0-9]+(.[0-9]{2})?$&quot;。只能输入有1~3位小数的正实数：&quot;^[0-9]+(.[0-9]{1,3})?$&quot;。只能输入非零的正整数：&quot;^\+?[1-9][0-9]*$&quot;。只能输入非零的负整数：&quot;^\-[1-9][]0-9&quot;*$。只能输入长度为3的字符：&quot;^.{3}$&quot;。只能输入由26个英文字母组成的字符串：&quot;^[A-Za-z]+$&quot;。只能输入由26个大写英文字母组成的字符串：&quot;^[A-Z]+$&quot;。只能输入由26个小写英文字母组成的字符串：&quot;^[a-z]+$&quot;。只能输入由数字和26个英文字母组成的字符串：&quot;^[A-Za-z0-9]+$&quot;。只能输入由数字、26个英文字母或者下划线组成的字符串：&quot;^\w+$&quot;。验证用户密码：&quot;^[a-zA-Z]\w{5,17}$&quot;正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。验证是否含有^%&amp;&apos;,;=?$\&quot;等字符：&quot;[^%&amp;&apos;,;=?$\x22]+&quot;。只能输入汉字：&quot;^[\u4e00-\u9fa5]{0,}$&quot;验证Email地址：&quot;^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$&quot;。验证InternetURL：&quot;^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$&quot;。验证电话号码：&quot;^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$&quot;正确格式为：&quot;XXX-XXXXXXX&quot;、&quot;XXXX-XXXXXXXX&quot;、&quot;XXX-XXXXXXX&quot;、&quot;XXX-XXXXXXXX&quot;、&quot;XXXXXXX&quot;和&quot;XXXXXXXX&quot;。验证身份证号（15位或18位数字）：&quot;^\d{15}|\d{18}$&quot;。验证一年的12个月：&quot;^(0?[1-9]|1[0-2])$&quot;正确格式为：&quot;01&quot;～&quot;09&quot;和&quot;1&quot;～&quot;12&quot;。验证一个月的31天：&quot;^((0?[1-9])|((1|2)[0-9])|30|31)$&quot;正确格式为；&quot;01&quot;～&quot;09&quot;和&quot;1&quot;～&quot;31&quot;。匹配中文字符的正则表达式： [\u4e00-\u9fa5]匹配双字节字符(包括汉字在内)：[^\x00-\xff]应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,&quot;aa&quot;).length;}匹配空行的正则表达式：\n[\s| ]*\r匹配html标签的正则表达式：&lt;(.*)&gt;(.*)&lt;\/(.*)&gt;|&lt;(.*)\/&gt;匹配首尾空格的正则表达式：(^\s*)|(\s*$)匹配Email地址的正则表达式：\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*匹配网址URL的正则表达式：http://([\w-]+\.)+[\w-]+(/[\w- ./?%&amp;=]*)?</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;效果上建议查看下面第二部分，如果自定义多变情况，建议使用第一部分；
-选择合适自己的加入自己的js中
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;第一部分： 适用于更适合自己需求的自定义校验方式&lt;br&gt; 特殊字符判断正则表达式&lt;br&gt;        var regEn =
-      
-    
-    </summary>
-    
-      <category term="javascript" scheme="https://liuhusen.com/categories/javascript/"/>
-    
-    
-      <category term="正则表达式" scheme="https://liuhusen.com/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
-    
-      <category term="输入框的输入限制效果" scheme="https://liuhusen.com/tags/%E8%BE%93%E5%85%A5%E6%A1%86%E7%9A%84%E8%BE%93%E5%85%A5%E9%99%90%E5%88%B6%E6%95%88%E6%9E%9C/"/>
     
   </entry>
   

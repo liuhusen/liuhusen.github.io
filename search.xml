@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[mysql存储过程和oracle存储过程对比]]></title>
+    <url>%2F2018%2F12%2F30%2Fmysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%92%8Coracle%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E5%AF%B9%E6%AF%94%2F</url>
+    <content type="text"><![CDATA[区别如下： 1 创建存储过程语句不同： ORACLE： create or replace procedure P_ADD_FAC(id_fac_cd IN ES_FAC_UNIT.FAC_CD%TYPE) is MYSQL： DROP PROCEDURE IF EXISTS `SD_USER_P_ADD_USR`;create procedure P_ADD_FAC(id_fac_cd varchar(100)) 注释：1.在创建存储过程时如果存在同名的存储过程,会删除老的存储过程. oracle使用create or replace. mysql使用先删除老的存储过程,然后再创建新的存储过程. 2. oracle 存储过程可以定义在package中,也可以定义在Procedures中. 如果定义在包中, 一个包中可以包含多个存储过程和方法.如果定义在Procedures中,存储过程中不可以定义多个存储过程. Mysql 存储过程中不可以定义多个存储过程. 3. oracle中字符串类型可以使用varchar2. Mysql 需要使用varchar 4. Oracle中参数varchar长度不是必须的, Mysql中参数varchar长度是必须的, 比如varchar(100) 2 创建函数语句不同： ORACLE： CREATE OR REPLACEFUNCTION F_ROLE_FACS_GRP( ii_role_int_key IN SD_ROLE.ROLE_INT_KEY%TYPE ) RETURN VARCHAR2 MYSQL： DROP FUNCTION IF EXISTS `SD_ROLE_F_ROLE_FACS_GRP`; CREATE FUNCTION `SD_ROLE_F_ROLE_FACS_GRP`( ii_role_int_key INTEGER(10) ) RETURNS varchar(1000) 注释： 1.在创建函数时如果存在同名的函数,会删除老的函数. oracle使用create or replace. mysql使用先删除老的函数,然后再创建新的函数. 2. oracle 函数可以定义在package中,也可以定义在Functions中. 如果定义在包中,一个包中可以包含多个存储过程和函数.如果定义在Functions中,每个函数只能定义一个函数. Mysql Functions不可以定义多个函数. 3. oracle返回值用return. Mysql返回值用returns. 3 传入参数写法不同： ORACLE：procedure P_ADD_FAC( id_fac_cd IN ES_FAC_UNIT.FAC_CD%TYPE) MYSQL： create procedure P_ADD_FAC( (in) id_fac_cd varchar(100)) 注释： 1. oracle存储过程参数可以定义为表的字段类型. Mysql存储过程不支持这种定义方法.需要定义变量的实际类型和长度. 2. oracle 参数类型in/out/inout写在参数名后面. Mysql 参数类型in/out/inout写在参数名前面. 3. oracle 参数类型in/out/inout 都必须写. Mysql 参数类型如果是in,则可以省略. 如果是out或inout则不能省略. 注意: mysql中指定参数为IN, OUT, 或INOUT 只对PROCEDURE是合法的。（FUNCTION参数总是被认为是IN参数） RETURNS字句只能对FUNCTION做指定，对函数而言这是强制的。它用来指定函数的返回类型，而且函数体必须包含一个RETURN value语句。 function func_name( gw_id in(out) varchar2 ) create function func_name( gw_id varchar（100)) 4 包的声明方式： ORACLE：create or replace package/package body package name MYSQL： 拆分成多个存储过程或函数 注释： oracle可以创建包,包中可以包含多个存储过程和方法. mysql没有没有包这个概念,可以分别创建存储过程和方法. 每个存储过程或方法都需要放在一个文件中. 例1: 方法命名 oracle 中SD_FACILITY_PKG.F_SEARCH_FAC to mysql SD_FACILITY_F_SEARCH_FAC 例2: 过程命名 oracle 中SD_FACILITY_PKG.P_ADD_FAC to mysql SD_FACILITY_P_ADD_FAC 5 存储过程返回语句不一样： ORACLE：return; MYSQL： LEAVE proc; (proc 代表最外层的begin end) 注释： oracle存储过程和方法都可以使用return退出当前过程和方法. Mysql存储过程中只能使用leave退出当前存储过程.不可以使用return. Mysql方法可以使用return退出当前方法. 6 存储过程异常处理不一样： ORACLE：EXCEPTION WHEN OTHERS THEN ROLLBACK ; ov_rtn_msg := c_sp_name||&apos;(&apos;|| li_debug_pos ||&apos;):&apos;|| TO_CHAR(SQLCODE)||&apos;: &apos;||SUBSTR(SQLERRM,1,100); MYSQL： DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK ; set ov_rtn_msg = concat(c_sp_name,&apos;(&apos;, li_debug_pos ,&apos;):&apos;, TO_CHAR(SQLCODE),&apos;: &apos;,SUBSTR(SQLERRM,1,100)); END; 注释： oracle : 内部异常不需要定义,在存储过程或函数末尾写上EXCEPTION后,后面的部分即为异常处理的部分. oracle可以定义自定义异常,自定义异常需要使用raise关键字抛出异常后,才可以在EXCEPTION中捕获. mysql: mysql内部异常也需要先定义,在定义的同时也需要实现异常的功能. 目前mysql不支持自定义异常. 7 过程和函数的声明变量的位置不同： ORACLE：声明变量在begin…end体之前 MYSQL： 声明变量在begin...end体内，begin之后其他任何内容之前 8 NO_DATA_FOUND异常处理： ORACLE：EXCEPTION WHEN NO_DATA_FOUND THEN oi_rtn_cd := 1; ov_rtn_msg := SD_COMMON.P_GET_MSG(&apos;DP-CBM-01100a-016&apos;, li_sub_rtn_cd, lv_sub_rtn_msg); MYSQL： 使用FOUND_ROWS()代替NO_DATA_FOUND. 注释： oracle中: NO_DATA_FOUND是游标的一个属性. 当select没有查到数据就会出现 no data found 的异常，程序不会向下执行. Mysql: 没有NO_DATA_FOUND这个属性.但可是使用FOUND_ROWS()方法得到select语句查询出来的数据. 如果FOUND_ROWS()得到的值为0,就进入异常处理逻辑. 9 在存储过程中调用存储过程方式的不同： ORACLE：Procedure_Name(参数); MYSQL： Call Procedure_Name(参数); 注释：MYSQL存储过程调用存储过程，需要使用Call pro_name(参数). Oracle调用存储过程直接写存储过程名就可以了. 10 抛异常的方式不同： ORACLE：RAISE Exception_Name; MYSQL： 待续。。。。。。。。]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>存储过程</tag>
+        <tag>数据库相关操作</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mysql存储过程------其他相关操作]]></title>
+    <url>%2F2018%2F12%2F09%2Fmysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B------%E5%85%B6%E4%BB%96%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C%2F</url>
+    <content type="text"><![CDATA[操作如下： CREATE TABLE `tstudent4` ( `id` int(15) NOT NULL, `Sname` varchar(32) DEFAULT NULL, `sex` char(1) DEFAULT NULL, `cardID` int(12) DEFAULT NULL, `Birthday` date DEFAULT NULL, `Email` varchar(40) DEFAULT NULL, `Class` varchar(20) DEFAULT NULL, `enterTime` datetime DEFAULT NULL, `cmos_modify_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3), PRIMARY KEY (`id`), KEY `pri_stuid` (`id`), KEY `idx_cmos_modify_time` (`cmos_modify_time`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ---------------------------------------------------------------------- DELIMITER $$ CREATE PROCEDURE `testStudent`( IN iCount INT) BEGIN DECLARE i INT; DECLARE inum INT; DECLARE iid INT; start transaction; SET i =1; SELECT COUNT(0) INTO inum FROM tstudent4; IF inum &gt; 1 THEN SELECT MAX(id) INTO inum FROM tstudent4; END IF; WHILE i &lt;= iCount DO INSERT tstudent4 VALUES ( inum+i, CONCAT(&apos;李长青&apos;,inum+i), IF(CEIL(RAND()*10)%2=0,&apos;男&apos;,&apos;女&apos;), CEIL(RAND()*100000000), CONCAT(CONVERT(CEIL(RAND()*10)+1980,CHAR(4)),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*12), CHAR(2)),2,&apos;0&apos;),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*28),CHAR(2)),2,&apos;0&apos;)), CONCAT(CONCAT(&apos;lichangqing&apos;,inum+i),&apos;@hotmail.com&apos;), CASE CEIL(RAND()*3) WHEN 1 THEN &apos;网络与网站开发&apos; WHEN 2 THEN &apos;计算机科学技术&apos; ELSE &apos;性能巧匠训练营&apos; END, NOW(),CURRENT_TIMESTAMP(3)); SET i = i + 1; END WHILE; commit; SET i =CEIL(RAND()*iCount); SELECT id INTO iid FROM tstudent4 ORDER BY RAND() LIMIT 1; UPDATE tstudent4 SET sname=CONCAT(&apos;张芳敏&apos;,id), cardID=CEIL(RAND()*100000000) WHERE id between iid and iid+i; SET i =CEIL(RAND()*iCount); SELECT id INTO iid FROM tstudent4 ORDER BY RAND() LIMIT 1; delete from tstudent4 WHERE id between iid and iid+i; END$$ DELIMITER ; ----------------------------清理2小时前的binlog日志--------------------------------------------、 DELIMITER $$ CREATE PROCEDURE `clearlog`() BEGIN PURGE MASTER LOGS BEFORE DATE_SUB(CURRENT_TIME, INTERVAL 2 HOUR); END$$ DELIMITER ; -----------------------------mysql相关设置开关-------------------------------------- SHOW VARIABLES LIKE &apos;event_scheduler&apos; SET GLOBAL event_scheduler = 1; SHOW VARIABLES LIKE &apos;autocommit&apos; set session autocommit = 0; --设置safe update模式 SHOW VARIABLES LIKE &apos;SQL_SAFE_UPDATES&apos;; set SQL_SAFE_UPDATES = 1; ----------------------------创建事务-------------------------------------------- CREATE EVENT `example_event2` ON SCHEDULE EVERY 10 SECOND STARTS CURRENT_TIMESTAMP ON COMPLETION NOT PRESERVE ENABLE DO call testStudent(100); -------------------binlog相关-------------------------------------------------------- show global variables like &apos;gtid_%&apos;; //查询gtid信息： show global variables like &apos;server_uuid&apos;; //查看机器uuid： 中断存储过程或者事务 show processlist； kill id show binlog events in &apos;mysql-bin.000002&apos;; //查看指定binlog文件的内容 show binary logs; //获取binlog列表 show master logs; //查询日志 --------------------------------------DDL操作----------------------------------------------- CREATE TABLE `testtab` ( `id` int(15) NOT NULL, `Sname` varchar(10) DEFAULT NULL, `sex` char(1) DEFAULT NULL, `cardID` int(12) DEFAULT NULL, `Birthday` date DEFAULT NULL, `Email` varchar(40) DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 插入列： ALTER TABLE testtab ADD testdate DATETIME DEFAULT NOW(); 更新列类型： ALTER TABLE testtab MODIFY testdate varchar(12) DEFAULT NULL COMMENT &apos;测试列更新&apos;; 更新列名： ALTER TABLE testtab change testdate changecol int(12); 删除列： ALTER TABLE testtab DROP changecol; 创建主键： alter table testtab add primary key(id); 全文索引： CREATE FULLTEXT INDEX IDX_KSD ON testtab (email); 普通索引： CREATE INDEX IDX_NAME ON testtab (sname); 唯一索引： CREATE UNIQUE INDEX IDX_STUNAME ON testtab (sname); 组合索引： CREATE INDEX MultiIdx ON testtab (id,sname); 主键索引： CREATE INDEX IDX_ID ON testtab (id); BTREE索引： CREATE INDEX IDX_cardid USING BTREE ON testtab (cardID); 删除索引： DROP INDEX IDX_KSD ON testtab ; DROP INDEX IDX_NAME ON testtab ; DROP INDEX IDX_STUNAME ON testtab ; DROP INDEX MultiIdx ON testtab ; DROP INDEX IDX_ID ON testtab ; DROP INDEX IDX_cardid ON testtab ; 删除主键： alter table testtab drop primary key; 重命名表： rename table testtab to tsrenmtabl; 删除表： DROP TABLE tsrenmtabl;]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>存储过程</tag>
+        <tag>数据库相关操作</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mysql存储过程------批量建表删表]]></title>
+    <url>%2F2018%2F12%2F08%2Fmysql%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B------%E6%89%B9%E9%87%8F%E5%BB%BA%E8%A1%A8%E5%88%A0%E8%A1%A8%2F</url>
+    <content type="text"><![CDATA[操作如下： CREATE TABLE `tstudent4` ( `studentID` int(15) NOT NULL, `Sname` varchar(64) DEFAULT NULL, `sex` char(1) DEFAULT NULL, `cardID` varchar(20) DEFAULT NULL, `Birthday` date DEFAULT NULL, `Email` varchar(40) DEFAULT NULL, `Class` varchar(20) DEFAULT NULL, `enterTime` datetime DEFAULT NULL, `remarks` mediumtext, `cmos_modify_time` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3), PRIMARY KEY (`studentID`), KEY `pri_stuid` (`studentID`), KEY `idx_cmos_modify_time` (`cmos_modify_time`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ---------------------------------------------------------------------- DELIMITER $$ CREATE PROCEDURE `addStudent4`( IN iCount INT) BEGIN DECLARE i INT; DECLARE inum INT; SET i =1; SELECT COUNT(0) INTO inum FROM tstudent4; IF inum &gt; 1 THEN SELECT MAX(studentID) INTO inum FROM tstudent4; END IF; start transaction; WHILE i &lt;= iCount DO INSERT tstudent4 VALUES ( inum+i, CONCAT(&apos;阿兰&apos;,inum+i), IF(CEIL(RAND()*10)%2=0,&apos;男&apos;,&apos;女&apos;), RPAD(CONVERT(CEIL(RAND()*1000000000000000000),CHAR(18)),18,&apos;0&apos;), CONCAT(CONVERT(CEIL(RAND()*10)+1980,CHAR(4)),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*12), CHAR(2)),2,&apos;0&apos;),&apos;-&apos;,LPAD(CONVERT(CEIL(RAND()*28),CHAR(2)),2,&apos;0&apos;)), CONCAT(CONCAT(&apos;alan&apos;,inum+i),&apos;@hotmail.com&apos;), CASE CEIL(RAND()*3) WHEN 1 THEN &apos;网络与网站开发&apos; WHEN 2 THEN &apos;计算机科学技术&apos; ELSE &apos;汇编语言初入门&apos; END, NOW(),&apos;河南省郑州市金水区第一实验小学一年级一班&apos;, CURRENT_TIMESTAMP(3)); SET i = i + 1; END WHILE; commit; END$$ DELIMITER ; ------------------------------------------------------------------- DELIMITER $$ CREATE PROCEDURE `upStudent4`(IN iCount INT) BEGIN DECLARE iid INT; DECLARE i INT; SET i =CEIL(RAND()*iCount)+100; SELECT studentID INTO iid FROM tstudent4 ORDER BY RAND() LIMIT 1; UPDATE tstudent4 SET cardID=RPAD(CONVERT(CEIL(RAND()*1000000000000000000),CHAR(18)),18,&apos;0&apos;) WHERE studentID between iid and iid+i; END$$ DELIMITER ; ----------------------------------------------------------------------- DELIMITER $$ CREATE PROCEDURE `teststudent4`() BEGIN DECLARE iid INT; DECLARE i INT; SET i =CEIL(RAND()*200)+100; CALL `addStudent4`(5000); CALL `upStudent4`(200); SELECT min(studentID) INTO iid FROM tstudent4; DELETE FROM tstudent4 WHERE studentID between iid and iid+i; END$$ DELIMITER ; ------------------------------------------------------------------------ CREATE EVENT `example_event2` ON SCHEDULE EVERY 10 SECOND STARTS CURRENT_TIMESTAMP ON COMPLETION NOT PRESERVE ENABLE DO call teststudent4(); ---------------批量建表---------------------------------- DELIMITER $$ CREATE PROCEDURE `createTables`( IN table_pre VARCHAR(20),IN iCount INT) BEGIN DECLARE i INT; DECLARE table_name VARCHAR(20); DECLARE sql_text VARCHAR(2000); SET i=0; SET table_name=&apos;&apos;; SET sql_text=&apos;&apos;; WHILE i&lt;iCount DO #IF i&lt;10 THEN SET table_name=CONCAT(table_pre,i); # ELSE SET table_name=CONCAT(table_pre,i); #END IF; SET table_name=CONCAT(table_pre,i); SET sql_text=CONCAT(&apos;CREATE TABLE &apos;, table_name, &apos;( id INT(11) NOT NULL COMMENT \&apos;用户id\&apos; AUTO_INCREMENT, userName VARCHAR(32) COMMENT \&apos;用户名\&apos;, service INT(11) DEFAULT 0 COMMENT \&apos;服务\&apos;, passportUserName VARCHAR(32) COMMENT \&apos;y\&apos;, email VARCHAR(32) COMMENT \&apos;email\&apos;, phone VARCHAR(15) COMMENT \&apos;电话\&apos;, trueName VARCHAR(12) COMMENT \&apos;真实姓名\&apos;, idNumber VARCHAR(18) COMMENT \&apos;身份证\&apos;, nickName VARCHAR(32) COMMENT \&apos;昵称\&apos;, maxMsgId INT(18) COMMENT \&apos;消息id\&apos;, gameIds VARCHAR(32)DEFAULT null COMMENT \&apos;昵称？\&apos;, crmVip INT(11) COMMENT \&apos;消息id\&apos;, status INT(11) COMMENT \&apos;状态\&apos;, updateTime Date COMMENT \&apos;更新时间\&apos;, bigHead VARCHAR(200)DEFAULT null COMMENT \&apos;bigHead\&apos;, smallHead VARCHAR(200)DEFAULT null COMMENT \&apos;smallHead\&apos;, cmos_modify_time datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3), PRIMARY KEY (id), KEY idx_cmos_modify_time (cmos_modify_time) ) ENGINE=INNODB DEFAULT CHARSET=utf8&apos; ); SELECT sql_text; SET @sql_text=sql_text; PREPARE stmt FROM @sql_text; EXECUTE stmt; DEALLOCATE PREPARE stmt; SET i=i+1; END WHILE; END$$ DELIMITER ; ---------------批量删表---------------------------------- DELIMITER $$ CREATE PROCEDURE `delTables`( IN table_pre VARCHAR(20),IN iCount INT) BEGIN DECLARE i INT; DECLARE table_name VARCHAR(50); DECLARE sql_text VARCHAR(2000); SET i=0; SET table_name=&apos;&apos;; SET sql_text=&apos;&apos;; WHILE i&lt;iCount DO SET table_name=CONCAT(table_pre,i); SET sql_text=CONCAT(&apos;DROP TABLE IF EXISTS &apos;, table_name, &apos;;&apos; ); SELECT sql_text; SET @sql_text=sql_text; PREPARE stmt FROM @sql_text; EXECUTE stmt; DEALLOCATE PREPARE stmt; SET i=i+1; END WHILE; END$$ DELIMITER ;]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>存储过程</tag>
+        <tag>数据库相关操作</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[多线程访问成员变量与局部变量]]></title>
     <url>%2F2018%2F10%2F11%2F%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%2F</url>
     <content type="text"><![CDATA[public class HelloThreadTest { public static void main(String[] args) { HelloThread r = new HelloThread(); Thread t1 = new Thread(r); Thread t2 = new Thread(r); t1.start(); t2.start(); } } class HelloThread implements Runnable { int i; @Override public void run() { while (true) { System.out.println(&quot;Hello number: &quot; + i++); try { Thread.sleep((long) Math.random() * 1000); } catch (InterruptedException e) { e.printStackTrace(); } if (50 == i) { break; } } } } 该例子中，HelloThread类实现了Runnable接口，其中run()方法的主要工作是输出&quot;Hello number: &quot;字符串加数字i，并且同时递增i，当i到达50时，退出循环。 main()方法中生成了一个HelloThread类的对象r，并且利用这个一个对象生成了两个线程。 程序的执行结果是：顺次打印了0到49的数字，共50个数字。 这是因为，i是成员变量，则HelloThread的对象r只包含这一个i，两个Thread对象因为由r构造，所以共享了同一个i。 当我们改变代码如下时（原先的成员变量i被注释掉，增加了方法中的局部变量i）： public class HelloThreadTest { public static void main(String[] args) { HelloThread r = new HelloThread(); Thread t1 = new Thread(r); Thread t2 = new Thread(r); t1.start(); t2.start(); } } class HelloThread implements Runnable { // int i; // 若i是成员变量，则HelloThread的对象r只包含这一个i，两个Thread对象因为由r构造，所以共享了同一个i // 打印结果是0到49的数字 @Override public void run() { int i = 0; // 每一个线程都会拥有自己的一份局部变量的拷贝 // 线程之间互不影响 // 所以会打印100个数字，0到49每个数字都是两遍 while (true) { System.out.println(&quot;Hello number: &quot; + i++); try { Thread.sleep((long) Math.random() * 1000); } catch (InterruptedException e) { e.printStackTrace(); } if (50 == i) { break; } } } } 如注释中所述，由于局部变量对于每一个线程来说都有自己的拷贝，所以各个线程之间不再共享同一个变量， 输出结果为100个数字，实际上是两组，每组都是0到49的50个数字，并且两组数字之间随意地穿插在一起。 得到的结论如下： 如果一个变量是成员变量，那么多个线程对同一个对象的成员变量进行操作时，它们对该成员变量是彼此影响的， 也就是说一个线程对成员变量的改变会影响到另一个线程。 如果一个变量是局部变量，那么每个线程都会有一个该局部变量的拷贝（即便是同一个对象中的方法的局部变量，也会对每一个线程有一个拷贝）， 一个线程对该局部变量的改变不会影响到其他线程。]]></content>
@@ -9,17 +45,6 @@
       </categories>
       <tags>
         <tag>多线程</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[Solr单机版服务搭建]]></title>
-    <url>%2F2018%2F10%2F08%2FSolr%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D%2F</url>
-    <content type="text"><![CDATA[Solr服务搭建 1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。 2、搭建步骤： 第一步： 把solr的压缩包上传到Linux系统 第二步： 解压solr 第三步： 安装Tomcat，解压缩即可。 第四步： 把solr部署到Tomcat下。 第五步： 解压缩war包。启动 第六步： 把/root/solr-4.10.3/example/lib/ext 目录下的所有的jar包，添加到 solr 工程中。 [root@localhost ext]# pwd /root/solr-4.10.3/example/lib/ext [root@localhost ext]# cp* /usr/local/solr/tomcat/webapps/solr/WEB-INF/lib/ 第七步： 创建一个 solrhome. /exanple/solr 目录就是一个 solrhome. 复制此目录到 /usr/local/solr/solrhome [root@localhost example]# pwd /root/solr-4.10.3/example [root@localhost example]# cp -r solr /usr/local/solr/solrhome [root@localhost example]# 第八步：关联solr及solrhome。需要修改solr工程的web.xml文件 第九步：启动Tomcat http://192.168.25.154:8080/solr/ 和windows下的配置完全一样。]]></content>
-      <categories>
-        <category>服务搭建</category>
-      </categories>
-      <tags>
-        <tag>Solr单机版服务搭建</tag>
       </tags>
   </entry>
   <entry>
@@ -67,6 +92,17 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[关于Hexo更换git账号的步骤记录]]></title>
+    <url>%2F2017%2F06%2F08%2F%E5%85%B3%E4%BA%8EHexo%E6%9B%B4%E6%8D%A2git%E8%B4%A6%E5%8F%B7%E7%9A%84%E6%AD%A5%E9%AA%A4%E8%AE%B0%E5%BD%95%2F</url>
+    <content type="text"><![CDATA[操作如下： 1.编辑_config.yml(在\hexo下)。你在部署时，要把下面的都换成你的账号名。 deploy: type: git repo: git@github.com:liuhusen/liuhusen.github.io.git branch: master 2.更换你本地的git用户名和邮箱，命令如下 查看当前用户名：git config user.name 查看当前邮箱（注册git账号的邮箱）：git config user.email 更改用户名：git config --global user.name &quot;liuhusen&quot; 更改邮箱：git config --global user.email &quot;l_Striving@163.com&quot; 3.生成你的ssh密钥，命令如下： 生成密钥： ssh-keygen -t rsa -C &quot;l_Striving@163.com&quot; 三次回车，设置密码为空 将生成的C:\Users\Administrator.ssh目录下的id_rsa.pub添加到github上 4. 清理：hexo c 生成静态资源： hexo g 推送到git上： hexo d 重新在git上设置你的访问域名 设置完毕，大功告成！]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[简单有效的页面防止重复提交的操作]]></title>
     <url>%2F2017%2F06%2F08%2F%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88%E7%9A%84%E9%A1%B5%E9%9D%A2%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%93%8D%E4%BD%9C%2F</url>
     <content type="text"><![CDATA[操作如下： var isSubmit = true; // 在js顶部定义全局变量 if(isSubmit){ save(); }else{ crossAPI.tips(&quot;请勿重复提交数据！&quot;,3000); return false; } var save = function () { isSubmit = false; // 进入方法后 isSubmit 置为 false，在后续的点击提交时，便不会执行save方法 。。。 。。。 // 此处为你自己的执行保存的方法 if( 保存成功 ){ 关闭数据新增页面，并刷新查询页面的查询 }else{ // 保存失败，则页面提醒保存失败 isSubmit = true; // isSubmit 置为 true ,用以再次提交当前数据使用 } }]]></content>
@@ -76,6 +112,19 @@
       <tags>
         <tag>javascript页面效果</tag>
         <tag>防止重复提交</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[接口传输时对乱码的处理]]></title>
+    <url>%2F2017%2F05%2F26%2F%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86%2F</url>
+    <content type="text"><![CDATA[传输前编码： // 先对用户名进行解码得到%E7%8E%8B%E6%8C%AF%E5%9B%BD 这样的形式 username = URLEncoder.encode(username, &quot;ISO-8859-1&quot;); 获取后解码： username = URLDecoder.decode(username, &quot;UTF-8&quot;); System.out.println(&quot;乱码解决后用户名：&quot; + username)]]></content>
+      <categories>
+        <category>接口传输</category>
+      </categories>
+      <tags>
+        <tag>接口传输</tag>
+        <tag>post请求传输</tag>
+        <tag>get请求传输</tag>
       </tags>
   </entry>
   <entry>
@@ -92,18 +141,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[MySQL的表以及数据备份]]></title>
-    <url>%2F2017%2F05%2F26%2FMySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%2F</url>
-    <content type="text"><![CDATA[备份表方法： 此方法索引和increment值也会同步 CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表 INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据 若只复制表中的部分内容的同时定义表中的字段信息： CREATE TABLE tb_cab_bak ( – 对copy的表中的ID进行主键约束 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY ) AS ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );]]></content>
-      <categories>
-        <category>mysql</category>
-      </categories>
-      <tags>
-        <tag>MySQL</tag>
-        <tag>数据备份</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[自学编程成功概率有多少可能]]></title>
     <url>%2F2017%2F05%2F26%2F%E5%85%B3%E4%BA%8E%2F</url>
     <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
@@ -116,16 +153,15 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[接口传输时对乱码的处理和post与个体的区别]]></title>
-    <url>%2F2017%2F05%2F26%2F%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86%E5%92%8Cpost%E4%B8%8E%E4%B8%AA%E4%BD%93%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;; 表删除字段： ALTER TABLE 表名 DROP COLUMN 表字段 ; 字段建唯一索引：create index idx_province_id on 表名 (表字段 ); 上为索引 create index 字段的索引 on 表名 (表字段 ); 删除字段的索引：alter table 表名 drop index idx_province_id ; 上为索引 alter table 表名 drop 字段的索引 ;]]></content>
+    <title><![CDATA[MySQL的表以及数据备份]]></title>
+    <url>%2F2017%2F05%2F26%2FMySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%2F</url>
+    <content type="text"><![CDATA[备份表方法： 此方法索引和increment值也会同步 CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表 INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据 若只复制表中的部分内容的同时定义表中的字段信息： CREATE TABLE tb_cab_bak ( – 对copy的表中的ID进行主键约束 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY ) AS ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );]]></content>
       <categories>
-        <category>接口传输</category>
+        <category>mysql</category>
       </categories>
       <tags>
-        <tag>接口传输</tag>
-        <tag>post请求传输</tag>
-        <tag>get请求传输</tag>
+        <tag>MySQL</tag>
+        <tag>数据备份</tag>
       </tags>
   </entry>
   <entry>
@@ -152,17 +188,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[关于FastDFS图片服务器详解]]></title>
-    <url>%2F2016%2F08%2F16%2F%E5%85%B3%E4%BA%8EFastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%A6%E8%A7%A3%2F</url>
-    <content type="text"><![CDATA[首先，什么是FastDFS ? fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的， 因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、 高性能等指标。使用fastDFS很容易搭建一套高性能的文件服务器集群提供文件上传 和下载功能。 fastDFS的架构： fastDFS的架构包括tracker server 和 stroage server 。客户端请求 tracker server 进 行文件上传/下载，通过tracker server 调度最终由 stroage server 完成文件上传和下载 tracker server ：作用是负载均衡和调度，通过tracker server 在文件上传时通过一些策略 找到stroage server提供文件上传下载服务，可以称tracker server 为追踪服务器或调度服务器。 stroage server : 作用是文件存储，客户端上传的文件最终存储在 stroage 服务器上，stroage server没有 实现自己的文件系统而是利用操作系统的文件系统来管理文件，可称stroage server为存储服务器。 ![你想输入的替代文字](关于FastDFS图片服务器详解/01.png) 服务端两个角色： Tracker：管理集群，tracker也可以实现集群。每个tracker节点地位平等。 收集Storage集群的状态。 Storage：实际保存文件，Storage分为多个组，每个组之间保存的文件是不同的。 每个组内部可以有多个成员，组成员内部保存的内容是一样的，组成员的地位是一致的，没有主从的概念。 文件上传的流程： ![你想输入的替代文字](关于FastDFS图片服务器详解/02.png) 客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。 文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。 ![你想输入的替代文字](关于FastDFS图片服务器详解/03.png)  组名：文件上传后所在的storage组名称，在文件上传成功后由storage服务器返回， 需要客户端自行保存。  虚拟磁盘路径：storage配置的虚拟路径，与磁盘选项store_path*对应。如果配置 了store_path0则是M00，如果配置了store_path1则是M01，以此类推。 数据两级目录：storage服务器在每个虚拟磁盘路径下创建的两级目录，用于存储数据文件。 文件名：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器 IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。 文件下载： ![你想输入的替代文字](关于FastDFS图片服务器详解/04.png) 最简单的FastDFS架构： ![你想输入的替代文字](关于FastDFS图片服务器详解/05.png) 图片服务器安装方法： 1.安装步骤 第一步：把图片服务器解压缩。 第二步：把图片服务器添加到Vmware中。 第三步：Vmware的网络配置。 ![你想输入的替代文字](关于FastDFS图片服务器详解/06.png) 第四步：开机 ![你想输入的替代文字](关于FastDFS图片服务器详解/07.png) 移动：网络配置不发生变化。要使用图片服务器，需要保证网络配置不变。 复制：重新生成一块网卡mac地址是新地址。 Ip地址：192.168.25.133 用户名root、itcast 密码：itcast 图片服务器使用： ![你想输入的替代文字](关于FastDFS图片服务器详解/08.png) ![你想输入的替代文字](关于FastDFS图片服务器详解/09.png) 上传图片： 1.上传步骤： 1、加载配置文件，配置文件中的内容就是tracker服务的地址。 配置文件内容：tracker_server=192.168.25.133:22122 2、创建一个TrackerClient对象。直接new一个。 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。 4、创建一个StorageServer的引用，值为null 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用 6、使用StorageClient对象上传图片。 7、返回数组。包含组名和图片的路径。 代码如下： public class FastDFSTest { @Test public void testFileUpload() throws Exception { // 1、加载配置文件，配置文件中的内容就是tracker服务的地址。 ClientGlobal.init(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;); // 2、创建一个TrackerClient对象。直接new一个。 TrackerClient trackerClient = new TrackerClient(); // 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。 TrackerServer trackerServer = trackerClient.getConnection(); // 4、创建一个StorageServer的引用，值为null StorageServer storageServer = null; // 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用 StorageClient storageClient = new StorageClient(trackerServer, storageServer); // 6、使用StorageClient对象上传图片。 //扩展名不带“.” String[] strings = storageClient.upload_file(&quot;D:/Documents/Pictures/images/200811281555127886.jpg&quot;, &quot;jpg&quot;, null); // 7、返回数组。包含组名和图片的路径。 for (String string : strings) { System.out.println(string); } } } 使用工具类上传： ![你想输入的替代文字](关于FastDFS图片服务器详解/10.png) @Test public void testFastDfsClient() throws Exception { FastDFSClient fastDFSClient = new FastDFSClient(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;); String file = fastDFSClient.uploadFile(&quot;D:/Documents/Pictures/images/2f2eb938943d.jpg&quot;); System.out.println(file); }]]></content>
-      <categories>
-        <category>服务器</category>
-      </categories>
-      <tags>
-        <tag>FastDFS图片服务器</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[使用VMware安装CentOS 6.4]]></title>
     <url>%2F2016%2F08%2F16%2F%E4%BD%BF%E7%94%A8VMware%E5%AE%89%E8%A3%85CentOS-6-4%2F</url>
     <content type="text"><![CDATA[环境：Windows7 , VMware Workstation10, CentOS6.4 为什么选择CentOS ? 1.主流： 目前的Linux操作系统主要应用于生产环境，主流企业级Linux系统仍旧是RedHat或者CentOS 2.免费： RedHat 和CentOS差别不大，CentOS是一个基于Red Hat Linux 提供的可自由使用源代码的企业级Linux发行版本 3.更新方便：CentOS独有的yum命令支持在线升级，可以即时更新系统，不像RED HAT那样需要花钱购买支持服务！ 安装步骤 第1步：首先安装VMware Workstation，只需点下一步即可，安装过程略 第2步：文件 → 新建虚拟机 或 直接点击 创建新的虚拟机 图标 第3步：选择 典型（推荐）→ 下一步 第4步：稍后安装操作系统 第5步：选择操作系统和版本 第6步：输入虚拟机名称和安装路径 第7步：设置磁盘大小 第8步：自定义硬件 第9步：选择CentOS安装镜像文件 第10步：点击完成 第11步：启动虚拟机 第12步：选择第一项，安装全新操作系统或升级现有操作系统 第13步：Tab键进行选择，选择Skip，退出检测 第14步：点击Next 第15步：选择语言，这里选择的是中文简体 第16步：选择键盘样式 第17步：选择存储设备 如果以前安装过虚拟机，会出现这个警告，选择是，忽略所有数据 第18步：输入主机名 第19步：配置网络 第20步：设置时区，勾选使用UTC时间 第21步：输入根用户（root）的密码 如果密码过于简单会出现提示，点击无论如何都使用 第22步：根据此Linux具体功能，选择不同的方式 第23步：选择现在自定义，自定义安装需要的软件，如桌面配置 可以根据具体的情况来配置，如可安Eclipse 还可以安装Java平台、Perl支持等 选择语言支持 第24步：点击下一步，开始安装 第25步：安装完成后，点击重新导引 第26步：点击前进按钮 第27步：点击是，同意许可，再点击前进按钮 第28步：创建用户 第29步：设置日期和时间，如果可以上网，勾选在网上同步日期和时间 最后点击前进，完成安装！]]></content>
@@ -171,6 +196,17 @@
       </categories>
       <tags>
         <tag>虚拟机VMware安装教程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[关于FastDFS图片服务器详解]]></title>
+    <url>%2F2016%2F08%2F16%2F%E5%85%B3%E4%BA%8EFastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%A6%E8%A7%A3%2F</url>
+    <content type="text"><![CDATA[首先，什么是FastDFS ? fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的， 因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、 高性能等指标。使用fastDFS很容易搭建一套高性能的文件服务器集群提供文件上传 和下载功能。 fastDFS的架构： fastDFS的架构包括tracker server 和 stroage server 。客户端请求 tracker server 进 行文件上传/下载，通过tracker server 调度最终由 stroage server 完成文件上传和下载 tracker server ：作用是负载均衡和调度，通过tracker server 在文件上传时通过一些策略 找到stroage server提供文件上传下载服务，可以称tracker server 为追踪服务器或调度服务器。 stroage server : 作用是文件存储，客户端上传的文件最终存储在 stroage 服务器上，stroage server没有 实现自己的文件系统而是利用操作系统的文件系统来管理文件，可称stroage server为存储服务器。 ![你想输入的替代文字](关于FastDFS图片服务器详解/01.png) 服务端两个角色： Tracker：管理集群，tracker也可以实现集群。每个tracker节点地位平等。 收集Storage集群的状态。 Storage：实际保存文件，Storage分为多个组，每个组之间保存的文件是不同的。 每个组内部可以有多个成员，组成员内部保存的内容是一样的，组成员的地位是一致的，没有主从的概念。 文件上传的流程： ![你想输入的替代文字](关于FastDFS图片服务器详解/02.png) 客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。 文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。 ![你想输入的替代文字](关于FastDFS图片服务器详解/03.png)  组名：文件上传后所在的storage组名称，在文件上传成功后由storage服务器返回， 需要客户端自行保存。  虚拟磁盘路径：storage配置的虚拟路径，与磁盘选项store_path*对应。如果配置 了store_path0则是M00，如果配置了store_path1则是M01，以此类推。 数据两级目录：storage服务器在每个虚拟磁盘路径下创建的两级目录，用于存储数据文件。 文件名：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器 IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。 文件下载： ![你想输入的替代文字](关于FastDFS图片服务器详解/04.png) 最简单的FastDFS架构： ![你想输入的替代文字](关于FastDFS图片服务器详解/05.png) 图片服务器安装方法： 1.安装步骤 第一步：把图片服务器解压缩。 第二步：把图片服务器添加到Vmware中。 第三步：Vmware的网络配置。 ![你想输入的替代文字](关于FastDFS图片服务器详解/06.png) 第四步：开机 ![你想输入的替代文字](关于FastDFS图片服务器详解/07.png) 移动：网络配置不发生变化。要使用图片服务器，需要保证网络配置不变。 复制：重新生成一块网卡mac地址是新地址。 Ip地址：192.168.25.133 用户名root、itcast 密码：itcast 图片服务器使用： ![你想输入的替代文字](关于FastDFS图片服务器详解/08.png) ![你想输入的替代文字](关于FastDFS图片服务器详解/09.png) 上传图片： 1.上传步骤： 1、加载配置文件，配置文件中的内容就是tracker服务的地址。 配置文件内容：tracker_server=192.168.25.133:22122 2、创建一个TrackerClient对象。直接new一个。 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。 4、创建一个StorageServer的引用，值为null 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用 6、使用StorageClient对象上传图片。 7、返回数组。包含组名和图片的路径。 代码如下： public class FastDFSTest { @Test public void testFileUpload() throws Exception { // 1、加载配置文件，配置文件中的内容就是tracker服务的地址。 ClientGlobal.init(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;); // 2、创建一个TrackerClient对象。直接new一个。 TrackerClient trackerClient = new TrackerClient(); // 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。 TrackerServer trackerServer = trackerClient.getConnection(); // 4、创建一个StorageServer的引用，值为null StorageServer storageServer = null; // 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用 StorageClient storageClient = new StorageClient(trackerServer, storageServer); // 6、使用StorageClient对象上传图片。 //扩展名不带“.” String[] strings = storageClient.upload_file(&quot;D:/Documents/Pictures/images/200811281555127886.jpg&quot;, &quot;jpg&quot;, null); // 7、返回数组。包含组名和图片的路径。 for (String string : strings) { System.out.println(string); } } } 使用工具类上传： ![你想输入的替代文字](关于FastDFS图片服务器详解/10.png) @Test public void testFastDfsClient() throws Exception { FastDFSClient fastDFSClient = new FastDFSClient(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;); String file = fastDFSClient.uploadFile(&quot;D:/Documents/Pictures/images/2f2eb938943d.jpg&quot;); System.out.println(file); }]]></content>
+      <categories>
+        <category>服务器</category>
+      </categories>
+      <tags>
+        <tag>FastDFS图片服务器</tag>
       </tags>
   </entry>
   <entry>
@@ -258,45 +294,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[面向对象和面向过程的区别]]></title>
-    <url>%2F2015%2F10%2F08%2F%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[面向对象和面向过程的区别： –面向过程 优点：性能比面向对象高，因为类调用时需要实例化，比较消耗资源；比如单片机、嵌入式开发、Linux/Unix等一般采用面向过程开发，性能是最重要因素。 缺点：没有面向对象易于维护，易复用，易扩展 –面向对象 优点：易维护，易复用，易扩展，由于面向对象有封装，继承，多肽性的特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护 缺点：性能比面向过程低]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[hashCode和equals方法的关系]]></title>
-    <url>%2F2015%2F10%2F08%2FhashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB%2F</url>
-    <content type="text"><![CDATA[hashCode和equals方法的关系： –equals相等，hashcode必相等；hashcode相等，equals可能不相等]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[自动装箱与拆箱]]></title>
-    <url>%2F2015%2F10%2F08%2F%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1%2F</url>
-    <content type="text"><![CDATA[自动装箱与拆箱： 装箱：将基本类型用它们对应的引用类型包装起来； 拆箱：将包装类型转换为基本数据类型； Java使用自动装箱和拆箱机制，节省了常用数值的内存开销和创建对象的开销，提高了效率，由编译器来完 成，编译器会在编译期根据语法决定是否进行装箱和拆箱动作。]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[重载和重写的区别]]></title>
-    <url>%2F2015%2F10%2F08%2F%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[重载和重写的区别： –重载：发生在同一个类中，方法名必须相同，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰 符可以不同，发生在编译时。 –重写：发生在父子类中，方法名、参数列表必须相同，返回值小于等于父类，抛出的异常小于等于父类，访 问修饰符大于等于父类；如果父类方法访问修饰符为private则子类中就不是重写。]]></content>
+    <title><![CDATA[访问控制符public,protected,private,以及默认的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public%2Cprotected%2Cprivate%2C%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[访问控制符public,protected,private,以及默认的区别： private只有在本类中才能访问； public在任何地方都能访问； protected在同包内的类及包外的子类能访问； 默认不写在同包内能访问。 是否可以继承String类？？？ String类是final类故不可以继承，一切由final修饰过的都不能继承。]]></content>
       <categories>
         <category>java基础</category>
       </categories>
@@ -318,18 +318,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[String和StringBuffer、StringBuilder的区别]]></title>
-    <url>%2F2015%2F10%2F08%2FString%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[String和StringBuffer、StringBuilder的区别： –可变性 String类中使用字符数组保存字符串，private final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自 AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[] value，这两种对象都是可变的。 –线程安全性 String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与 StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf 等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。 StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。 –性能 每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。 StringBuffer每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用 StirngBuilder 相比使用 StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[框架-spring详解]]></title>
     <url>%2F2015%2F10%2F08%2F%E6%A1%86%E6%9E%B6-spring%E8%AF%A6%E8%A7%A3%2F</url>
     <content type="text"><![CDATA[一、 Spring 概述 1、Spring介绍： Spring 是一个开源框架，Spring是于2003年兴起的一个轻量级的Java开发框架，由RodJohnson 创建。 简单来说，Spring 是一个分层的 JavaSE/EEfull-stack(一站式) 轻量级开源框架 2、Spring 作用 Spring致力于提供一种方法管理你的业务对象。 Spring的主要目的是使JavaEE易用和促进好编程习惯。 Spring 致力于 J2EE 应用的各层的解决方案，而不是仅仅专注于某一层的方案。可以说 Spring 是企业应用开发的“一站式”选择，并贯穿表现层、业务层及持久层。然而，Spring 并不想取 代那些已有的框架，而是与它们无缝地整合。 3． Spring 起源： Spring 的出现是为了取代 EJB（Enterprise JavaBean）的臃肿、低效、脱离现实的特点。 传统 J2EE 应用的开发效率低，应用服务器厂商对各种技术的支持并没有真正统一，导致 J2EE 的应用没有真正实现 Write Once 及 Run Anywhere 的承诺。Spring 作为开源的中间件，独立 于各种应用服务器，甚至无须应用服务器的支持，也能提供应用服务器的功能，如声明式事 务、事务处理等 4． Spring 体系结构 Spring 框架是一个分层架构,,它包含一系列的功能要素并被分为大约 20 个模块。这些模块 分为 Core Container、Data Access/Integration、Web、AOP（Aspect Oriented Programming)、 Instrumentation 和测试部分,如下图所示： ![你想输入的替代文字](框架-spring详解/01.png) ---核心容器(Core Container) 1：Core 和 Beans 模块提供了 Spring 最基础的功能，提供 IoC 和依赖注入特性。这里的基础 概念是 BeanFactory，它提供对 Factory 模式的经典实现来消除对程序性单例模式的需要，并 真正地允许你从程序逻辑中分离出依赖关系和配置。 2：Context 模块基于 Core 和 Beans 来构建，它提供了用一种框架风格的方式来访问对象， 有些像 JNDI 注册表。Context 封装包继承了 beans 包的功能，还增加了国际化（I18N）,事件 传播，资源装载，以及透明创建上下文，例如通过 servlet 容器，以及对大量 JavaEE 特性的 支持，如 EJB、JMX。核心接口是 ApplicationContext。 3：Expression Language，表达式语言模块，提供了在运行期间查询和操作对象图的强大能力。 支持访问和修改属性值，方法调用，支持访问及修改数组、容器和索引器，命名变量，支持 算数和逻辑运算，支持从 Spring 容器获取 Bean，它也支持列表投影、选择和一般的列表聚 合等 ---数据访问/集成部分(Data Access/Integration) 1：JDBC 模块，提供对 JDBC 的抽象，它可消除冗长的 JDBC 编码和解析数据库厂商特有的错 误代码。 2：ORM 模块，提供了常用的&quot;对象/关系&quot;映射 API 的集成层。 其中包括 JPA、JDO、Hibernate 和 iBatis 。利用 ORM 封装包，可以混合使用所有 Spring 提供的特性进行&quot;对象/关系&quot;映射， 如简单声明性 事务管理 。 3：OXM 模块，提供一个支持 Object 和 XML 进行映射的抽象层，其中包括 JAXB、Castor、 XMLBeans、JiBX 和 XStream。 4：JMS 模块，提供一套&quot;消息生产者、消费者&quot;模板用于更加简单的使用 JMS，JMS 用于在两 个应用程序之间，或分布式系统中发送消息，进行异步通信。 5：Transaction 模块，支持程序通过简单声明性 事务管理，只要是 Spring 管理对象都能得到 Spring 管理事务的好处，即使是 POJO，也可以为他们提供事务。 --- Web 1：Web-Socket 模块， WebSocket protocol 是 HTML5 一种新的协议。它实现了浏览器与服 务器全双工通信，spring 支持 webSocket 通信。 2：Web 模块，提供了基础的 web 功能。例如多文件上传、集成 IoC 容器、远程过程访问、 以及 Web Service 支持，并提供一个 RestTemplate 类来提供方便的 Restful services 访问 3：Web-Servlet 模块，提供了 Web 应用的 Model-View-Controller（MVC）实现。Spring MVC 框架提供了基于注解的请求资源注入、更简单的数据绑定、数据验证等及一套非常易用的 JSP 标签，完全无缝与 Spring 其他技术协作。 4：Web-Portlet 模块，提供了在 Portlet 环境下的 MVC 实现 ---AOP 1：AOP 模块，提供了符合 AOP 联盟规范的面向方面的编程实现，让你可以定义如方法拦截 器和切入点，从逻辑上讲，可以减弱代码的功能耦合，清晰的被分离开。而且，利用源码级 的元数据功能，还可以将各种行为信息合并到你的代码中 。 2：Aspects 模块，提供了对 AspectJ 的集成。 3：Instrumentation 模块， 提供一些类级的工具支持和 ClassLoader 级的实现，可以在一些 特定的应用服务器中使用 ---Test 1：Test 模块，提供对使用 JUnit 和 TestNG 来测试 Spring 组件的支持，它提供一致的 ApplicationContexts 并缓存这些上下文，它还能提供一些 mock 对象，使得你可以独立的测 试代码 5． Spring 优点：  方便解耦，简化开发 Spring 就是一个大工厂，可以将所有对象创建和依赖关系维护，交给 Spring 管理  AOP 编程的支持 Spring 提供面向切面编程，可以方便的实现对程序进行权限拦截、运行监控等功能  声明式事务的支持 只需要通过配置就可以完成对事务的管理，而无需手动编程  方便程序的测试 Spring 对 Junit4 支持，可以通过注解方便的测试 Spring 程序  方便集成各种优秀框架 Spring 不排斥各种优秀的开源框架，其内部提供了对各种优秀框架（如：Struts、Hibernate、 MyBatis、Quartz 等）的直接支持  降低 JavaEE API 的使用难度 Spring 对 JavaEE 开发中非常难用的一些 API（JDBC、JavaMail、远程调用等），都提供了封 装，使这些 API 应用难度大大降低 二、 IOC 与 DI 1、Spring 的 jar 包下载 Spring 的官网：spring.io 我们课程中讲解使用的是 spring4.2.4 在 spring3.0.2 版本后，不在提供依赖 jar 包 ![你想输入的替代文字](框架-spring详解/02.png) docs 存在 API 和规范文档 libs 开发 jar 包 schema 开发过程中需要的 xml 的 schema 约束 2、spring 开发环境搭建 在 spring 开发中，我们要根据不同的情况来导入不同的 jar 包，当前我们要讲解的是关于 ioc 与 di 对于 ioc 与 di 讲解我们只需要使用 spring 的核心功能。 1. beans 相关 2. core 相关 3. context 相关 4. spel 相关 ![你想输入的替代文字](框架-spring详解/03.png) 我们使用 spring 框架也会使用到配置文件，我们需要在 src 下创建一个关于 spring 的配置文 件，一般情况名称叫 applicationContext.xml 问题：applicationContext.xml 约束？ ![你想输入的替代文字](框架-spring详解/04.png) 它的路径: spring-framework-4.2.4.RELEASE-dist\spring-framework-4.2.4.RELEASE\docs\spring-framework-r eference\html ![你想输入的替代文字](框架-spring详解/05.png) 3、IOC 快速入门 Ioc 它是什么，解决什么问题，它的原理是如何实现。 IOC inversion of Controller 控制反转。 在程序中所说的 IOC 其实简单说，就是原来由我们自己实例化的对象交给 spring 容器来实始 化。这时对象的实始化的权利就会反转。 程序运行时报错 ![你想输入的替代文字](框架-spring详解/06.png) 原因:当前环境需要一个 commons-loggin 的 jar 包 总结 spring 使用步骤: 1. 在 applicationContext.xml 文件中配置 bean 如：&lt;bean id=&quot;userService&quot; class=&quot;com.lhs.ioc.UserServiceImpl&quot;&gt; &lt;/bean&gt; 2. 创建一个 ApplicationContext 对象 ApplicationContext它是BeanFactory的一个子接口，我们在使用时使用的是AppliCationContext的 实现类ClassPathXmlApplicationContext ![你想输入的替代文字](框架-spring详解/07.png) 可以通过 getBean(配置文件中 id 名称)来获取指定的对象。 4． DI DI:dependency injection 依赖注入 在 spring 框架负责创建 Bean 对象时，动态将依赖对象注入到 Bean 组件。 ![你想输入的替代文字](框架-spring详解/08.png) 简单说，这时 UserServiceImpl 中的 info 属性值就是 ITCAST 面试题:IOC 和 DI 区别? IOC 控制反转，是指对象实例化权利由 spring 容器来管理 DI 依赖注入 在 spring 创建对象的过程中，对象所依赖的属性通过配置注入对象中。 三、 Bean 获取与实例化 1． ApplicationContext 与 BeanFactory 关系 ![你想输入的替代文字](框架-spring详解/09.png) ApplicationContext 它是扩展 BeanFactory 接口。 BeanFactory 它采取延迟加载的方案，只有真正在 getBean 时才会实例化 Bean 在开发中我们一般使用的是 ApplicationContext,真正使用的是其实现类, FileSystemXmlAppliCationContext 根据文件路径获取 ClassPathXmlApplicationContext 根据类路径获取 AppliCationContext它会在配置文件加载时，就会初始化Bean,并且ApplicationContext 它 提 供 不 同 的 应 用 层 的 Context 实现。例如在 web 开 发 中 可 以 使 用 WebApplicationContext. 2、Bean 的实例化方式 1、无参数构造 对于这种方式，注意 Bean 类中必须提供无参数构造。 &lt;bean name=&quot;bean1&quot; class=&quot;com.lhs.bean.Bean1&quot;&gt; &lt;/bean&gt; 2、静态工厂方法 需要创建一个工厂类，在工厂类中提供一个 static 返回 bean 对象的方法就可以 ![你想输入的替代文字](框架-spring详解/10.png) ![你想输入的替代文字](框架-spring详解/11.png) 3、实例工厂方法 需要创建一个工厂类，在工厂类中提供一个非 static 的创建 bean 对象的方法，在配置文件 中需要将工厂配置，还需要配置 bean ![你想输入的替代文字](框架-spring详解/12.png) &lt;bean name=&quot;bean3Factory&quot; class=&quot;com.lhs.bean.Bean3Factory&quot;&gt; &lt;/bean&gt; &lt;bean name=&quot;bean3&quot; factory-bean=&quot;bean3Factory&quot; factory-method=&quot;createBean3&quot;&gt; &lt;/bean&gt; 3． Bean 的作用域 ![你想输入的替代文字](框架-spring详解/13.png) 在 bean 声明时它有一个 scope 属性，它是用于描述 bean 的作用域。 可取值有: singleton:单例 代表在 spring ioc 容器中只有一个 Bean 实例 (默认的 scope) prototype 多例 每一次从 spring 容器中获取时，都会返回一个新的实例 request 用在 web 开发中，将 bean 对象 request.setAttribute()存储到 request 域中 session 用在 web 开发中，将 bean 对象 session.setAttribute()存储到 session 域中 在开如常用的值是 singleton 与 prototype 4． Bean 的生命周期 ![你想输入的替代文字](框架-spring详解/14.png) 1. instantiate bean 对象实例化 2. populate properties 封装属性 3. 如果 Bean 实现 BeanNameAware 执行 setBeanName 4. 如果 Bean 实现 BeanFactoryAwar 或 ApplicationContextAwar 设置工厂 setBeanFactory 或上 下文对象 setApplicationContext 5. 如果存在类实现 BeanPostProcess(后处理 Bean),执行 postProcessBeforeInitialization 6. 如果 Bean 实现 InitializingBean 执行 afterPropertiesSet 7. 调用自定义的 init-method 方法 8. 如果存在类实现 BeanPostProcessor(处理 Bean),执行 postProcessAfterInitialization 9. 执行业务处理 10. 如果 Bean 实现 DisposableBean 执行 destroy 11. 调用自定义的 destroy-method 对于 bean 的生命周期方法: 第三步与第四步是让 Bean 了解 spring 容器。 第五步与第八步 可以针对指定的 Bean 进行功能增强，这时一般会使用动态代理. 第六步与第十步:通过实现指定的接口来完成 init 与 destroy 操作 但是在开发中一般不使用第 6 步与第 10 步，原因是我们可以使用第 7 步与第 11 步来完成。 第 7 步与第 11 步的初始化与销毁操作它无耦合，推荐使用的。但是必须在配置文件中指定 初始化与销毁的方法 &lt;bean id=&quot;beanLifeCycle&quot; class=&quot;com.lhs.bean.BeanLifeCycle&quot; init-method=&quot;myInit&quot; destory-method=&quot;myDestory&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;itcast&quot;&gt; &lt;/property&gt; &lt;/bean&gt; 总结: 对于 bean 的生命周期，我们需要关注的主要有两个方法: 1. 增强 bean 的功能可以使用后处理 Bean, BeanPostProcessor 2. 如果需要初始化或销毁操作我们可以使用 init-method destroy-method 注意:destroy-method 只对 scope=singleTon 有效果。 四、 Bean 属性注入 在 spring 中 bean 的属性注入有两种 1、构造器注入 &lt;bean id=&quot;car&quot; class=&quot;com.lhs.di.Car&quot;&gt; &lt;construtor-arg index=&quot;0&quot; type=&quot;java.lang.String&quot; value=&quot;弹窗&quot;&gt; &lt;/construtor-arg&gt; &lt;construtor-arg index=&quot;1&quot; type=&quot;double&quot; value=&quot;1000000&quot;&gt; &lt;/construtor-arg&gt; &lt;/bean&gt; 2、Setter方法注入 &lt;!-- 使用setter方法对car的属性进行注入 --&gt; &lt;bean id=&quot;car1&quot; class=&quot;com.lhs.di.Car&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;宝马&quot; /&gt; &lt;property name=&quot;price&quot; value=&quot;500000&quot; /&gt; &lt;/bean&gt; 关于 ref属性作用 &lt;bean id=&quot;person&quot; class=&quot;com.lhs.do.Person&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;张三&quot; /&gt; &lt;property name=&quot;car&quot; ref=&quot;car1&quot; /&gt; &lt;/bean&gt; 使用 ref 来引入另一个 bean 对象，完成 bean 之间注入 3、集合属性的注入 在 spring 中对于集合属性，可以使用专门的标签来完成注入例如:list set map properties 等集合元素来完成集合属性注入 ![你想输入的替代文字](框架-spring详解/15.png) 3.1． List 属性注入 ![你想输入的替代文字](框架-spring详解/16.png) 如果属性是数组类型也可以使用 list 完成注入 3.2． Set 属性注入 ![你想输入的替代文字](框架-spring详解/17.png) 3.3． Map 属性注入 ![你想输入的替代文字](框架-spring详解/18.png) 3.4． Properties 属性注入 Java.util.Properties 是 java.utilsMap 的实现类，它的 key 与 value 都是 String 类型. ![你想输入的替代文字](框架-spring详解/19.png)]]></content>
@@ -341,9 +329,57 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[访问控制符public,protected,private,以及默认的区别]]></title>
-    <url>%2F2015%2F10%2F08%2F%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public%2Cprotected%2Cprivate%2C%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[访问控制符public,protected,private,以及默认的区别： private只有在本类中才能访问； public在任何地方都能访问； protected在同包内的类及包外的子类能访问； 默认不写在同包内能访问。 是否可以继承String类？？？ String类是final类故不可以继承，一切由final修饰过的都不能继承。]]></content>
+    <title><![CDATA[重载和重写的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[重载和重写的区别： –重载：发生在同一个类中，方法名必须相同，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰 符可以不同，发生在编译时。 –重写：发生在父子类中，方法名、参数列表必须相同，返回值小于等于父类，抛出的异常小于等于父类，访 问修饰符大于等于父类；如果父类方法访问修饰符为private则子类中就不是重写。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[自动装箱与拆箱]]></title>
+    <url>%2F2015%2F10%2F08%2F%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1%2F</url>
+    <content type="text"><![CDATA[自动装箱与拆箱： 装箱：将基本类型用它们对应的引用类型包装起来； 拆箱：将包装类型转换为基本数据类型； Java使用自动装箱和拆箱机制，节省了常用数值的内存开销和创建对象的开销，提高了效率，由编译器来完 成，编译器会在编译期根据语法决定是否进行装箱和拆箱动作。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hashCode和equals方法的关系]]></title>
+    <url>%2F2015%2F10%2F08%2FhashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB%2F</url>
+    <content type="text"><![CDATA[hashCode和equals方法的关系： –equals相等，hashcode必相等；hashcode相等，equals可能不相等]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[什么是泛型、为什么要使用以及泛型擦除]]></title>
+    <url>%2F2015%2F10%2F08%2F%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4%2F</url>
+    <content type="text"><![CDATA[什么是泛型、为什么要使用以及泛型擦除： 泛型，即“参数化类型”。 创建集合时就指定集合元素的类型，该集合只能保存其指定类型的元素，避免使用强制类型转换。 Java编译器生成的字节码是不包涵泛型信息的，泛型类型信息将在编译处理是被擦除，这个过程即类型擦 除。泛型擦除可以简单的理解为将泛型java代码转换为普通java代码，只不过编译器更直接点，将泛型java 代码直接转换成普通java字节码。 类型擦除的主要过程如下： 1）.将所有的泛型参数用其 2）.移除所有的类型参数。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[String和StringBuffer、StringBuilder的区别]]></title>
+    <url>%2F2015%2F10%2F08%2FString%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[String和StringBuffer、StringBuilder的区别： –可变性 String类中使用字符数组保存字符串，private final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自 AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[] value，这两种对象都是可变的。 –线程安全性 String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与 StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf 等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。 StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。 –性能 每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。 StringBuffer每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用 StirngBuilder 相比使用 StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。]]></content>
       <categories>
         <category>java基础</category>
       </categories>
@@ -365,9 +401,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[什么是泛型、为什么要使用以及泛型擦除]]></title>
-    <url>%2F2015%2F10%2F08%2F%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4%2F</url>
-    <content type="text"><![CDATA[什么是泛型、为什么要使用以及泛型擦除： 泛型，即“参数化类型”。 创建集合时就指定集合元素的类型，该集合只能保存其指定类型的元素，避免使用强制类型转换。 Java编译器生成的字节码是不包涵泛型信息的，泛型类型信息将在编译处理是被擦除，这个过程即类型擦 除。泛型擦除可以简单的理解为将泛型java代码转换为普通java代码，只不过编译器更直接点，将泛型java 代码直接转换成普通java字节码。 类型擦除的主要过程如下： 1）.将所有的泛型参数用其 2）.移除所有的类型参数。]]></content>
+    <title><![CDATA[面向对象和面向过程的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[面向对象和面向过程的区别： –面向过程 优点：性能比面向对象高，因为类调用时需要实例化，比较消耗资源；比如单片机、嵌入式开发、Linux/Unix等一般采用面向过程开发，性能是最重要因素。 缺点：没有面向对象易于维护，易复用，易扩展 –面向对象 优点：易维护，易复用，易扩展，由于面向对象有封装，继承，多肽性的特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护 缺点：性能比面向过程低]]></content>
       <categories>
         <category>java基础</category>
       </categories>
