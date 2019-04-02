@@ -1,626 +1,390 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search> 
-  
-    
-    <entry>
-      <title>常用的扒拉后台日志操作命令</title>
-      <link href="/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
-      <url>/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/</url>
-      
-        <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
-      
-      
+<search>
+  <entry>
+    <title><![CDATA[多线程访问成员变量与局部变量]]></title>
+    <url>%2F2018%2F10%2F11%2F%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[public class HelloThreadTest { public static void main(String[] args) { HelloThread r = new HelloThread(); Thread t1 = new Thread(r); Thread t2 = new Thread(r); t1.start(); t2.start(); } } class HelloThread implements Runnable { int i; @Override public void run() { while (true) { System.out.println(&quot;Hello number: &quot; + i++); try { Thread.sleep((long) Math.random() * 1000); } catch (InterruptedException e) { e.printStackTrace(); } if (50 == i) { break; } } } } 该例子中，HelloThread类实现了Runnable接口，其中run()方法的主要工作是输出&quot;Hello number: &quot;字符串加数字i，并且同时递增i，当i到达50时，退出循环。 main()方法中生成了一个HelloThread类的对象r，并且利用这个一个对象生成了两个线程。 程序的执行结果是：顺次打印了0到49的数字，共50个数字。 这是因为，i是成员变量，则HelloThread的对象r只包含这一个i，两个Thread对象因为由r构造，所以共享了同一个i。 当我们改变代码如下时（原先的成员变量i被注释掉，增加了方法中的局部变量i）： public class HelloThreadTest { public static void main(String[] args) { HelloThread r = new HelloThread(); Thread t1 = new Thread(r); Thread t2 = new Thread(r); t1.start(); t2.start(); } } class HelloThread implements Runnable { // int i; // 若i是成员变量，则HelloThread的对象r只包含这一个i，两个Thread对象因为由r构造，所以共享了同一个i // 打印结果是0到49的数字 @Override public void run() { int i = 0; // 每一个线程都会拥有自己的一份局部变量的拷贝 // 线程之间互不影响 // 所以会打印100个数字，0到49每个数字都是两遍 while (true) { System.out.println(&quot;Hello number: &quot; + i++); try { Thread.sleep((long) Math.random() * 1000); } catch (InterruptedException e) { e.printStackTrace(); } if (50 == i) { break; } } } } 如注释中所述，由于局部变量对于每一个线程来说都有自己的拷贝，所以各个线程之间不再共享同一个变量， 输出结果为100个数字，实际上是两组，每组都是0到49的50个数字，并且两组数字之间随意地穿插在一起。 得到的结论如下： 如果一个变量是成员变量，那么多个线程对同一个对象的成员变量进行操作时，它们对该成员变量是彼此影响的， 也就是说一个线程对成员变量的改变会影响到另一个线程。 如果一个变量是局部变量，那么每个线程都会有一个该局部变量的拷贝（即便是同一个对象中的方法的局部变量，也会对每一个线程有一个拷贝）， 一个线程对该局部变量的改变不会影响到其他线程。]]></content>
       <categories>
-          
-          <category> 关于日志 </category>
-          
+        <category>关于日志</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 生产日志 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>简单有效的页面防止重复提交的操作</title>
-      <link href="/2017/06/08/%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88%E7%9A%84%E9%A1%B5%E9%9D%A2%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%93%8D%E4%BD%9C/"/>
-      <url>/2017/06/08/%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88%E7%9A%84%E9%A1%B5%E9%9D%A2%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%93%8D%E4%BD%9C/</url>
-      
-        <content type="html"><![CDATA[<pre><code>操作如下：     var isSubmit = true; // 在js顶部定义全局变量    if(isSubmit){       save();    }else{       crossAPI.tips(&quot;请勿重复提交数据！&quot;,3000);       return false;    }    var save = function () {          isSubmit = false; // 进入方法后 isSubmit 置为 false，在后续的点击提交时，便不会执行save方法          。。。          。。。 // 此处为你自己的执行保存的方法          if( 保存成功 ){             关闭数据新增页面，并刷新查询页面的查询          }else{             // 保存失败，则页面提醒保存失败             isSubmit = true;  // isSubmit 置为 true ,用以再次提交当前数据使用          }    }</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Solr单机版服务搭建]]></title>
+    <url>%2F2018%2F10%2F08%2FSolr%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D%2F</url>
+    <content type="text"><![CDATA[Solr服务搭建 1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。 2、搭建步骤： 第一步： 把solr的压缩包上传到Linux系统 第二步： 解压solr 第三步： 安装Tomcat，解压缩即可。 第四步： 把solr部署到Tomcat下。 第五步： 解压缩war包。启动 第六步： 把/root/solr-4.10.3/example/lib/ext 目录下的所有的jar包，添加到 solr 工程中。 [root@localhost ext]# pwd /root/solr-4.10.3/example/lib/ext [root@localhost ext]# cp* /usr/local/solr/tomcat/webapps/solr/WEB-INF/lib/ 第七步： 创建一个 solrhome. /exanple/solr 目录就是一个 solrhome. 复制此目录到 /usr/local/solr/solrhome [root@localhost example]# pwd /root/solr-4.10.3/example [root@localhost example]# cp -r solr /usr/local/solr/solrhome [root@localhost example]# 第八步：关联solr及solrhome。需要修改solr工程的web.xml文件 第九步：启动Tomcat http://192.168.25.154:8080/solr/ 和windows下的配置完全一样。]]></content>
       <categories>
-          
-          <category> javascript </category>
-          
+        <category>服务搭建</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> javascript页面效果 </tag>
-            
-            <tag> 防止重复提交 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>自学编程成功概率有多少可能</title>
-      <link href="/2017/05/26/%E5%85%B3%E4%BA%8E/"/>
-      <url>/2017/05/26/%E5%85%B3%E4%BA%8E/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-      
-      
+      <tags>
+        <tag>Solr单机版服务搭建</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Solr单机版服务搭建]]></title>
+    <url>%2F2018%2F10%2F08%2FSolr%E5%8D%95%E6%9C%BA%E7%89%88%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%2F</url>
+    <content type="text"><![CDATA[Solr服务搭建 1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。 2、搭建步骤： 第一步： 把solr的压缩包上传到Linux系统 第二步： 解压solr 第三步： 安装Tomcat，解压缩即可。 第四步： 把solr部署到Tomcat下。 第五步： 解压缩war包。启动 第六步： 把/root/solr-4.10.3/example/lib/ext 目录下的所有的jar包，添加到 solr 工程中。 [root@localhost ext]# pwd /root/solr-4.10.3/example/lib/ext [root@localhost ext]# cp* /usr/local/solr/tomcat/webapps/solr/WEB-INF/lib/ 第七步： 创建一个 solrhome. /exanple/solr 目录就是一个 solrhome. 复制此目录到 /usr/local/solr/solrhome [root@localhost example]# pwd /root/solr-4.10.3/example [root@localhost example]# cp -r solr /usr/local/solr/solrhome [root@localhost example]# 第八步：关联solr及solrhome。需要修改solr工程的web.xml文件 第九步：启动Tomcat http://192.168.25.154:8080/solr/ 和windows下的配置完全一样。]]></content>
       <categories>
-          
-          <category> 档案 </category>
-          
+        <category>服务搭建</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 编程 </tag>
-            
-            <tag> 感悟 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>MySQL的表增删字段和增删索引</title>
-      <link href="/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95/"/>
-      <url>/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95/</url>
-      
-        <content type="html"><![CDATA[<pre><code>表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;;表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;字段建唯一索引：create index idx_province_id on 表名 (表字段 );                               上为索引                create index 字段的索引 on 表名 (表字段 );               删除字段的索引：alter table 表名 drop index idx_province_id ;                                        上为索引                alter table 表名 drop 字段的索引 ;</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>Solr单机版服务搭建</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[常用的扒拉后台日志操作命令]]></title>
+    <url>%2F2018%2F08%2F08%2F%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[翻找环境上的日志： ll 展示目录 cd 进入含有日志文件的文件夹目录 tail -200f 文件名 实时查看200行日志 cat 文件名 | grep “关键字” -A 页数 展示出含有关键字的后面的页数 cat 文件名 | grep “关键字” -B 页数 展示出含有关键字的前面的页数 cat 文件名 | grep “关键字” -C 页数 展示出含有关键字的上下文的页数]]></content>
       <categories>
-          
-          <category> mysql </category>
-          
+        <category>关于日志</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> MySQL </tag>
-            
-            <tag> 增删字段 </tag>
-            
-            <tag> 增删索引 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>MySQL的表以及数据备份</title>
-      <link href="/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
-      <url>/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/</url>
-      
-        <content type="html"><![CDATA[<p>   备份表方法：  此方法索引和increment值也会同步</p><pre><code>CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据</code></pre><p>   若只复制表中的部分内容的同时定义表中的字段信息：<br>                 CREATE TABLE tb_cab_bak<br>                  (<br>                  – 对copy的表中的ID进行主键约束<br>                 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY<br>                   )<br>                 AS<br>                 ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );</p>]]></content>
-      
-      
+      <tags>
+        <tag>生产日志</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[常见框架单例、多例与线程安全性总结]]></title>
+    <url>%2F2018%2F08%2F08%2F%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93%2F</url>
+    <content type="text"><![CDATA[单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。 线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是线程安全的; 若有可能影响，则是线程不安全的。 现在对 HttpServlet、HttpSession、SpingMVC、Struts2 中的 Action、Hibernate 中的 SessionFactory与 Session，进行总结。 (1)HttpServlet 其是单例的。即无论多少用户访问同一个业务，如 LoginServlet，Web 容器只会创建一个该 Servlet 实例。而该实例是允许多用户访问的。 若 Servlet 中包含成员变量，则每个用户对于成员变量的修改，均会影响到其他用户所看到的该变量的值，所以这时是线程不安全的。 若不包含成员变量，则是线程安全的。 (2)HttpSession 其是多例的。Web 容器会为每个用户开辟一个 Session，多个用户会有多个 Session。而每个用户只能访问自己的 Session。 所以，对于 Session 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (3)SpingMVC Controller Spring MVC Controller默认是单例的： 单例的原因有二： 1、为了性能。 2、不需要多例。 如果需要多例，则需要在Controller类上加注解 @Scope(“prototype”) (4)Struts2 的 Action 其是多例的。对于同一个业务，例如 LoginAction，系统会为每一个用户创建一个LoginAction 的实例， 并使其成员变量 username 与 password 接收用户 交的数据。同一用户只能访问自己的 Action。 所以，对于 Action 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (5)Hibernate 的 SessionFactory 其是单例的。无论多少用户访问该项目，系统只会创建一个 SessionFactory 对象，即这个对象是可以被所有用户访问的。 SessionFactory实现类中所包含的成员变量基本都是 final常量，即任何用户均不能修改。所以，也就不存在用户的修改对其他用户的影响问题了，所以是线程安全的。 (6)Hibernate 的 Session 其是多例的。系统会为每个用户创建一个 Sessio。 Session 的实现类中定义了很多的非 final 成员变量，一个事务对成员变量所做的修改，会影响到另一个事务对同一数据的访问结果，所以是线程不安全的。]]></content>
       <categories>
-          
-          <category> mysql </category>
-          
+        <category>关于日志</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> MySQL </tag>
-            
-            <tag> 数据备份 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>页面常用的设置：显示，隐藏，只读，不可编辑，取值，置空</title>
-      <link href="/2016/11/06/%E9%A1%B5%E9%9D%A2%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E7%BD%AE%EF%BC%9A%E6%98%BE%E7%A4%BA%EF%BC%8C%E9%9A%90%E8%97%8F%EF%BC%8C%E5%8F%AA%E8%AF%BB%EF%BC%8C%E4%B8%8D%E5%8F%AF%E7%BC%96%E8%BE%91%EF%BC%8C%E5%8F%96%E5%80%BC%EF%BC%8C%E7%BD%AE%E7%A9%BA/"/>
-      <url>/2016/11/06/%E9%A1%B5%E9%9D%A2%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E7%BD%AE%EF%BC%9A%E6%98%BE%E7%A4%BA%EF%BC%8C%E9%9A%90%E8%97%8F%EF%BC%8C%E5%8F%AA%E8%AF%BB%EF%BC%8C%E4%B8%8D%E5%8F%AF%E7%BC%96%E8%BE%91%EF%BC%8C%E5%8F%96%E5%80%BC%EF%BC%8C%E7%BD%AE%E7%A9%BA/</url>
-      
-        <content type="html"><![CDATA[<pre><code>$(&quot;#id&quot;).val()   // 获取值$(&quot;#id&quot;).val(&apos;&apos;)   // 清空值$(&quot;#id&quot;).val(&apos;变量名&apos;)   // 赋值$(&quot;#id&quot;).css(&apos;display&apos;,&apos;block&apos;) // 显示选择的对象$(&quot;#id&quot;).css(&apos;display&apos;,&apos;none&apos;) // 隐藏选择的对象$(&quot;#msgIdTpl option[value=&apos;&quot;+msgIdTpl+&quot;&apos;]&quot;).attr(&quot;selected&quot;,true);  // 锁定下拉结果并是=使下拉不可编辑$(&quot;#id,#id2,#id3&quot;).attr(&quot;readonly&quot;,&quot;readonly&quot;); //多个选择设置只读属性$(&quot;#id,#id2).attr(&quot;disabled&quot;, true);  // 设置为不可用</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>多例，多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[redis的安装与集群搭建]]></title>
+    <url>%2F2018%2F02%2F08%2Fredis%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA%2F</url>
+    <content type="text"><![CDATA[Redis是C语言开发的。 安装Redis需要C语言的编译环境。如果没有gcc 需要在线安装。 Yum install gcc-c++ 安装步骤： 第一步： Redis的源码包上传到Linux系统。 第二步： 解压缩Redis。 第三步： 编译 make 第四步： 安装 make install PREFIX=/usr/local/redis 连接Redis： 1.Redis的启动： 前端启动：[root@localhost bin]# ./redis-server 后台启动： 把 /root/redis-3.0.0/redis.conf 复制到 /usr/local/redis/bin目录下 [root@localhost bin]# cp redis.conf /usr/local/redis/bin/ 修改配置文件： [root@localhost bin]# ./redis-server redis.conf 查看Redis进程： [root@localhost bin]# ps aux|grep redis root 5190 0.1 0.3 33936 1712 ? Ssl 18:23 0:00 ./redis-server *:6379 root 5196 0.0 0.1 4356 728 pts/0 S+ 18:24 0:00 grep redis [root@localhost bin]# 2.Redis-cli [root@localhost bin]# ./redis-cli 默认连接localhost运行在6379端口的Redis服务 [root@localhost bin]# ./redis-cli -h 192.168.25.153 -p 6379 -h : 连接的服务器地址 -p : 服务的端口号 3.Redis五种数据类型 String : key-value (做缓存) Hash ：key-fields-values (做缓存) List : 有顺序可重复 Set ：无顺序，不能重复 SortedSet(zset) : 有顺序，不能重复 4.Redis集群的搭建 （1） redis-cluster 架构图 ![你想输入的替代文字](redis的安装与集群搭建/02.png) 架构细节： 1.所有的Redis节点彼此互联（ping-pong机制），内部使用二进制协议优化传输速度和带宽 2.节点的fail是通过集群中超过半数的节点检测失效时才生效 3.客户端与Redis节点直连，不需要中间proxy层，客户端不需要连接集群所有节点， 连接集群中任何一个可用节点即可 4.redis-cluster 把所有的物理节点映射到 [0-16383] slot上，cluster负责维护 node&lt;-&gt;slot&lt;-&gt;node Redis 集群中内置了 16384 个哈希槽，当需要在 redis集群中放置一个 key-value 时， redis 先对 key 使用 crc16算法算出一个结果，然后把结果对 16384 求余，这样每个 key 都 会对应一个编号在 0-16383 之间的哈希槽，redis会根据节点数量大致均等的将哈希槽映射到 不同的节点 （2） 1、 使用ruby脚本搭建集群。需要ruby的运行环境。 安装 ruby yum install ruby yum install rubygems 2、 安装 ruby 脚本运行使用的包 [root@localhost ~]# gem install redis-3.0.0.gem Successfully installed redis-3.0.0 1 gem installed Installing ri documentation for redis-3.0.0... Installing RDoc documentation for redis-3.0.0... [root@localhost ~]# [root@localhost ~]# redis-3.0.0/src [root@localhost ~]# ll*.rb -rwxrwxr-x. 1 root root 48141 Apr 1 2015 redis-trib.rb 3、 搭建步骤 需要6台redis服务器。搭建伪分布式。 需要6个redis实例。 需要运行在不同的端口 7001-7006 第一步：创建6个redis实例，每个实例运行在不同的端口。需要修改redis.conf配置文件。 配置文件中还需要把 cluster-enabled yes 前的注释去掉 ![你想输入的替代文字](redis的安装与集群搭建/03.png) 第二步：启动每个redis实例。 第三步：使用ruby脚本搭建集群。 ./redis-trib.rb create --replicas 1 192.168.25.153:7001 192.168.25.153:7002 192.168.25.153:7003 192.168.25.153:7004 192.168.25.153:7005 192.168.25.153:7006 创建关闭集群的脚本： [root@localhost redis-cluster]# vim shutdow-all.sh redis01/redis-cli -p 7001 shutdown redis01/redis-cli -p 7002 shutdown redis01/redis-cli -p 7003 shutdown redis01/redis-cli -p 7004 shutdown redis01/redis-cli -p 7005 shutdown redis01/redis-cli -p 7006 shutdown [root@localhost redis-cluster]# chomd u+x shutdown-all.sh [root@localhost redis-cluster]# ./redis-trib.rb create --replicas 1 192.168.25.153:7001 192.168.25.153:7002 192.168.25.153:7003 192.168.25.153:7004 192.168.25.153:7005 192.168.25.153:7006 &gt;&gt;&gt; Creating cluster Connecting to node 192.168.25.153:7001: OK Connecting to node 192.168.25.153:7002: OK Connecting to node 192.168.25.153:7003: OK Connecting to node 192.168.25.153:7004: OK Connecting to node 192.168.25.153:7005: OK Connecting to node 192.168.25.153:7006: OK &gt;&gt;&gt; Performing hash slots allocation on 6 nodes... Using 3 masters: 192.168.25.153:7001 192.168.25.153:7002 192.168.25.153:7003 Adding replica 192.168.25.153:7004 to 192.168.25.153:7001 Adding replica 192.168.25.153:7005 to 192.168.25.153:7002 Adding replica 192.168.25.153:7006 to 192.168.25.153:7003 M: 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3 192.168.25.153:7001 slots:0-5460 (5461 slots) master M: 8cd93a9a943b4ef851af6a03edd699a6061ace01 192.168.25.153:7002 slots:5461-10922 (5462 slots) master M: 2935007902d83f20b1253d7f43dae32aab9744e6 192.168.25.153:7003 slots:10923-16383 (5461 slots) master S: 74f9d9706f848471583929fc8bbde3c8e99e211b 192.168.25.153:7004 replicates 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3 S: 42cc9e25ebb19dda92591364c1df4b3a518b795b 192.168.25.153:7005 replicates 8cd93a9a943b4ef851af6a03edd699a6061ace01 S: 8b1b11d509d29659c2831e7a9f6469c060dfcd39 192.168.25.153:7006 replicates 2935007902d83f20b1253d7f43dae32aab9744e6 Can I set the above configuration? (type &apos;yes&apos; to accept): yes &gt;&gt;&gt; Nodes configuration updated &gt;&gt;&gt; Assign a different config epoch to each node &gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster Waiting for the cluster to join..... &gt;&gt;&gt; Performing Cluster Check (using node 192.168.25.153:7001) M: 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3 192.168.25.153:7001 slots:0-5460 (5461 slots) master M: 8cd93a9a943b4ef851af6a03edd699a6061ace01 192.168.25.153:7002 slots:5461-10922 (5462 slots) master M: 2935007902d83f20b1253d7f43dae32aab9744e6 192.168.25.153:7003 slots:10923-16383 (5461 slots) master M: 74f9d9706f848471583929fc8bbde3c8e99e211b 192.168.25.153:7004 slots: (0 slots) master replicates 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3 M: 42cc9e25ebb19dda92591364c1df4b3a518b795b 192.168.25.153:7005 slots: (0 slots) master replicates 8cd93a9a943b4ef851af6a03edd699a6061ace01 M: 8b1b11d509d29659c2831e7a9f6469c060dfcd39 192.168.25.153:7006 slots: (0 slots) master replicates 2935007902d83f20b1253d7f43dae32aab9744e6 [OK] All nodes agree about slots configuration. &gt;&gt;&gt; Check for open slots... &gt;&gt;&gt; Check slots coverage... [OK] All 16384 slots covered. [root@localhost redis-cluster]# 5、 集群的使用方法 Redis-cli 连接集群 。 [root@localhost redis-cluster]# redis01/redis-cli -p 7002 -c -c: 代表连接的是redis集群 （3） Jedis 需要把jedis依赖的jar包添加到工程中。Maven工程中需要把jedis的坐标添加到依赖。 推荐添加到服务层。Taotao-content-Service 工程中 1. 连接单机版 第一步：创建一个Jedis对象。需要指定服务端的IP及端口。 第二步：使用Jedis对象操作数据库，每个Jedis命令对应一个方法。 第三步：打印结果。 第四步：关闭Jedis 代码如下： @Test public void testJedis() throws Exception { // 第一步：创建一个Jedis对象。需要指定服务端的ip及端口。 Jedis jedis = new Jedis(&quot;192.168.25.153&quot;, 6379); // 第二步：使用Jedis对象操作数据库，每个redis命令对应一个方法。 String result = jedis.get(&quot;hello&quot;); // 第三步：打印结果。 System.out.println(result); // 第四步：关闭Jedis jedis.close(); } 2、连接单机版使用连接池 第一步： 创建一个JedisPool对象。需要指定服务器的IP及端口。 第二步： 从JedisPool中获取Jedis对象。 第三步： 使用Jedis操作redis服务器 第四步： 使用完毕后关闭jedis对象，连接池回收资源。 第五步： 关闭JedisPool对象。 代码如下： @Test public void testJedisPool() throws Exception { // 第一步：创建一个JedisPool对象。需要指定服务端的ip及端口。 JedisPool jedisPool = new JedisPool(&quot;192.168.25.153&quot;, 6379); // 第二步：从JedisPool中获得Jedis对象。 Jedis jedis = jedisPool.getResource(); // 第三步：使用Jedis操作redis服务器。 jedis.set(&quot;jedis&quot;, &quot;test&quot;); String result = jedis.get(&quot;jedis&quot;); System.out.println(result); // 第四步：操作完毕后关闭jedis对象，连接池回收资源。 jedis.close(); // 第五步：关闭JedisPool对象。 jedisPool.close(); } 3、连接集群版 第一步: 使用JedisCluster对象。需要一个 Set&lt;HostAndPost&gt; 参数。Redis 节点列表。 第二步：直接使用JedisCluster对象操作redis。在系统中单例存在。 第三步：打印结果。 第四步：系统关闭前，关闭JedisCluster对象。 代码如下： @Test public void testJedisCluster() throws Exception { // 第一步：使用JedisCluster对象。需要一个Set&lt;HostAndPort&gt;参数。Redis节点的列表。 Set&lt;HostAndPort&gt; nodes = new HashSet&lt;&gt;(); nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7001)); nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7002)); nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7003)); nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7004)); nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7005)); nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7006)); JedisCluster jedisCluster = new JedisCluster(nodes); // 第二步：直接使用JedisCluster对象操作redis。在系统中单例存在。 jedisCluster.set(&quot;hello&quot;, &quot;100&quot;); String result = jedisCluster.get(&quot;hello&quot;); // 第三步：打印结果 System.out.println(result); // 第四步：系统关闭前，关闭JedisCluster对象。 jedisCluster.close(); } （4）、实际使用案例：在实际业务逻辑的添加缓存 1、 接口封装 常用的操作redis的方法提取出一个接口，分别对应单机版和集群版创建两个实现类。 2、 单机版接口定义 public interface JedisClient { String set(String key, String value); String get(String key); Boolean exists(String key); Long expire(String key, int seconds); Long ttl(String key); Long incr(String key); Long hset(String key, String field, String value); String hget(String key, String field); Long hdel(String key, String... field); } 3、 单机版实现类 public class JedisClientPool implements JedisClient { @Autowired private JedisPool jedisPool; @Override public String set(String key, String value) { Jedis jedis = jedisPool.getResource(); String result = jedis.set(key, value); jedis.close(); return result; } @Override public String get(String key) { Jedis jedis = jedisPool.getResource(); String result = jedis.get(key); jedis.close(); return result; } @Override public Boolean exists(String key) { Jedis jedis = jedisPool.getResource(); Boolean result = jedis.exists(key); jedis.close(); return result; } @Override public Long expire(String key, int seconds) { Jedis jedis = jedisPool.getResource(); Long result = jedis.expire(key, seconds); jedis.close(); return result; } @Override public Long ttl(String key) { Jedis jedis = jedisPool.getResource(); Long result = jedis.ttl(key); jedis.close(); return result; } @Override public Long incr(String key) { Jedis jedis = jedisPool.getResource(); Long result = jedis.incr(key); jedis.close(); return result; } @Override public Long hset(String key, String field, String value) { Jedis jedis = jedisPool.getResource(); Long result = jedis.hset(key, field, value); jedis.close(); return result; } @Override public String hget(String key, String field) { Jedis jedis = jedisPool.getResource(); String result = jedis.hget(key, field); jedis.close(); return result; } @Override public Long hdel(String key, String... field) { Jedis jedis = jedisPool.getResource(); Long result = jedis.hdel(key, field); jedis.close(); return result; } } 配置applicationContext-redis.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot; xmlns:context=&quot;http://www.springframework.org/schema/context&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot; xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop4.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx4.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util4.2.xsd&quot;&gt; &lt;!--配置单机版的连接--&gt; &lt;bean id=&quot;jedisPool&quot; class=&quot;redis.client.jedis.JedisPool&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt; &lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;6379&quot;&gt; &lt;/constructor-arg&gt; &lt;/bean&gt; &lt;bean id=&quot;jedisClientPool&quot; class=&quot;com.taotao.jedis.JedisClientPool&quot; /&gt; &lt;/beans&gt; 集群版实现类： 代码如下： package com.taotao.jedis; import org.springframework.beans.factory.annotation.Autowired; import redis.clients.jedis.JedisCluster; public class JedisClientCluster implements JedisClient { @Autowired private JedisCluster jedisCluster; @Override public String set(String key, String value) { return jedisCluster.set(key, value); } @Override public String get(String key) { return jedisCluster.get(key); } @Override public Boolean exists(String key) { return jedisCluster.exists(key); } @Override public Long expire(String key, int seconds) { return jedisCluster.expire(key, seconds); } @Override public Long ttl(String key) { return jedisCluster.ttl(key); } @Override public Long incr(String key) { return jedisCluster.incr(key); } @Override public Long hset(String key, String field, String value) { return jedisCluster.hset(key, field, value); } @Override public String hget(String key, String field) { return jedisCluster.hget(key, field); } @Override public Long hdel(String key, String... field) { return jedisCluster.hdel(key, field); } } Spring的配置： &lt;!-- 集群版的配置 --&gt; &lt;bean id=&quot;jedisCluster&quot; class=&quot;redis.clients.jedis.JedisCluster&quot;&gt; &lt;constructor-arg&gt; &lt;set&gt; &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt; &lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;7001&quot;&gt; &lt;/constructor-arg&gt; &lt;/beans&gt; &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt; &lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;7002&quot;&gt; &lt;/constructor-arg&gt; &lt;/beans&gt; &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;7003&quot;&gt;&lt;/constructor-arg&gt; &lt;/bean&gt; &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;7004&quot;&gt;&lt;/constructor-arg&gt; &lt;/bean&gt; &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;7005&quot;&gt;&lt;/constructor-arg&gt; &lt;/bean&gt; &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt; &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt; &lt;constructor-arg name=&quot;port&quot; value=&quot;7006&quot;&gt;&lt;/constructor-arg&gt; &lt;/bean&gt; &lt;/set&gt; &lt;/constructor-arg&gt; &lt;/bean&gt; &lt;bean id=&quot;jedisClientCluster&quot; class=&quot;com.taotao.jedis.JedisClientCluster&quot; /&gt; 注意： 单机版和集群版不能共存，使用单机版时注释集群版的配置。使用集群版，把单机版注释。 工作中常用的业务：（注意：添加缓存时不能影响正常业务逻辑） 1.大数据量查询时: 查数据库之前先查询缓存，查到结果就直接响应结果，查不到则 缓存中没有，需要查询数据库，把查询结果添加到缓存中。 还需要考虑到一点 ： 缓存同步-- 对内容信息做增删改查操作后把对应缓存删除即可。]]></content>
       <categories>
-          
-          <category> javascript </category>
-          
+        <category>redis</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> javascript页面效果 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>工作中重名判断的注意事项</title>
-      <link href="/2016/10/08/%E9%87%8D%E5%90%8D%E5%88%A4%E6%96%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
-      <url>/2016/10/08/%E9%87%8D%E5%90%8D%E5%88%A4%E6%96%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/</url>
-      
-        <content type="html"><![CDATA[<p>   工作中重名判断的注意事项：</p><p>   信息记录修改页面中重名判断如下：<br>          首先定义一个js中的全局变量stillName，用于存储要修改的信息原名；<br>          修改时判断 修改后名称是否 == 修改的信息原名，若等于则不进行重名判断，不然则反之；<br>          但是这里所有的 == 判断 以及  数据的保存，都应该是“去除数据两边空格后”的结果，<br>          否则，增减一个空格，判断结果也是不重名，而页面效果可看不到空格，给客户的视觉感受就是重名</p><p>   代码如下：<br>    var stillName = “需要更改的信息原名”</p><pre><code>if(stillName != $.trim(newName) ) {    // 此处是去数据库查找是否有信息含有  修改后名称}然后，在执行修改后数据保存的方法时传值注意：一定要也去掉空格  newName = $.trim(newName);</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[简单有效的页面防止重复提交的操作]]></title>
+    <url>%2F2017%2F06%2F08%2F%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88%E7%9A%84%E9%A1%B5%E9%9D%A2%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%93%8D%E4%BD%9C%2F</url>
+    <content type="text"><![CDATA[操作如下： var isSubmit = true; // 在js顶部定义全局变量 if(isSubmit){ save(); }else{ crossAPI.tips(&quot;请勿重复提交数据！&quot;,3000); return false; } var save = function () { isSubmit = false; // 进入方法后 isSubmit 置为 false，在后续的点击提交时，便不会执行save方法 。。。 。。。 // 此处为你自己的执行保存的方法 if( 保存成功 ){ 关闭数据新增页面，并刷新查询页面的查询 }else{ // 保存失败，则页面提醒保存失败 isSubmit = true; // isSubmit 置为 true ,用以再次提交当前数据使用 } }]]></content>
       <categories>
-          
-          <category> javascript </category>
-          
+        <category>javascript</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> javascript页面效果 </tag>
-            
-            <tag> 重名判断 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>使用VMware安装CentOS 6.4</title>
-      <link href="/2016/08/16/%E4%BD%BF%E7%94%A8VMware%E5%AE%89%E8%A3%85CentOS-6-4/"/>
-      <url>/2016/08/16/%E4%BD%BF%E7%94%A8VMware%E5%AE%89%E8%A3%85CentOS-6-4/</url>
-      
-        <content type="html"><![CDATA[<pre><code>环境：Windows7 , VMware Workstation10, CentOS6.4为什么选择CentOS ?1.主流： 目前的Linux操作系统主要应用于生产环境，主流企业级Linux系统仍旧是RedHat或者CentOS2.免费： RedHat 和CentOS差别不大，CentOS是一个基于Red Hat Linux 提供的可自由使用源代码的企业级Linux发行版本3.更新方便：CentOS独有的yum命令支持在线升级，可以即时更新系统，不像RED HAT那样需要花钱购买支持服务！安装步骤第1步：首先安装VMware Workstation，只需点下一步即可，安装过程略第2步：文件 → 新建虚拟机 或 直接点击 创建新的虚拟机 图标</code></pre><p><img src="/2016/08/16/使用VMware安装CentOS-6-4/01.png" alt="你想输入的替代文字"><br>    第3步：选择 典型（推荐）→ 下一步<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/02.png" alt="你想输入的替代文字"><br>    第4步：稍后安装操作系统<br><img src="/2016/08/16/使用VMware安装CentOS-6-4/03.png" alt="你想输入的替代文字"><br>    第5步：选择操作系统和版本<br><img src="/2016/08/16/使用VMware安装CentOS-6-4/04.png" alt="你想输入的替代文字"><br>    第6步：输入虚拟机名称和安装路径<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/05.png" alt="你想输入的替代文字"><br>    第7步：设置磁盘大小<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/06.png" alt="你想输入的替代文字"><br>    第8步：自定义硬件<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/07.png" alt="你想输入的替代文字"><br>    第9步：选择CentOS安装镜像文件<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/08.png" alt="你想输入的替代文字"><br>    第10步：点击完成<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/09.png" alt="你想输入的替代文字"><br>    第11步：启动虚拟机<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/10.png" alt="你想输入的替代文字"><br>    第12步：选择第一项，安装全新操作系统或升级现有操作系统<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/11.png" alt="你想输入的替代文字"><br>    第13步：Tab键进行选择，选择Skip，退出检测<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/12.png" alt="你想输入的替代文字"><br>    第14步：点击Next<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/13.png" alt="你想输入的替代文字"><br>    第15步：选择语言，这里选择的是中文简体<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/14.png" alt="你想输入的替代文字"><br>    第16步：选择键盘样式<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/15.png" alt="你想输入的替代文字"><br>    第17步：选择存储设备<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/16.png" alt="你想输入的替代文字"><br>     如果以前安装过虚拟机，会出现这个警告，选择是，忽略所有数据<br>     <img src="/2016/08/16/使用VMware安装CentOS-6-4/17.png" alt="你想输入的替代文字"><br>    第18步：输入主机名<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/18.png" alt="你想输入的替代文字"><br>    第19步：配置网络<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/19.png" alt="你想输入的替代文字"><br>    第20步：设置时区，勾选使用UTC时间<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/20.png" alt="你想输入的替代文字"><br>    第21步：输入根用户（root）的密码<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/21.png" alt="你想输入的替代文字"><br>      如果密码过于简单会出现提示，点击无论如何都使用<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/22.png" alt="你想输入的替代文字"><br>    第22步：根据此Linux具体功能，选择不同的方式<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/23.png" alt="你想输入的替代文字"><br>    第23步：选择现在自定义，自定义安装需要的软件，如桌面配置<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/24.png" alt="你想输入的替代文字"><br>      可以根据具体的情况来配置，如可安Eclipse<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/25.png" alt="你想输入的替代文字"><br>      还可以安装Java平台、Perl支持等<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/26.png" alt="你想输入的替代文字"><br>      选择语言支持<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/27.png" alt="你想输入的替代文字"><br>    第24步：点击下一步，开始安装<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/28.png" alt="你想输入的替代文字"><br>    第25步：安装完成后，点击重新导引<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/29.png" alt="你想输入的替代文字"><br>    第26步：点击前进按钮<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/30.png" alt="你想输入的替代文字"><br>    第27步：点击是，同意许可，再点击前进按钮<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/31.png" alt="你想输入的替代文字"><br>    第28步：创建用户<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/32.png" alt="你想输入的替代文字"><br>    第29步：设置日期和时间，如果可以上网，勾选在网上同步日期和时间<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/33.png" alt="你想输入的替代文字"><br>    最后点击前进，完成安装！</p>]]></content>
-      
-      
+      <tags>
+        <tag>javascript页面效果</tag>
+        <tag>防止重复提交</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[MySQL的表增删字段和增删索引]]></title>
+    <url>%2F2017%2F05%2F26%2FMySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95%2F</url>
+    <content type="text"><![CDATA[表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;; 表删除字段： ALTER TABLE 表名 DROP COLUMN 表字段 ; 字段建唯一索引：create index idx_province_id on 表名 (表字段 ); 上为索引 create index 字段的索引 on 表名 (表字段 ); 删除字段的索引：alter table 表名 drop index idx_province_id ; 上为索引 alter table 表名 drop 字段的索引 ;]]></content>
       <categories>
-          
-          <category> 虚拟机VMware </category>
-          
+        <category>mysql</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 虚拟机VMware安装教程 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>基本的sql语句以及高级运算符和 多表查询</title>
-      <link href="/2016/07/20/%E5%9F%BA%E6%9C%AC%E7%9A%84sql%E8%AF%AD%E5%8F%A5%E4%BB%A5%E5%8F%8A%E9%AB%98%E7%BA%A7%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%20%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/"/>
-      <url>/2016/07/20/%E5%9F%BA%E6%9C%AC%E7%9A%84sql%E8%AF%AD%E5%8F%A5%E4%BB%A5%E5%8F%8A%E9%AB%98%E7%BA%A7%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%20%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/</url>
-      
-        <content type="html"><![CDATA[<p>选择：select * from table1 where Id=1(Id=1为条件语句，根据自己情况自定义）</p><p>插入：insert into table1(field1,field2) values(value1,value2)</p><p>删除：delete from table1 where 范围</p><p>更新：update table1 set field1=value1 where 范围</p><p>查找：select * from table1 where field1 like ’%value1%’ —like的语法很精妙，查资料!</p><p>排序：select * from table1 order by field1,field2 [desc]</p><p>总数：select count * as totalcount from table1</p><p>求和：select sum(field1) as sumvalue from table1</p><p>平均：select avg(field1) as avgvalue from table1</p><p>最大：select max(field1) as maxvalue from table1</p><p>最小：select min(field1) as minvalue from table1</p><p>11、说明：几个高级查询运算词</p><p>A： UNION 运算符</p><p>UNION 运算符通过组合其他两个结果表(例如 TABLE1 和 TABLE2)并消去表中任何重复行而派生出一个结果表。当 ALL 随 UNION 一起使用时(即 UNION ALL)，不消除重复行。两种情况下，派生表的每一行不是来自 TABLE1 就是来自 TABLE2。</p><p>B： EXCEPT 运算符</p><p>EXCEPT 运算符通过包括所有在 TABLE1 中但不在 TABLE2 中的行并消除所有重复行而派生出一个结果表。当 ALL 随 EXCEPT 一起使用时 (EXCEPT ALL)，不消除重复行。</p><p>C： INTERSECT 运算符</p><p>INTERSECT 运算符通过只包括 TABLE1 和 TABLE2 中都有的行并消除所有重复行而派生出一个结果表。当 ALL 随 INTERSECT 一起使用时 (INTERSECT ALL)，不消除重复行。</p><p>注：使用运算词的几个查询结果行必须是一致的。</p><p>12、说明：使用外连接</p><p>A、left outer join：</p><p>左外连接(左连接)：结果集几包括连接表的匹配行，也包括左连接表的所有行。</p><p>SQL: select a.a, a.b, a.c, b.c, b.d, b.f from a LEFT OUT JOIN b ON a.a = b.c</p><p>B：right outer join:</p><p>右外连接(右连接)：结果集既包括连接表的匹配连接行，也包括右连接表的所有行。</p><p>C：full outer join：</p><p>全外连接：不仅包括符号连接表的匹配行，还包括两个连接表中的所有记录。</p>]]></content>
-      
-      
+      <tags>
+        <tag>MySQL</tag>
+        <tag>增删字段</tag>
+        <tag>增删索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[MySQL的表以及数据备份]]></title>
+    <url>%2F2017%2F05%2F26%2FMySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%2F</url>
+    <content type="text"><![CDATA[备份表方法： 此方法索引和increment值也会同步 CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表 INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据 若只复制表中的部分内容的同时定义表中的字段信息： CREATE TABLE tb_cab_bak ( – 对copy的表中的ID进行主键约束 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY ) AS ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );]]></content>
       <categories>
-          
-          <category> mysql </category>
-          
+        <category>mysql</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> SQL的各种基本操作 </tag>
-            
-            <tag> MySQL的高级运算符 </tag>
-            
-            <tag> 多表查询之左连接，右连接 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>MySQL建库建表建索引建视图建主键</title>
-      <link href="/2016/05/20/MySQL%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BB%BA%E8%A7%86%E5%9B%BE%E5%BB%BA%E4%B8%BB%E9%94%AE/"/>
-      <url>/2016/05/20/MySQL%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BB%BA%E8%A7%86%E5%9B%BE%E5%BB%BA%E4%B8%BB%E9%94%AE/</url>
-      
-        <content type="html"><![CDATA[<p>1、说明：创建数据库<br>CREATE DATABASE db1(db1代表数据库表，可自命名)<br>2、说明：删除数据库<br>drop database db1(db1代表数据库表，可自命名)<br>3、说明：备份sql server<br>— 创建 备份数据的 device<br>USE master<br>EXEC sp_addumpdevice ‘disk’, ‘testBack’, ‘c:\mssql7backup\MyNwind_1.dat’<br>— 开始 备份<br>BACKUP DATABASE pubs TO testBack<br>4、说明：创建新表<br>create table tb1(Id int not null primary key,name varchar,..)(tb1为数据表名，ID为字段，int为数据类型整型，not null为数据是否可为空，Primary Key为主键设置，其中not null,primary key为可选项，字段，数据类型自定义。）<br>根据已有的表创建新表：<br>A：create table tab_new like tab_old (使用旧表创建新表)<br>B：create table tab_new as select col1,col2… from tab_old definition only<br>5、说明：<br>删除新表：drop table tb1<br>6、说明：<br>添加主键：Alter table tabname add primary key(ID)(设置某字段为主键，ID可自由设置，主键数据不可重复）<br>说明：<br>删除主键：Alter table tabname drop primary key(ID)（删除某字段主键）<br>7、说明：<br>创建索引：create [unique] index idxname on tabname(col….)<br>删除索引：drop index idxname<br>注：索引是不可更改的，想更改必须删除重新建。<br>8、说明：<br>创建视图：create view viewname as select statement<br>删除视图：drop view viewname</p>]]></content>
-      
-      
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据备份</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[自学编程成功概率有多少可能]]></title>
+    <url>%2F2017%2F05%2F26%2F%E5%85%B3%E4%BA%8E%2F</url>
+    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
       <categories>
-          
-          <category> mysql </category>
-          
+        <category>档案</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 建库建表建索引建视图 </tag>
-            
-            <tag> 备份数据库 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>Mysql进行大数据量查询的性能优化</title>
-      <link href="/2016/03/26/Mysql%E8%BF%9B%E8%A1%8C%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
-      <url>/2016/03/26/Mysql%E8%BF%9B%E8%A1%8C%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</url>
-      
-        <content type="html"><![CDATA[<p>数据库设计方面：</p><p>1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。</p><p>2、应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描。<br>             如： select id from t where num is null<br>             可以在num上设置默认值0，确保表中num列没有null值，然后这样查询： select id from t where num=0</p><p>3、并不是所有索引对查询都有效，SQL是根据表中数据来进行查询优化的，当索引列有大量数据重复时,查询可能不会去利用索引，如一表中有字段sex，male、female几乎各一半，</p><pre><code>那么即使在sex上建了索引也对查询效率起不了作用。</code></pre><p>4、索引并不是越多越好，索引固然可以提高相应的 select 的效率，但同时也降低了 insert 及 update 的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重</p><pre><code>考虑，视具体情况而定。一个表的索引数最好不要超过6个，若太多则应考虑一些不常使用到的列上建的索引是否有必要。</code></pre><p>5、应尽可能的避免更新索引数据列，因为索引数据列的顺序就是表记录的物理存储顺序，一旦该列值改变将导致整个表记录的顺序的调整，会耗费相当大的资源。若应用系统需要频<br>  繁更新索引数据列，那么需要考虑是否应将该索引建为索引。</p><p>6、尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连接时会逐个比较字符串中每</p><pre><code>一个字符，而对于数字型而言只需要比较一次就够了。</code></pre><p>7、尽可能的使用 varchar/nvarchar 代替 char/nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。</p><p>8、避免频繁创建和删除临时表，以减少系统表资源的消耗。</p><p>9、临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。</p><p>10、在新建临时表时，如果一次性插入数据量很大，那么可以使用 select into 代替 create table，避免造成大量 log ，以提高速度；如果数据量不大，为了缓和系统表的资源，应先                    create table，然后insert。</p><p>11、如果使用到了临时表，在存储过程的最后务必将所有的临时表显式删除，先 truncate table ，然后 drop table ，这样可以避免系统表的较长时间锁定。</p><p>SQL语句方面：</p><p>1、应尽量避免在 where 子句中使用!=或&lt;&gt;操作符，否则将引擎放弃使用索引而进行全表扫描。</p><p>2、应尽量避免在 where 子句中使用 or 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描<br>             如： select id from t where num=10 or num=20<br>             可以这样查询： select id from t where num=10 union all select id from t where num=20</p><p>3、in 和 not in 也要慎用，否则会导致全表扫描。<br>             如： select id from t where num in(1,2,3)<br>             对于连续的数值，能用 between 就不要用 in 了： select id from t where num between 1 and 3</p><p>4、下面的查询也将导致全表扫描： select id from t where name like ‘%abc%’</p><p>5、如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。</p><pre><code>然而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。        如下面语句将进行全表扫描： select id from t where num=@num         可以改为强制查询使用索引： select id from t with(index(索引名)) where num=@num</code></pre><p>6、应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。<br>             如： select id from t where num/2=100<br>             应改为: select id from t where num=100*2 </p><p>7、应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。<br>             如： select id from t where substring(name,1,3)=’abc’   ——name以abc开头的id<br>                     select id from t where datediff(day,createdate,’2005-11-30′)=0  ——‘2005-11-30’生成的id<br>             应改为：<br>                     select id from t where name like ‘abc%’<br>                     select id from t where createdate&gt;=’2005-11-30′ and createdate&lt;’2005-12-1′ </p><p>8、不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。</p><p>9、不要写一些没有意义的查询，如需要生成一个空表结构： select col1,col2 into #t from t where 1=0 这类代码不会返回任何结果集，但是会消耗系统资源的，</p><pre><code>应改成这样： create table #t(„)</code></pre><p>10、很多时候用 exists 代替 in 是一个好的选择： select num from a where num in(select num from b) </p><pre><code>用下面的语句替换： select num from a where exists(select 1 from b where num=a.num) </code></pre><p>11、任何地方都不要使用 select <em> from t ，用具体的字段列表代替“</em>”，不要返回用不到的任何字段。</p><p>12、尽量避免使用游标，因为游标的效率较差，如果游标操作的数据超过1万行，那么就应该考虑改写。</p><p>13、尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。</p><p>14、尽量避免大事务操作，提高系统并发能力。</p><p>java方面：</p><p>1、尽可能的少造对象。</p><p>2、合理摆正系统设计的位置。大量数据操作，和少量数据操作一定是分开的。大量的数据操作，肯定不是ORM框架搞定的。</p><p>3、使用jDBC链接数据库操作数据。</p><p>4、控制好内存，让数据流起来，而不是全部读到内存再处理，而是边读取边处理。</p><p>5、合理利用内存，有的数据要缓存</p>]]></content>
-      
-      
+      <tags>
+        <tag>编程</tag>
+        <tag>感悟</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[接口传输时对乱码的处理和post与个体的区别]]></title>
+    <url>%2F2017%2F05%2F26%2F%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86%E5%92%8Cpost%E4%B8%8E%E4%B8%AA%E4%BD%93%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;; 表删除字段： ALTER TABLE 表名 DROP COLUMN 表字段 ; 字段建唯一索引：create index idx_province_id on 表名 (表字段 ); 上为索引 create index 字段的索引 on 表名 (表字段 ); 删除字段的索引：alter table 表名 drop index idx_province_id ; 上为索引 alter table 表名 drop 字段的索引 ;]]></content>
       <categories>
-          
-          <category> mysql </category>
-          
+        <category>接口传输</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 大数据量查询 </tag>
-            
-            <tag> 查询优化 </tag>
-            
-            <tag> sql语句优化 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>javascript实现锁定网页、密码解锁效果（屏幕保护效果）</title>
-      <link href="/2015/12/10/javascript%E5%AE%9E%E7%8E%B0%E9%94%81%E5%AE%9A%E7%BD%91%E9%A1%B5%E3%80%81%E5%AF%86%E7%A0%81%E8%A7%A3%E9%94%81%E6%95%88%E6%9E%9C%EF%BC%88%E5%B1%8F%E5%B9%95%E4%BF%9D%E6%8A%A4%E6%95%88%E6%9E%9C/"/>
-      <url>/2015/12/10/javascript%E5%AE%9E%E7%8E%B0%E9%94%81%E5%AE%9A%E7%BD%91%E9%A1%B5%E3%80%81%E5%AF%86%E7%A0%81%E8%A7%A3%E9%94%81%E6%95%88%E6%9E%9C%EF%BC%88%E5%B1%8F%E5%B9%95%E4%BF%9D%E6%8A%A4%E6%95%88%E6%9E%9C/</url>
-      
-        <content type="html"><![CDATA[<p> 功能描述：打开一个网站的网页，过指定时间不动作，就会锁定页面，隐藏内容容器，显示一个容器用于输入密码，输入正确的密码来解锁。锁定后即使用户刷新页面，还是保留原来的状态。如已经锁定的，需要继续锁定，否则显示内容。<br> 示例代码如下，通过document.onmouseover来实现多少分钟没有动作，使用计时器来实现。<br>（此处建议，将下列方法单独提取到一个公共的js中，然后再引用到页面上）</p><p>&lt;!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN” “<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;" target="_blank" rel="noopener">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;</a></p><html xmlns="http://www.w3.org/1999/xhtml"><br><head><meta name="generator" content="Hexo 3.8.0"><br>    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><br>    <title>javascript实现系统屏幕保护效果(锁定网页)</title><br></head><br><br><body><br>    <div id="dvContent">内容<br>内容<br>内容<br>内容<br>内容<br>内容</div><br>    <div id="dvPassword" style="display:none">请输入解锁密码：<input type="password" id="txtPwd"><input type="button" value="确定" onclick="check()"></div><br>    <script><br>      if (document.cookie.indexOf(‘lock=1’) != -1) ShowContent(false);<br>      var delay = 10 * 1000,timer;//10s后锁定，修改delay为你需要的时间，单位毫秒<br>      function startTimer() {<br>        clearTimeout(timer);<br>        timer = setTimeout(TimerHandler, delay);<br>      }<br>      function TimerHandler() {<br>        document.cookie = ‘lock=1’;<br>        document.onmousemove = null;//锁定后移除鼠标移动事件<br>        ShowContent(false);<br>      }<br>      function ShowContent(show) {<br>        document.getElementById(‘dvContent’).style.display = show ? ‘block’ : ‘none’;<br>        document.getElementById(‘dvPassword’).style.display = show ? ‘none’ : ‘block’;<br>      }<br>      function check() {<br>        if (document.getElementById(‘txtPwd’).value == ‘123’) {<br>          document.cookie = ‘lock=0’;<br>          ShowContent(true);<br>          startTimer()//重新计时<br>          document.onmousemove = startTimer; //重新绑定鼠标移动事件<br>        }<br>        else alert(‘密码输入错误！！’);<br>      }<br>      window.onload = function () {<br>        document.onmousemove = startTimer;<br>        startTimer();<br>      }<br>    </script><br></body><br></html>]]></content>
-      
-      
+      <tags>
+        <tag>接口传输</tag>
+        <tag>post请求传输</tag>
+        <tag>get请求传输</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[页面常用的设置：显示，隐藏，只读，不可编辑，取值，置空]]></title>
+    <url>%2F2016%2F11%2F06%2F%E9%A1%B5%E9%9D%A2%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E7%BD%AE%EF%BC%9A%E6%98%BE%E7%A4%BA%EF%BC%8C%E9%9A%90%E8%97%8F%EF%BC%8C%E5%8F%AA%E8%AF%BB%EF%BC%8C%E4%B8%8D%E5%8F%AF%E7%BC%96%E8%BE%91%EF%BC%8C%E5%8F%96%E5%80%BC%EF%BC%8C%E7%BD%AE%E7%A9%BA%2F</url>
+    <content type="text"><![CDATA[$(&quot;#id&quot;).val() // 获取值 $(&quot;#id&quot;).val(&apos;&apos;) // 清空值 $(&quot;#id&quot;).val(&apos;变量名&apos;) // 赋值 $(&quot;#id&quot;).css(&apos;display&apos;,&apos;block&apos;) // 显示选择的对象 $(&quot;#id&quot;).css(&apos;display&apos;,&apos;none&apos;) // 隐藏选择的对象 $(&quot;#msgIdTpl option[value=&apos;&quot;+msgIdTpl+&quot;&apos;]&quot;).attr(&quot;selected&quot;,true); // 锁定下拉结果并是=使下拉不可编辑 $(&quot;#id,#id2,#id3&quot;).attr(&quot;readonly&quot;,&quot;readonly&quot;); //多个选择设置只读属性 $(&quot;#id,#id2).attr(&quot;disabled&quot;, true); // 设置为不可用]]></content>
       <categories>
-          
-          <category> javascript </category>
-          
+        <category>javascript</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> javascript页面效果 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>JS中常用的各类正则表达式以及使用方式收录</title>
-      <link href="/2015/11/18/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%90%84%E7%B1%BB%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E6%94%B6%E5%BD%95/"/>
-      <url>/2015/11/18/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%90%84%E7%B1%BB%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E6%94%B6%E5%BD%95/</url>
-      
-        <content type="html"><![CDATA[<pre><code>效果上建议查看下面第二部分，如果自定义多变情况，建议使用第一部分；选择合适自己的加入自己的js中</code></pre><p>第一部分： 适用于更适合自己需求的自定义校验方式<br> 特殊字符判断正则表达式<br>        var regEn = /[`~!@#$%^&amp;*()_+&lt;&gt;?:”{},.\/;’[]]/im;<br>        var regCn = /[·！#￥（）：；“”‘、，|《。》？、【】[]]/im;<br>        var re = /([-])\1{1}/;<br> //判断是否包含符合上述的正则表达式（定义一个js内方法校验特殊字符，使用该方法时调用即可）<br>        var isSpecialCharacter = function (characterStr,itemName) {<br>            if(regEn.test(characterStr) || regCn.test(characterStr)) {<br>                crossAPI.tips(itemName+”此处为描述信息，自己随便写！”, 3000);<br>                return true;<br>            }<br>            if(re.test(characterStr))<br>            {<br>                crossAPI.tips(itemName+”此处为描述信息，自己随便写！”, 3000);<br>                return true;<br>            }<br>            return false;<br>        }<br>第二部分： 文本框输入内容控制 更好的效果是input加上onkeyup，onbeforepaste，onblur，onkeydown等事件<br>           使用：建议先定义好需要的正则表达式，再在事件中使用 如：自定义正则表达式.test(“要校验的变量名”)</p><pre><code>整数或者小数：^[0-9]+\.{0,1}[0-9]{0,2}$只能输入数字：&quot;^[0-9]*$&quot;。只能输入n位的数字：&quot;^\d{n}$&quot;。只能输入至少n位的数字：&quot;^\d{n,}$&quot;。只能输入m~n位的数字：。&quot;^\d{m,n}$&quot;只能输入零和非零开头的数字：&quot;^(0|[1-9][0-9]*)$&quot;。只能输入有两位小数的正实数：&quot;^[0-9]+(.[0-9]{2})?$&quot;。只能输入有1~3位小数的正实数：&quot;^[0-9]+(.[0-9]{1,3})?$&quot;。只能输入非零的正整数：&quot;^\+?[1-9][0-9]*$&quot;。只能输入非零的负整数：&quot;^\-[1-9][]0-9&quot;*$。只能输入长度为3的字符：&quot;^.{3}$&quot;。只能输入由26个英文字母组成的字符串：&quot;^[A-Za-z]+$&quot;。只能输入由26个大写英文字母组成的字符串：&quot;^[A-Z]+$&quot;。只能输入由26个小写英文字母组成的字符串：&quot;^[a-z]+$&quot;。只能输入由数字和26个英文字母组成的字符串：&quot;^[A-Za-z0-9]+$&quot;。只能输入由数字、26个英文字母或者下划线组成的字符串：&quot;^\w+$&quot;。验证用户密码：&quot;^[a-zA-Z]\w{5,17}$&quot;正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。验证是否含有^%&amp;&apos;,;=?$\&quot;等字符：&quot;[^%&amp;&apos;,;=?$\x22]+&quot;。只能输入汉字：&quot;^[\u4e00-\u9fa5]{0,}$&quot;验证Email地址：&quot;^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$&quot;。验证InternetURL：&quot;^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$&quot;。验证电话号码：&quot;^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$&quot;正确格式为：&quot;XXX-XXXXXXX&quot;、&quot;XXXX-XXXXXXXX&quot;、&quot;XXX-XXXXXXX&quot;、&quot;XXX-XXXXXXXX&quot;、&quot;XXXXXXX&quot;和&quot;XXXXXXXX&quot;。验证身份证号（15位或18位数字）：&quot;^\d{15}|\d{18}$&quot;。验证一年的12个月：&quot;^(0?[1-9]|1[0-2])$&quot;正确格式为：&quot;01&quot;～&quot;09&quot;和&quot;1&quot;～&quot;12&quot;。验证一个月的31天：&quot;^((0?[1-9])|((1|2)[0-9])|30|31)$&quot;正确格式为；&quot;01&quot;～&quot;09&quot;和&quot;1&quot;～&quot;31&quot;。匹配中文字符的正则表达式： [\u4e00-\u9fa5]匹配双字节字符(包括汉字在内)：[^\x00-\xff]应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1）String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,&quot;aa&quot;).length;}匹配空行的正则表达式：\n[\s| ]*\r匹配html标签的正则表达式：&lt;(.*)&gt;(.*)&lt;\/(.*)&gt;|&lt;(.*)\/&gt;匹配首尾空格的正则表达式：(^\s*)|(\s*$)匹配Email地址的正则表达式：\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*匹配网址URL的正则表达式：http://([\w-]+\.)+[\w-]+(/[\w- ./?%&amp;=]*)?</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>javascript页面效果</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[工作中重名判断的注意事项]]></title>
+    <url>%2F2016%2F10%2F08%2F%E9%87%8D%E5%90%8D%E5%88%A4%E6%96%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%2F</url>
+    <content type="text"><![CDATA[工作中重名判断的注意事项： 信息记录修改页面中重名判断如下： 首先定义一个js中的全局变量stillName，用于存储要修改的信息原名； 修改时判断 修改后名称是否 == 修改的信息原名，若等于则不进行重名判断，不然则反之； 但是这里所有的 == 判断 以及 数据的保存，都应该是“去除数据两边空格后”的结果， 否则，增减一个空格，判断结果也是不重名，而页面效果可看不到空格，给客户的视觉感受就是重名 代码如下： var stillName = “需要更改的信息原名” if(stillName != $.trim(newName) ) { // 此处是去数据库查找是否有信息含有 修改后名称 } 然后，在执行修改后数据保存的方法时传值注意：一定要也去掉空格 newName = $.trim(newName);]]></content>
       <categories>
-          
-          <category> javascript </category>
-          
+        <category>javascript</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> 正则表达式 </tag>
-            
-            <tag> 输入框的输入限制效果 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>this 和super 关键字的区别</title>
-      <link href="/2015/11/12/JAVA%E5%9F%BA%E7%A1%80%EF%BC%9Athis%20%E5%92%8Csuper%20%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-      <url>/2015/11/12/JAVA%E5%9F%BA%E7%A1%80%EF%BC%9Athis%20%E5%92%8Csuper%20%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-      
-        <content type="html"><![CDATA[<pre><code>属性的区别：this访问本类中的属性，如果本类没有此属性则从父类中继续查找。super访问父类中的属性。 方法的区别：this访问本类中的方法，如果本类没有此方法则从父类中继续查找。super访问父类中的方法。 构造的区别：this调用本类构造，必须放在构造方法的首行。super调用父类构造，必须放在子类构造方法首行。 其他区别：this表示当前对象。super不能表示当前对象 1、this. 变量和super.变量     this.变量 调用的当前对象的变量；     super.变量 直接调用的是父类中的变量。     2、this(参数)和super(参数)方法     this(参数) 调用（转发）的是当前类中的构造器；     super(参数) 用于确认要使用父类中的哪一个构造器。 注意点：     1）在对拥有父类的子类进行初始化时，父类的构造方法也会执行，且优先于子类的构造函数执行；因为每一个子类的构造函数中的第一行都有一条默认的隐式语句super();     2）this() 和super()都只能写在构造函数的第一行；     3）this() 和super() 不能存在于同一个构造函数中。第一，this()和super()都必须写在构造函数的第一行；第二，this()语句调用的是当前类的另一个构造函数而这个另一个构造函数中必然有一个父类的构造器，再使用super()又调用一次父类的构造器， 就相当于调用了两次父类的构造器，编译器不会通过；     4）this和super不能用于static修饰的变量，方法，代码块；因为this和super都是指的是对象（实例）。</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>javascript页面效果</tag>
+        <tag>重名判断</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[关于FastDFS图片服务器详解]]></title>
+    <url>%2F2016%2F08%2F16%2F%E5%85%B3%E4%BA%8EFastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%A6%E8%A7%A3%2F</url>
+    <content type="text"><![CDATA[首先，什么是FastDFS ? fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的， 因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、 高性能等指标。使用fastDFS很容易搭建一套高性能的文件服务器集群提供文件上传 和下载功能。 fastDFS的架构： fastDFS的架构包括tracker server 和 stroage server 。客户端请求 tracker server 进 行文件上传/下载，通过tracker server 调度最终由 stroage server 完成文件上传和下载 tracker server ：作用是负载均衡和调度，通过tracker server 在文件上传时通过一些策略 找到stroage server提供文件上传下载服务，可以称tracker server 为追踪服务器或调度服务器。 stroage server : 作用是文件存储，客户端上传的文件最终存储在 stroage 服务器上，stroage server没有 实现自己的文件系统而是利用操作系统的文件系统来管理文件，可称stroage server为存储服务器。 ![你想输入的替代文字](关于FastDFS图片服务器详解/01.png) 服务端两个角色： Tracker：管理集群，tracker也可以实现集群。每个tracker节点地位平等。 收集Storage集群的状态。 Storage：实际保存文件，Storage分为多个组，每个组之间保存的文件是不同的。 每个组内部可以有多个成员，组成员内部保存的内容是一样的，组成员的地位是一致的，没有主从的概念。 文件上传的流程： ![你想输入的替代文字](关于FastDFS图片服务器详解/02.png) 客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。 文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。 ![你想输入的替代文字](关于FastDFS图片服务器详解/03.png)  组名：文件上传后所在的storage组名称，在文件上传成功后由storage服务器返回， 需要客户端自行保存。  虚拟磁盘路径：storage配置的虚拟路径，与磁盘选项store_path*对应。如果配置 了store_path0则是M00，如果配置了store_path1则是M01，以此类推。 数据两级目录：storage服务器在每个虚拟磁盘路径下创建的两级目录，用于存储数据文件。 文件名：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器 IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。 文件下载： ![你想输入的替代文字](关于FastDFS图片服务器详解/04.png) 最简单的FastDFS架构： ![你想输入的替代文字](关于FastDFS图片服务器详解/05.png) 图片服务器安装方法： 1.安装步骤 第一步：把图片服务器解压缩。 第二步：把图片服务器添加到Vmware中。 第三步：Vmware的网络配置。 ![你想输入的替代文字](关于FastDFS图片服务器详解/06.png) 第四步：开机 ![你想输入的替代文字](关于FastDFS图片服务器详解/07.png) 移动：网络配置不发生变化。要使用图片服务器，需要保证网络配置不变。 复制：重新生成一块网卡mac地址是新地址。 Ip地址：192.168.25.133 用户名root、itcast 密码：itcast 图片服务器使用： ![你想输入的替代文字](关于FastDFS图片服务器详解/08.png) ![你想输入的替代文字](关于FastDFS图片服务器详解/09.png) 上传图片： 1.上传步骤： 1、加载配置文件，配置文件中的内容就是tracker服务的地址。 配置文件内容：tracker_server=192.168.25.133:22122 2、创建一个TrackerClient对象。直接new一个。 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。 4、创建一个StorageServer的引用，值为null 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用 6、使用StorageClient对象上传图片。 7、返回数组。包含组名和图片的路径。 代码如下： public class FastDFSTest { @Test public void testFileUpload() throws Exception { // 1、加载配置文件，配置文件中的内容就是tracker服务的地址。 ClientGlobal.init(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;); // 2、创建一个TrackerClient对象。直接new一个。 TrackerClient trackerClient = new TrackerClient(); // 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。 TrackerServer trackerServer = trackerClient.getConnection(); // 4、创建一个StorageServer的引用，值为null StorageServer storageServer = null; // 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用 StorageClient storageClient = new StorageClient(trackerServer, storageServer); // 6、使用StorageClient对象上传图片。 //扩展名不带“.” String[] strings = storageClient.upload_file(&quot;D:/Documents/Pictures/images/200811281555127886.jpg&quot;, &quot;jpg&quot;, null); // 7、返回数组。包含组名和图片的路径。 for (String string : strings) { System.out.println(string); } } } 使用工具类上传： ![你想输入的替代文字](关于FastDFS图片服务器详解/10.png) @Test public void testFastDfsClient() throws Exception { FastDFSClient fastDFSClient = new FastDFSClient(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;); String file = fastDFSClient.uploadFile(&quot;D:/Documents/Pictures/images/2f2eb938943d.jpg&quot;); System.out.println(file); }]]></content>
       <categories>
-          
-          <category> JAVA基础 </category>
-          
+        <category>服务器</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> JAVA基础 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>构造器Constructor是否可被override</title>
-      <link href="/2015/10/08/%E6%9E%84%E9%80%A0%E5%99%A8Constructor%E6%98%AF%E5%90%A6%E5%8F%AF%E8%A2%ABoverride/"/>
-      <url>/2015/10/08/%E6%9E%84%E9%80%A0%E5%99%A8Constructor%E6%98%AF%E5%90%A6%E5%8F%AF%E8%A2%ABoverride/</url>
-      
-        <content type="html"><![CDATA[<p>   构造器Constructor是否可被override：</p><p>   构造器不能被重写，不能用static修饰构造器，只能用public<br>   private protected这三个权限修饰符，且不能有返回语句。</p>]]></content>
-      
-      
+      <tags>
+        <tag>FastDFS图片服务器</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用VMware安装CentOS 6.4]]></title>
+    <url>%2F2016%2F08%2F16%2F%E4%BD%BF%E7%94%A8VMware%E5%AE%89%E8%A3%85CentOS-6-4%2F</url>
+    <content type="text"><![CDATA[环境：Windows7 , VMware Workstation10, CentOS6.4 为什么选择CentOS ? 1.主流： 目前的Linux操作系统主要应用于生产环境，主流企业级Linux系统仍旧是RedHat或者CentOS 2.免费： RedHat 和CentOS差别不大，CentOS是一个基于Red Hat Linux 提供的可自由使用源代码的企业级Linux发行版本 3.更新方便：CentOS独有的yum命令支持在线升级，可以即时更新系统，不像RED HAT那样需要花钱购买支持服务！ 安装步骤 第1步：首先安装VMware Workstation，只需点下一步即可，安装过程略 第2步：文件 → 新建虚拟机 或 直接点击 创建新的虚拟机 图标 第3步：选择 典型（推荐）→ 下一步 第4步：稍后安装操作系统 第5步：选择操作系统和版本 第6步：输入虚拟机名称和安装路径 第7步：设置磁盘大小 第8步：自定义硬件 第9步：选择CentOS安装镜像文件 第10步：点击完成 第11步：启动虚拟机 第12步：选择第一项，安装全新操作系统或升级现有操作系统 第13步：Tab键进行选择，选择Skip，退出检测 第14步：点击Next 第15步：选择语言，这里选择的是中文简体 第16步：选择键盘样式 第17步：选择存储设备 如果以前安装过虚拟机，会出现这个警告，选择是，忽略所有数据 第18步：输入主机名 第19步：配置网络 第20步：设置时区，勾选使用UTC时间 第21步：输入根用户（root）的密码 如果密码过于简单会出现提示，点击无论如何都使用 第22步：根据此Linux具体功能，选择不同的方式 第23步：选择现在自定义，自定义安装需要的软件，如桌面配置 可以根据具体的情况来配置，如可安Eclipse 还可以安装Java平台、Perl支持等 选择语言支持 第24步：点击下一步，开始安装 第25步：安装完成后，点击重新导引 第26步：点击前进按钮 第27步：点击是，同意许可，再点击前进按钮 第28步：创建用户 第29步：设置日期和时间，如果可以上网，勾选在网上同步日期和时间 最后点击前进，完成安装！]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>虚拟机VMware</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>抽象类和接口的区别</title>
-      <link href="/2015/10/08/%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-      <url>/2015/10/08/%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-      
-        <content type="html"><![CDATA[<p>   抽象类和接口的区别：</p><p>   –语法层次<br>    抽象类和接口分别给出了不同的语法定义。<br>   –设计层次<br>    抽象层次不同，抽象类是对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、<br>    行为，但是接口却是对类局部（行为）进行抽象。抽象类是自底向上抽象而来的，接口是自顶向下设计出来<br>    的。<br>   –跨域不同<br>    抽象类所体现的是一种继承关系，要想使得继承关系合理，父类和派生类之间必须存在”is-a” 关系，即父类和派生类在概念本质上应该是相同的。对于接口则不然，并不要求接口的实现者和接口定义在<br>    概念本质上是一致的，仅仅是实现了接口定义的契约而已，”like-a”的关系。</p>]]></content>
-      
-      
+      <tags>
+        <tag>虚拟机VMware安装教程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[基本的sql语句以及高级运算符和 多表查询]]></title>
+    <url>%2F2016%2F07%2F20%2F%E5%9F%BA%E6%9C%AC%E7%9A%84sql%E8%AF%AD%E5%8F%A5%E4%BB%A5%E5%8F%8A%E9%AB%98%E7%BA%A7%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%20%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2%2F</url>
+    <content type="text"><![CDATA[选择：select * from table1 where Id=1(Id=1为条件语句，根据自己情况自定义） 插入：insert into table1(field1,field2) values(value1,value2) 删除：delete from table1 where 范围 更新：update table1 set field1=value1 where 范围 查找：select * from table1 where field1 like ’%value1%’ —like的语法很精妙，查资料! 排序：select * from table1 order by field1,field2 [desc] 总数：select count * as totalcount from table1 求和：select sum(field1) as sumvalue from table1 平均：select avg(field1) as avgvalue from table1 最大：select max(field1) as maxvalue from table1 最小：select min(field1) as minvalue from table1 11、说明：几个高级查询运算词 A： UNION 运算符 UNION 运算符通过组合其他两个结果表(例如 TABLE1 和 TABLE2)并消去表中任何重复行而派生出一个结果表。当 ALL 随 UNION 一起使用时(即 UNION ALL)，不消除重复行。两种情况下，派生表的每一行不是来自 TABLE1 就是来自 TABLE2。 B： EXCEPT 运算符 EXCEPT 运算符通过包括所有在 TABLE1 中但不在 TABLE2 中的行并消除所有重复行而派生出一个结果表。当 ALL 随 EXCEPT 一起使用时 (EXCEPT ALL)，不消除重复行。 C： INTERSECT 运算符 INTERSECT 运算符通过只包括 TABLE1 和 TABLE2 中都有的行并消除所有重复行而派生出一个结果表。当 ALL 随 INTERSECT 一起使用时 (INTERSECT ALL)，不消除重复行。 注：使用运算词的几个查询结果行必须是一致的。 12、说明：使用外连接 A、left outer join： 左外连接(左连接)：结果集几包括连接表的匹配行，也包括左连接表的所有行。 SQL: select a.a, a.b, a.c, b.c, b.d, b.f from a LEFT OUT JOIN b ON a.a = b.c B：right outer join: 右外连接(右连接)：结果集既包括连接表的匹配连接行，也包括右连接表的所有行。 C：full outer join： 全外连接：不仅包括符号连接表的匹配行，还包括两个连接表中的所有记录。]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>mysql</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>hashCode和equals方法的关系</title>
-      <link href="/2015/10/08/hashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB/"/>
-      <url>/2015/10/08/hashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB/</url>
-      
-        <content type="html"><![CDATA[<p>   hashCode和equals方法的关系：</p><p>   –equals相等，hashcode必相等；hashcode相等，equals可能不相等</p>]]></content>
-      
-      
+      <tags>
+        <tag>SQL的各种基本操作</tag>
+        <tag>MySQL的高级运算符</tag>
+        <tag>多表查询之左连接，右连接</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[MySQL建库建表建索引建视图建主键]]></title>
+    <url>%2F2016%2F05%2F20%2FMySQL%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BB%BA%E8%A7%86%E5%9B%BE%E5%BB%BA%E4%B8%BB%E9%94%AE%2F</url>
+    <content type="text"><![CDATA[1、说明：创建数据库CREATE DATABASE db1(db1代表数据库表，可自命名)2、说明：删除数据库drop database db1(db1代表数据库表，可自命名)3、说明：备份sql server— 创建 备份数据的 deviceUSE masterEXEC sp_addumpdevice ‘disk’, ‘testBack’, ‘c:\mssql7backup\MyNwind_1.dat’— 开始 备份BACKUP DATABASE pubs TO testBack4、说明：创建新表create table tb1(Id int not null primary key,name varchar,..)(tb1为数据表名，ID为字段，int为数据类型整型，not null为数据是否可为空，Primary Key为主键设置，其中not null,primary key为可选项，字段，数据类型自定义。）根据已有的表创建新表：A：create table tab_new like tab_old (使用旧表创建新表)B：create table tab_new as select col1,col2… from tab_old definition only5、说明：删除新表：drop table tb16、说明：添加主键：Alter table tabname add primary key(ID)(设置某字段为主键，ID可自由设置，主键数据不可重复）说明：删除主键：Alter table tabname drop primary key(ID)（删除某字段主键）7、说明：创建索引：create [unique] index idxname on tabname(col….)删除索引：drop index idxname注：索引是不可更改的，想更改必须删除重新建。8、说明：创建视图：create view viewname as select statement删除视图：drop view viewname]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>mysql</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>String和StringBuffer、StringBuilder的区别</title>
-      <link href="/2015/10/08/String%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-      <url>/2015/10/08/String%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-      
-        <content type="html"><![CDATA[<p>   String和StringBuffer、StringBuilder的区别：</p><p>   –可变性<br>    String类中使用字符数组保存字符串，private<br>    final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自<br>    AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[]<br>    value，这两种对象都是可变的。</p><p>  –线程安全性<br>    String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与<br>    StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf<br>    等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。<br>    StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。</p><p>  –性能<br>    每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。<br>    StringBuffer每次都会对<br>    StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用<br>    StirngBuilder 相比使用<br>    StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。</p>]]></content>
-      
-      
+      <tags>
+        <tag>建库建表建索引建视图</tag>
+        <tag>备份数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Mysql进行大数据量查询的性能优化]]></title>
+    <url>%2F2016%2F03%2F26%2FMysql%E8%BF%9B%E8%A1%8C%E5%A4%A7%E6%95%B0%E6%8D%AE%E9%87%8F%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%2F</url>
+    <content type="text"><![CDATA[数据库设计方面： 1、对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。 2、应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描。 如： select id from t where num is null 可以在num上设置默认值0，确保表中num列没有null值，然后这样查询： select id from t where num=0 3、并不是所有索引对查询都有效，SQL是根据表中数据来进行查询优化的，当索引列有大量数据重复时,查询可能不会去利用索引，如一表中有字段sex，male、female几乎各一半， 那么即使在sex上建了索引也对查询效率起不了作用。 4、索引并不是越多越好，索引固然可以提高相应的 select 的效率，但同时也降低了 insert 及 update 的效率，因为 insert 或 update 时有可能会重建索引，所以怎样建索引需要慎重 考虑，视具体情况而定。一个表的索引数最好不要超过6个，若太多则应考虑一些不常使用到的列上建的索引是否有必要。 5、应尽可能的避免更新索引数据列，因为索引数据列的顺序就是表记录的物理存储顺序，一旦该列值改变将导致整个表记录的顺序的调整，会耗费相当大的资源。若应用系统需要频 繁更新索引数据列，那么需要考虑是否应将该索引建为索引。 6、尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连接时会逐个比较字符串中每 一个字符，而对于数字型而言只需要比较一次就够了。 7、尽可能的使用 varchar/nvarchar 代替 char/nchar ，因为首先变长字段存储空间小，可以节省存储空间，其次对于查询来说，在一个相对较小的字段内搜索效率显然要高些。 8、避免频繁创建和删除临时表，以减少系统表资源的消耗。 9、临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。 10、在新建临时表时，如果一次性插入数据量很大，那么可以使用 select into 代替 create table，避免造成大量 log ，以提高速度；如果数据量不大，为了缓和系统表的资源，应先 create table，然后insert。 11、如果使用到了临时表，在存储过程的最后务必将所有的临时表显式删除，先 truncate table ，然后 drop table ，这样可以避免系统表的较长时间锁定。 SQL语句方面： 1、应尽量避免在 where 子句中使用!=或&lt;&gt;操作符，否则将引擎放弃使用索引而进行全表扫描。 2、应尽量避免在 where 子句中使用 or 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描 如： select id from t where num=10 or num=20 可以这样查询： select id from t where num=10 union all select id from t where num=20 3、in 和 not in 也要慎用，否则会导致全表扫描。 如： select id from t where num in(1,2,3) 对于连续的数值，能用 between 就不要用 in 了： select id from t where num between 1 and 3 4、下面的查询也将导致全表扫描： select id from t where name like ‘%abc%’ 5、如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。 然而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。 如下面语句将进行全表扫描： select id from t where num=@num 可以改为强制查询使用索引： select id from t with(index(索引名)) where num=@num 6、应尽量避免在 where 子句中对字段进行表达式操作，这将导致引擎放弃使用索引而进行全表扫描。 如： select id from t where num/2=100 应改为: select id from t where num=100*2 7、应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。 如： select id from t where substring(name,1,3)=’abc’ ——name以abc开头的id select id from t where datediff(day,createdate,’2005-11-30′)=0 ——‘2005-11-30’生成的id 应改为： select id from t where name like ‘abc%’ select id from t where createdate&gt;=’2005-11-30′ and createdate&lt;’2005-12-1′ 8、不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。 9、不要写一些没有意义的查询，如需要生成一个空表结构： select col1,col2 into #t from t where 1=0 这类代码不会返回任何结果集，但是会消耗系统资源的， 应改成这样： create table #t(„) 10、很多时候用 exists 代替 in 是一个好的选择： select num from a where num in(select num from b) 用下面的语句替换： select num from a where exists(select 1 from b where num=a.num) 11、任何地方都不要使用 select from t ，用具体的字段列表代替“”，不要返回用不到的任何字段。 12、尽量避免使用游标，因为游标的效率较差，如果游标操作的数据超过1万行，那么就应该考虑改写。 13、尽量避免向客户端返回大数据量，若数据量过大，应该考虑相应需求是否合理。 14、尽量避免大事务操作，提高系统并发能力。 java方面： 1、尽可能的少造对象。 2、合理摆正系统设计的位置。大量数据操作，和少量数据操作一定是分开的。大量的数据操作，肯定不是ORM框架搞定的。 3、使用jDBC链接数据库操作数据。 4、控制好内存，让数据流起来，而不是全部读到内存再处理，而是边读取边处理。 5、合理利用内存，有的数据要缓存]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>mysql</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>重载和重写的区别</title>
-      <link href="/2015/10/08/%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-      <url>/2015/10/08/%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-      
-        <content type="html"><![CDATA[<p>   重载和重写的区别：</p><p>   –重载：发生在同一个类中，方法名必须相同，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰<br>           符可以不同，发生在编译时。</p><p>   –重写：发生在父子类中，方法名、参数列表必须相同，返回值小于等于父类，抛出的异常小于等于父类，访<br>           问修饰符大于等于父类；如果父类方法访问修饰符为private则子类中就不是重写。</p>]]></content>
-      
-      
+      <tags>
+        <tag>大数据量查询</tag>
+        <tag>查询优化</tag>
+        <tag>sql语句优化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[javascript实现锁定网页、密码解锁效果（屏幕保护效果）]]></title>
+    <url>%2F2015%2F12%2F10%2Fjavascript%E5%AE%9E%E7%8E%B0%E9%94%81%E5%AE%9A%E7%BD%91%E9%A1%B5%E3%80%81%E5%AF%86%E7%A0%81%E8%A7%A3%E9%94%81%E6%95%88%E6%9E%9C%EF%BC%88%E5%B1%8F%E5%B9%95%E4%BF%9D%E6%8A%A4%E6%95%88%E6%9E%9C%2F</url>
+    <content type="text"><![CDATA[功能描述：打开一个网站的网页，过指定时间不动作，就会锁定页面，隐藏内容容器，显示一个容器用于输入密码，输入正确的密码来解锁。锁定后即使用户刷新页面，还是保留原来的状态。如已经锁定的，需要继续锁定，否则显示内容。 示例代码如下，通过document.onmouseover来实现多少分钟没有动作，使用计时器来实现。（此处建议，将下列方法单独提取到一个公共的js中，然后再引用到页面上） &lt;!DOCTYPE html PUBLIC “-//W3C//DTD XHTML 1.0 Transitional//EN” “http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt; javascript实现系统屏幕保护效果(锁定网页) 内容内容内容内容内容内容 请输入解锁密码： if (document.cookie.indexOf(‘lock=1’) != -1) ShowContent(false); var delay = 10 * 1000,timer;//10s后锁定，修改delay为你需要的时间，单位毫秒 function startTimer() { clearTimeout(timer); timer = setTimeout(TimerHandler, delay); } function TimerHandler() { document.cookie = ‘lock=1’; document.onmousemove = null;//锁定后移除鼠标移动事件 ShowContent(false); } function ShowContent(show) { document.getElementById(‘dvContent’).style.display = show ? ‘block’ : ‘none’; document.getElementById(‘dvPassword’).style.display = show ? ‘none’ : ‘block’; } function check() { if (document.getElementById(‘txtPwd’).value == ‘123’) { document.cookie = ‘lock=0’; ShowContent(true); startTimer()//重新计时 document.onmousemove = startTimer; //重新绑定鼠标移动事件 } else alert(‘密码输入错误！！’); } window.onload = function () { document.onmousemove = startTimer; startTimer(); }]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>javascript</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>访问控制符public,protected,private,以及默认的区别</title>
-      <link href="/2015/10/08/%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public,protected,private,%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-      <url>/2015/10/08/%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public,protected,private,%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-      
-        <content type="html"><![CDATA[<p>   访问控制符public,protected,private,以及默认的区别：</p><pre><code>private只有在本类中才能访问；public在任何地方都能访问；protected在同包内的类及包外的子类能访问；默认不写在同包内能访问。是否可以继承String类？？？String类是final类故不可以继承，一切由final修饰过的都不能继承。</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>javascript页面效果</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JS中常用的各类正则表达式以及使用方式收录]]></title>
+    <url>%2F2015%2F11%2F18%2F%E5%B8%B8%E7%94%A8%E7%9A%84%E5%90%84%E7%B1%BB%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BB%A5%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E6%94%B6%E5%BD%95%2F</url>
+    <content type="text"><![CDATA[效果上建议查看下面第二部分，如果自定义多变情况，建议使用第一部分； 选择合适自己的加入自己的js中 第一部分： 适用于更适合自己需求的自定义校验方式 特殊字符判断正则表达式 var regEn = /[`~!@#$%^&amp;*()_+&lt;&gt;?:”{},.\/;’[]]/im; var regCn = /[·！#￥（）：；“”‘、，|《。》？、【】[]]/im; var re = /([-])\1{1}/; //判断是否包含符合上述的正则表达式（定义一个js内方法校验特殊字符，使用该方法时调用即可） var isSpecialCharacter = function (characterStr,itemName) { if(regEn.test(characterStr) || regCn.test(characterStr)) { crossAPI.tips(itemName+”此处为描述信息，自己随便写！”, 3000); return true; } if(re.test(characterStr)) { crossAPI.tips(itemName+”此处为描述信息，自己随便写！”, 3000); return true; } return false; }第二部分： 文本框输入内容控制 更好的效果是input加上onkeyup，onbeforepaste，onblur，onkeydown等事件 使用：建议先定义好需要的正则表达式，再在事件中使用 如：自定义正则表达式.test(“要校验的变量名”) 整数或者小数：^[0-9]+\.{0,1}[0-9]{0,2}$ 只能输入数字：&quot;^[0-9]*$&quot;。 只能输入n位的数字：&quot;^\d{n}$&quot;。 只能输入至少n位的数字：&quot;^\d{n,}$&quot;。 只能输入m~n位的数字：。&quot;^\d{m,n}$&quot; 只能输入零和非零开头的数字：&quot;^(0|[1-9][0-9]*)$&quot;。 只能输入有两位小数的正实数：&quot;^[0-9]+(.[0-9]{2})?$&quot;。 只能输入有1~3位小数的正实数：&quot;^[0-9]+(.[0-9]{1,3})?$&quot;。 只能输入非零的正整数：&quot;^\+?[1-9][0-9]*$&quot;。 只能输入非零的负整数：&quot;^\-[1-9][]0-9&quot;*$。 只能输入长度为3的字符：&quot;^.{3}$&quot;。 只能输入由26个英文字母组成的字符串：&quot;^[A-Za-z]+$&quot;。 只能输入由26个大写英文字母组成的字符串：&quot;^[A-Z]+$&quot;。 只能输入由26个小写英文字母组成的字符串：&quot;^[a-z]+$&quot;。 只能输入由数字和26个英文字母组成的字符串：&quot;^[A-Za-z0-9]+$&quot;。 只能输入由数字、26个英文字母或者下划线组成的字符串：&quot;^\w+$&quot;。 验证用户密码：&quot;^[a-zA-Z]\w{5,17}$&quot;正确格式为：以字母开头，长度在6~18之间，只能包含字符、数字和下划线。 验证是否含有^%&amp;&apos;,;=?$\&quot;等字符：&quot;[^%&amp;&apos;,;=?$\x22]+&quot;。 只能输入汉字：&quot;^[\u4e00-\u9fa5]{0,}$&quot; 验证Email地址：&quot;^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$&quot;。 验证InternetURL：&quot;^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$&quot;。 验证电话号码：&quot;^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$&quot;正确格式为：&quot;XXX-XXXXXXX&quot;、&quot;XXXX-XXXXXXXX&quot;、&quot;XXX-XXXXXXX&quot;、&quot;XXX-XXXXXXXX&quot;、&quot;XXXXXXX&quot;和&quot;XXXXXXXX&quot;。 验证身份证号（15位或18位数字）：&quot;^\d{15}|\d{18}$&quot;。 验证一年的12个月：&quot;^(0?[1-9]|1[0-2])$&quot;正确格式为：&quot;01&quot;～&quot;09&quot;和&quot;1&quot;～&quot;12&quot;。 验证一个月的31天：&quot;^((0?[1-9])|((1|2)[0-9])|30|31)$&quot;正确格式为；&quot;01&quot;～&quot;09&quot;和&quot;1&quot;～&quot;31&quot;。 匹配中文字符的正则表达式： [\u4e00-\u9fa5] 匹配双字节字符(包括汉字在内)：[^\x00-\xff] 应用：计算字符串的长度（一个双字节字符长度计2，ASCII字符计1） String.prototype.len=function(){return this.replace(/[^\x00-\xff]/g,&quot;aa&quot;).length;} 匹配空行的正则表达式：\n[\s| ]*\r 匹配html标签的正则表达式：&lt;(.*)&gt;(.*)&lt;\/(.*)&gt;|&lt;(.*)\/&gt; 匹配首尾空格的正则表达式：(^\s*)|(\s*$) 匹配Email地址的正则表达式：\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)* 匹配网址URL的正则表达式：http://([\w-]+\.)+[\w-]+(/[\w- ./?%&amp;=]*)?]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>javascript</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>自动装箱与拆箱</title>
-      <link href="/2015/10/08/%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1/"/>
-      <url>/2015/10/08/%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1/</url>
-      
-        <content type="html"><![CDATA[<p>   自动装箱与拆箱：</p><p>   装箱：将基本类型用它们对应的引用类型包装起来；<br>   拆箱：将包装类型转换为基本数据类型；<br>   Java使用自动装箱和拆箱机制，节省了常用数值的内存开销和创建对象的开销，提高了效率，由编译器来完<br>   成，编译器会在编译期根据语法决定是否进行装箱和拆箱动作。</p>]]></content>
-      
-      
+      <tags>
+        <tag>正则表达式</tag>
+        <tag>输入框的输入限制效果</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[this 和super 关键字的区别]]></title>
+    <url>%2F2015%2F11%2F12%2FJAVA%E5%9F%BA%E7%A1%80%EF%BC%9Athis%20%E5%92%8Csuper%20%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[属性的区别：this访问本类中的属性，如果本类没有此属性则从父类中继续查找。super访问父类中的属性。 方法的区别：this访问本类中的方法，如果本类没有此方法则从父类中继续查找。super访问父类中的方法。 构造的区别：this调用本类构造，必须放在构造方法的首行。super调用父类构造，必须放在子类构造方法首行。 其他区别：this表示当前对象。super不能表示当前对象 1、this. 变量和super.变量 this.变量 调用的当前对象的变量； super.变量 直接调用的是父类中的变量。 2、this(参数)和super(参数)方法 this(参数) 调用（转发）的是当前类中的构造器； super(参数) 用于确认要使用父类中的哪一个构造器。 注意点： 1）在对拥有父类的子类进行初始化时，父类的构造方法也会执行，且优先于子类的构造函数执行；因为每一个子类的构造函数中的第一行都有一条默认的隐式语句super(); 2）this() 和super()都只能写在构造函数的第一行； 3）this() 和super() 不能存在于同一个构造函数中。第一，this()和super()都必须写在构造函数的第一行；第二，this()语句调用的是当前类的另一个构造函数而这个另一个构造函数中必然有一个父类的构造器，再使用super()又调用一次父类的构造器， 就相当于调用了两次父类的构造器，编译器不会通过； 4）this和super不能用于static修饰的变量，方法，代码块；因为this和super都是指的是对象（实例）。]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>JAVA基础</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>面向对象和面向过程的区别</title>
-      <link href="/2015/10/08/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-      <url>/2015/10/08/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/</url>
-      
-        <content type="html"><![CDATA[<p>   面向对象和面向过程的区别：</p><p>   –面向过程<br>     优点：性能比面向对象高，因为类调用时需要实例化，比较消耗资源；比如单片机、嵌入式开发、Linux/Unix等一般采用面向过程开发，性能是最重要因素。<br>     缺点：没有面向对象易于维护，易复用，易扩展<br>   –面向对象<br>     优点：易维护，易复用，易扩展，由于面向对象有封装，继承，多肽性的特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护<br>     缺点：性能比面向过程低</p>]]></content>
-      
-      
+      <tags>
+        <tag>JAVA基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[构造器Constructor是否可被override]]></title>
+    <url>%2F2015%2F10%2F08%2F%E6%9E%84%E9%80%A0%E5%99%A8Constructor%E6%98%AF%E5%90%A6%E5%8F%AF%E8%A2%ABoverride%2F</url>
+    <content type="text"><![CDATA[构造器Constructor是否可被override： 构造器不能被重写，不能用static修饰构造器，只能用public private protected这三个权限修饰符，且不能有返回语句。]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>java基础</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>Java的四个基本特性（抽象、封装、继承，多态）</title>
-      <link href="/2015/10/08/Java%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%88%E6%8A%BD%E8%B1%A1%E3%80%81%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%A4%9A%E6%80%81%EF%BC%89/"/>
-      <url>/2015/10/08/Java%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%88%E6%8A%BD%E8%B1%A1%E3%80%81%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%A4%9A%E6%80%81%EF%BC%89/</url>
-      
-        <content type="html"><![CDATA[<p>   Java的四个基本特性（抽象、封装、继承，多态）：</p><p>   –抽象：就是把现实生活中的某一类东西提取出来，用程序代码表示，我们通常叫做类或者接口。<br>     抽象包括两个方面：一个是数据抽象，一个是过程抽象。数据抽象也就是对象的属性。过程抽象是对象的行为特征。</p><p>  –封装：把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信<br>          的进行封装隐藏。<br>    封装分为属性的封装和方法的封装。</p><p>  –继承：是对有着共同特性的多类事物，进行再抽象成一个类。这个类就是多类事物的父类。父类的意义在于<br>          抽取多类事物的共性。</p><p>  –多态：允许不同类的对象对同一消息做出响应。方法的重载、类的覆盖正体现了多态。</p>]]></content>
-      
-      
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[面向对象和面向过程的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[面向对象和面向过程的区别： –面向过程 优点：性能比面向对象高，因为类调用时需要实例化，比较消耗资源；比如单片机、嵌入式开发、Linux/Unix等一般采用面向过程开发，性能是最重要因素。 缺点：没有面向对象易于维护，易复用，易扩展 –面向对象 优点：易维护，易复用，易扩展，由于面向对象有封装，继承，多肽性的特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护 缺点：性能比面向过程低]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>java基础</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>什么是泛型、为什么要使用以及泛型擦除</title>
-      <link href="/2015/10/08/%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4/"/>
-      <url>/2015/10/08/%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4/</url>
-      
-        <content type="html"><![CDATA[<p>   什么是泛型、为什么要使用以及泛型擦除：</p><p>   泛型，即“参数化类型”。<br>   创建集合时就指定集合元素的类型，该集合只能保存其指定类型的元素，避免使用强制类型转换。<br>   Java编译器生成的字节码是不包涵泛型信息的，泛型类型信息将在编译处理是被擦除，这个过程即类型擦<br>   除。泛型擦除可以简单的理解为将泛型java代码转换为普通java代码，只不过编译器更直接点，将泛型java<br>   代码直接转换成普通java字节码。<br>   类型擦除的主要过程如下：<br>       1）.将所有的泛型参数用其<br>       2）.移除所有的类型参数。</p>]]></content>
-      
-      
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hashCode和equals方法的关系]]></title>
+    <url>%2F2015%2F10%2F08%2FhashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB%2F</url>
+    <content type="text"><![CDATA[hashCode和equals方法的关系： –equals相等，hashcode必相等；hashcode相等，equals可能不相等]]></content>
       <categories>
-          
-          <category> java基础 </category>
-          
+        <category>java基础</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> java基础 </tag>
-            
-            <tag> 面试常问 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    <entry>
-      <title>页面动态输入框可点击增加，下拉列表可点击增加</title>
-      <link href="/2015/08/10/%E9%A1%B5%E9%9D%A2%E5%8A%A8%E6%80%81%E8%BE%93%E5%85%A5%E6%A1%86%E5%8F%AF%E7%82%B9%E5%87%BB%E5%A2%9E%E5%8A%A0%EF%BC%8C%E4%B8%8B%E6%8B%89%E5%88%97%E8%A1%A8%E5%8F%AF%E7%82%B9%E5%87%BB%E5%A2%9E%E5%8A%A0/"/>
-      <url>/2015/08/10/%E9%A1%B5%E9%9D%A2%E5%8A%A8%E6%80%81%E8%BE%93%E5%85%A5%E6%A1%86%E5%8F%AF%E7%82%B9%E5%87%BB%E5%A2%9E%E5%8A%A0%EF%BC%8C%E4%B8%8B%E6%8B%89%E5%88%97%E8%A1%A8%E5%8F%AF%E7%82%B9%E5%87%BB%E5%A2%9E%E5%8A%A0/</url>
-      
-        <content type="html"><![CDATA[<p>   页面效果如下：<br>   <img src="/2015/08/10/页面动态输入框可点击增加，下拉列表可点击增加/one.png" alt="你想输入的替代文字"><br>   定义好下列两个方法，给</p><pre><code> var addConfigList = function (index) {            var $div = &apos; &lt;div class=&quot;t-list-search t-columns-2&quot; id=&quot;config&apos;+index+&apos;&quot; style=&quot;margin: 10px;&quot;&gt;&apos; +                &apos;                        &lt;ul class=&quot;t-columns-group&quot; id = &quot;configContent&apos;+index+&apos;&quot;&gt;&apos; +                &apos;                            &lt;li class=&quot;robcss-select&quot; &gt;&apos; +                &apos;                                &lt;label &gt;字段类型&lt;/label&gt;&apos; +                &apos;                                &lt;div&gt;&apos; +                &apos;                                    &lt;input type=&quot;radio&quot; name = &quot;configType&apos;+index+&apos;&quot; checked = &quot;true&quot; id = &quot;textType&apos;+index+&apos;&quot; value=&quot;0&quot; style=&quot;margin-top: 15px;&quot;&gt;文本框&apos; +                &apos;                                    &lt;input type=&quot;radio&quot; name = &quot;configType&apos;+index+&apos;&quot; id= &quot;selectType&apos;+index+&apos;&quot; value=&quot;1&quot; style=&quot;margin-top: 15px&quot;&gt;下拉框&apos; +                &apos;                                &lt;/div&gt;&apos; +                &apos;                            &lt;/li&gt;&apos; +                &apos;                            &lt;li class=&quot;robcss-select&quot; id = &quot;configTitleArea&apos; +index+ &apos;&quot;&gt;&apos; +                &apos;                                &lt;label style=&quot;width:10%&quot;&gt;字段标题&lt;/label&gt;&apos; +                &apos;                                &lt;div&gt;&apos; +                &apos;                                    &lt;input name=&quot;configTitle&quot;  id=&quot;configTitle&apos;+ index+&apos;&quot; type=&quot;text&quot; value=&quot;&quot; style=&quot;width: 60%;margin-right: 40px&quot; &gt;&apos; +                &apos;                                    &lt;a href=&quot;#nogo&quot; class = &quot;t-btn t-btn-xs t-btn-blue&quot; id = &quot;deleteName&apos;+index+&apos;&quot;&gt;删除此字段&lt;/a&gt;&apos; +                &apos;                                &lt;/div&gt;&apos; +                &apos;                            &lt;/li&gt;&apos; +                &apos;                        &lt;/ul&gt;&apos; +                &apos;                    &lt;/div&gt;&apos;;            $(&quot;#configList&quot;).append($div);            //绑定删除配置事件            $(&apos;#deleteName&apos;+ index, $el).on(&apos;click&apos;, function () {                if ($(&apos;#configList&apos;).children().length &lt; 2) {                    crossAPI.tips(&quot;至少保留一行&quot;, 1500);                }else{                    $(&quot;#config&quot; + index, $el).remove();                }            });            //绑定选中文本框事件            $(&apos;#textType&apos;+ index, $el).on(&apos;click&apos;, function () {                $(&quot;#configTitleArea&quot; + index, $el).nextAll().remove();            });            //绑定选中下拉框事件            $(&apos;#selectType&apos;+ index, $el).on(&apos;click&apos;, function () {                if($(&quot;#configContent&quot; +index).children().length &gt; 2){                    return;                }else{                    addSelectInfo(index);                }            });    }//下拉框新增选项var addSelectInfo = function (index,createIndex) {    if(createIndex == &quot;&quot; || createIndex == null){        createIndex = index;    }    var $li = &apos; &lt;li class=&quot;robcss-select&quot; id = &quot;selectItem&apos;+ createIndex+ &apos;&quot; style=&quot;width: 30%;padding-left:65px&quot;&gt;&apos; +        &apos;                   &lt;label&gt;选项:&lt;/label&gt;&apos; +        &apos;                   &lt;div&gt;&apos; +        &apos;                        &lt;input name = &quot;selectName&quot;&gt;&apos; +        &apos;                   &lt;/div&gt;&apos; +        &apos;           &lt;/li&gt;&apos; +        &apos;           &lt;li class=&quot;robcss-select&quot; id = &quot;selectInfo&apos;+ createIndex+&apos;&quot; &gt;&apos; +        &apos;                    &lt;div&gt;&apos; +        &apos;                          &lt;a href=&quot;#nogo&quot; id = &quot;addSelectInfo&apos;+ createIndex+&apos;&quot; class = &quot;t-btn t-btn-xs t-btn-blue&quot;&gt;新增&lt;/a&gt;&apos; +        &apos;                          &lt;a href=&quot;#nogo&quot; id = &quot;delSelectInfo&apos;+ createIndex+&apos;&quot; class = &quot;t-btn t-btn-xs t-btn-blue&quot;&gt;删除&lt;/a&gt;&apos; +        &apos;                    &lt;/div&gt;&apos; +        &apos;            &lt;/li&gt;&apos;;    $(&quot;#configContent&quot;+index).append($li);    //绑定新增事件    $(&apos;#addSelectInfo&apos;+ createIndex, $el).on(&apos;click&apos;, function () {        if($(&apos;#configContent&apos;+ index).children().length &gt;= 12){            crossAPI.tips(&quot;最多新建5个选项&quot;, 1500);        }else{            var createIndex = ++num;            addSelectInfo(index,createIndex);        }    });    //绑定删除事件    $(&apos;#delSelectInfo&apos;+ createIndex, $el).on(&apos;click&apos;, function () {        if ($(&apos;#configContent&apos;+ index).children().length &lt; 6) {            crossAPI.tips(&quot;至少保留一行&quot;, 1500);        }else{            $(&quot;#selectItem&quot; + createIndex, $el).remove();            $(&quot;#selectInfo&quot; + createIndex, $el).remove();        }    });}</code></pre>]]></content>
-      
-      
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[自动装箱与拆箱]]></title>
+    <url>%2F2015%2F10%2F08%2F%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1%2F</url>
+    <content type="text"><![CDATA[自动装箱与拆箱： 装箱：将基本类型用它们对应的引用类型包装起来； 拆箱：将包装类型转换为基本数据类型； Java使用自动装箱和拆箱机制，节省了常用数值的内存开销和创建对象的开销，提高了效率，由编译器来完 成，编译器会在编译期根据语法决定是否进行装箱和拆箱动作。]]></content>
       <categories>
-          
-          <category> javascript </category>
-          
+        <category>java基础</category>
       </categories>
-      
-      
-        <tags>
-            
-            <tag> javascript页面效果 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-  
-  
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[重载和重写的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[重载和重写的区别： –重载：发生在同一个类中，方法名必须相同，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰 符可以不同，发生在编译时。 –重写：发生在父子类中，方法名、参数列表必须相同，返回值小于等于父类，抛出的异常小于等于父类，访 问修饰符大于等于父类；如果父类方法访问修饰符为private则子类中就不是重写。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[抽象类和接口的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[抽象类和接口的区别： –语法层次 抽象类和接口分别给出了不同的语法定义。 –设计层次 抽象层次不同，抽象类是对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、 行为，但是接口却是对类局部（行为）进行抽象。抽象类是自底向上抽象而来的，接口是自顶向下设计出来 的。 –跨域不同 抽象类所体现的是一种继承关系，要想使得继承关系合理，父类和派生类之间必须存在”is-a” 关系，即父类和派生类在概念本质上应该是相同的。对于接口则不然，并不要求接口的实现者和接口定义在 概念本质上是一致的，仅仅是实现了接口定义的契约而已，”like-a”的关系。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[String和StringBuffer、StringBuilder的区别]]></title>
+    <url>%2F2015%2F10%2F08%2FString%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[String和StringBuffer、StringBuilder的区别： –可变性 String类中使用字符数组保存字符串，private final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自 AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[] value，这两种对象都是可变的。 –线程安全性 String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与 StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf 等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。 StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。 –性能 每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。 StringBuffer每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用 StirngBuilder 相比使用 StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[框架-spring详解]]></title>
+    <url>%2F2015%2F10%2F08%2F%E6%A1%86%E6%9E%B6-spring%E8%AF%A6%E8%A7%A3%2F</url>
+    <content type="text"><![CDATA[一、 Spring 概述 1、Spring介绍： Spring 是一个开源框架，Spring是于2003年兴起的一个轻量级的Java开发框架，由RodJohnson 创建。 简单来说，Spring 是一个分层的 JavaSE/EEfull-stack(一站式) 轻量级开源框架 2、Spring 作用 Spring致力于提供一种方法管理你的业务对象。 Spring的主要目的是使JavaEE易用和促进好编程习惯。 Spring 致力于 J2EE 应用的各层的解决方案，而不是仅仅专注于某一层的方案。可以说 Spring 是企业应用开发的“一站式”选择，并贯穿表现层、业务层及持久层。然而，Spring 并不想取 代那些已有的框架，而是与它们无缝地整合。 3． Spring 起源： Spring 的出现是为了取代 EJB（Enterprise JavaBean）的臃肿、低效、脱离现实的特点。 传统 J2EE 应用的开发效率低，应用服务器厂商对各种技术的支持并没有真正统一，导致 J2EE 的应用没有真正实现 Write Once 及 Run Anywhere 的承诺。Spring 作为开源的中间件，独立 于各种应用服务器，甚至无须应用服务器的支持，也能提供应用服务器的功能，如声明式事 务、事务处理等 4． Spring 体系结构 Spring 框架是一个分层架构,,它包含一系列的功能要素并被分为大约 20 个模块。这些模块 分为 Core Container、Data Access/Integration、Web、AOP（Aspect Oriented Programming)、 Instrumentation 和测试部分,如下图所示： ![你想输入的替代文字](框架-spring详解/01.png) ---核心容器(Core Container) 1：Core 和 Beans 模块提供了 Spring 最基础的功能，提供 IoC 和依赖注入特性。这里的基础 概念是 BeanFactory，它提供对 Factory 模式的经典实现来消除对程序性单例模式的需要，并 真正地允许你从程序逻辑中分离出依赖关系和配置。 2：Context 模块基于 Core 和 Beans 来构建，它提供了用一种框架风格的方式来访问对象， 有些像 JNDI 注册表。Context 封装包继承了 beans 包的功能，还增加了国际化（I18N）,事件 传播，资源装载，以及透明创建上下文，例如通过 servlet 容器，以及对大量 JavaEE 特性的 支持，如 EJB、JMX。核心接口是 ApplicationContext。 3：Expression Language，表达式语言模块，提供了在运行期间查询和操作对象图的强大能力。 支持访问和修改属性值，方法调用，支持访问及修改数组、容器和索引器，命名变量，支持 算数和逻辑运算，支持从 Spring 容器获取 Bean，它也支持列表投影、选择和一般的列表聚 合等 ---数据访问/集成部分(Data Access/Integration) 1：JDBC 模块，提供对 JDBC 的抽象，它可消除冗长的 JDBC 编码和解析数据库厂商特有的错 误代码。 2：ORM 模块，提供了常用的&quot;对象/关系&quot;映射 API 的集成层。 其中包括 JPA、JDO、Hibernate 和 iBatis 。利用 ORM 封装包，可以混合使用所有 Spring 提供的特性进行&quot;对象/关系&quot;映射， 如简单声明性 事务管理 。 3：OXM 模块，提供一个支持 Object 和 XML 进行映射的抽象层，其中包括 JAXB、Castor、 XMLBeans、JiBX 和 XStream。 4：JMS 模块，提供一套&quot;消息生产者、消费者&quot;模板用于更加简单的使用 JMS，JMS 用于在两 个应用程序之间，或分布式系统中发送消息，进行异步通信。 5：Transaction 模块，支持程序通过简单声明性 事务管理，只要是 Spring 管理对象都能得到 Spring 管理事务的好处，即使是 POJO，也可以为他们提供事务。 --- Web 1：Web-Socket 模块， WebSocket protocol 是 HTML5 一种新的协议。它实现了浏览器与服 务器全双工通信，spring 支持 webSocket 通信。 2：Web 模块，提供了基础的 web 功能。例如多文件上传、集成 IoC 容器、远程过程访问、 以及 Web Service 支持，并提供一个 RestTemplate 类来提供方便的 Restful services 访问 3：Web-Servlet 模块，提供了 Web 应用的 Model-View-Controller（MVC）实现。Spring MVC 框架提供了基于注解的请求资源注入、更简单的数据绑定、数据验证等及一套非常易用的 JSP 标签，完全无缝与 Spring 其他技术协作。 4：Web-Portlet 模块，提供了在 Portlet 环境下的 MVC 实现 ---AOP 1：AOP 模块，提供了符合 AOP 联盟规范的面向方面的编程实现，让你可以定义如方法拦截 器和切入点，从逻辑上讲，可以减弱代码的功能耦合，清晰的被分离开。而且，利用源码级 的元数据功能，还可以将各种行为信息合并到你的代码中 。 2：Aspects 模块，提供了对 AspectJ 的集成。 3：Instrumentation 模块， 提供一些类级的工具支持和 ClassLoader 级的实现，可以在一些 特定的应用服务器中使用 ---Test 1：Test 模块，提供对使用 JUnit 和 TestNG 来测试 Spring 组件的支持，它提供一致的 ApplicationContexts 并缓存这些上下文，它还能提供一些 mock 对象，使得你可以独立的测 试代码 5． Spring 优点：  方便解耦，简化开发 Spring 就是一个大工厂，可以将所有对象创建和依赖关系维护，交给 Spring 管理  AOP 编程的支持 Spring 提供面向切面编程，可以方便的实现对程序进行权限拦截、运行监控等功能  声明式事务的支持 只需要通过配置就可以完成对事务的管理，而无需手动编程  方便程序的测试 Spring 对 Junit4 支持，可以通过注解方便的测试 Spring 程序  方便集成各种优秀框架 Spring 不排斥各种优秀的开源框架，其内部提供了对各种优秀框架（如：Struts、Hibernate、 MyBatis、Quartz 等）的直接支持  降低 JavaEE API 的使用难度 Spring 对 JavaEE 开发中非常难用的一些 API（JDBC、JavaMail、远程调用等），都提供了封 装，使这些 API 应用难度大大降低 二、 IOC 与 DI 1、Spring 的 jar 包下载 Spring 的官网：spring.io 我们课程中讲解使用的是 spring4.2.4 在 spring3.0.2 版本后，不在提供依赖 jar 包 ![你想输入的替代文字](框架-spring详解/02.png) docs 存在 API 和规范文档 libs 开发 jar 包 schema 开发过程中需要的 xml 的 schema 约束 2、spring 开发环境搭建 在 spring 开发中，我们要根据不同的情况来导入不同的 jar 包，当前我们要讲解的是关于 ioc 与 di 对于 ioc 与 di 讲解我们只需要使用 spring 的核心功能。 1. beans 相关 2. core 相关 3. context 相关 4. spel 相关 ![你想输入的替代文字](框架-spring详解/03.png) 我们使用 spring 框架也会使用到配置文件，我们需要在 src 下创建一个关于 spring 的配置文 件，一般情况名称叫 applicationContext.xml 问题：applicationContext.xml 约束？ ![你想输入的替代文字](框架-spring详解/04.png) 它的路径: spring-framework-4.2.4.RELEASE-dist\spring-framework-4.2.4.RELEASE\docs\spring-framework-r eference\html ![你想输入的替代文字](框架-spring详解/05.png) 3、IOC 快速入门 Ioc 它是什么，解决什么问题，它的原理是如何实现。 IOC inversion of Controller 控制反转。 在程序中所说的 IOC 其实简单说，就是原来由我们自己实例化的对象交给 spring 容器来实始 化。这时对象的实始化的权利就会反转。 程序运行时报错 ![你想输入的替代文字](框架-spring详解/06.png) 原因:当前环境需要一个 commons-loggin 的 jar 包 总结 spring 使用步骤: 1. 在 applicationContext.xml 文件中配置 bean 如：&lt;bean id=&quot;userService&quot; class=&quot;com.lhs.ioc.UserServiceImpl&quot;&gt; &lt;/bean&gt; 2. 创建一个 ApplicationContext 对象 ApplicationContext它是BeanFactory的一个子接口，我们在使用时使用的是AppliCationContext的 实现类ClassPathXmlApplicationContext ![你想输入的替代文字](框架-spring详解/07.png) 可以通过 getBean(配置文件中 id 名称)来获取指定的对象。 4． DI DI:dependency injection 依赖注入 在 spring 框架负责创建 Bean 对象时，动态将依赖对象注入到 Bean 组件。 ![你想输入的替代文字](框架-spring详解/08.png) 简单说，这时 UserServiceImpl 中的 info 属性值就是 ITCAST 面试题:IOC 和 DI 区别? IOC 控制反转，是指对象实例化权利由 spring 容器来管理 DI 依赖注入 在 spring 创建对象的过程中，对象所依赖的属性通过配置注入对象中。 三、 Bean 获取与实例化 1． ApplicationContext 与 BeanFactory 关系 ![你想输入的替代文字](框架-spring详解/09.png) ApplicationContext 它是扩展 BeanFactory 接口。 BeanFactory 它采取延迟加载的方案，只有真正在 getBean 时才会实例化 Bean 在开发中我们一般使用的是 ApplicationContext,真正使用的是其实现类, FileSystemXmlAppliCationContext 根据文件路径获取 ClassPathXmlApplicationContext 根据类路径获取 AppliCationContext它会在配置文件加载时，就会初始化Bean,并且ApplicationContext 它 提 供 不 同 的 应 用 层 的 Context 实现。例如在 web 开 发 中 可 以 使 用 WebApplicationContext. 2、Bean 的实例化方式 1、无参数构造 对于这种方式，注意 Bean 类中必须提供无参数构造。 &lt;bean name=&quot;bean1&quot; class=&quot;com.lhs.bean.Bean1&quot;&gt; &lt;/bean&gt; 2、静态工厂方法 需要创建一个工厂类，在工厂类中提供一个 static 返回 bean 对象的方法就可以 ![你想输入的替代文字](框架-spring详解/10.png) ![你想输入的替代文字](框架-spring详解/11.png) 3、实例工厂方法 需要创建一个工厂类，在工厂类中提供一个非 static 的创建 bean 对象的方法，在配置文件 中需要将工厂配置，还需要配置 bean ![你想输入的替代文字](框架-spring详解/12.png) &lt;bean name=&quot;bean3Factory&quot; class=&quot;com.lhs.bean.Bean3Factory&quot;&gt; &lt;/bean&gt; &lt;bean name=&quot;bean3&quot; factory-bean=&quot;bean3Factory&quot; factory-method=&quot;createBean3&quot;&gt; &lt;/bean&gt; 3． Bean 的作用域 ![你想输入的替代文字](框架-spring详解/13.png) 在 bean 声明时它有一个 scope 属性，它是用于描述 bean 的作用域。 可取值有: singleton:单例 代表在 spring ioc 容器中只有一个 Bean 实例 (默认的 scope) prototype 多例 每一次从 spring 容器中获取时，都会返回一个新的实例 request 用在 web 开发中，将 bean 对象 request.setAttribute()存储到 request 域中 session 用在 web 开发中，将 bean 对象 session.setAttribute()存储到 session 域中 在开如常用的值是 singleton 与 prototype 4． Bean 的生命周期 ![你想输入的替代文字](框架-spring详解/14.png) 1. instantiate bean 对象实例化 2. populate properties 封装属性 3. 如果 Bean 实现 BeanNameAware 执行 setBeanName 4. 如果 Bean 实现 BeanFactoryAwar 或 ApplicationContextAwar 设置工厂 setBeanFactory 或上 下文对象 setApplicationContext 5. 如果存在类实现 BeanPostProcess(后处理 Bean),执行 postProcessBeforeInitialization 6. 如果 Bean 实现 InitializingBean 执行 afterPropertiesSet 7. 调用自定义的 init-method 方法 8. 如果存在类实现 BeanPostProcessor(处理 Bean),执行 postProcessAfterInitialization 9. 执行业务处理 10. 如果 Bean 实现 DisposableBean 执行 destroy 11. 调用自定义的 destroy-method 对于 bean 的生命周期方法: 第三步与第四步是让 Bean 了解 spring 容器。 第五步与第八步 可以针对指定的 Bean 进行功能增强，这时一般会使用动态代理. 第六步与第十步:通过实现指定的接口来完成 init 与 destroy 操作 但是在开发中一般不使用第 6 步与第 10 步，原因是我们可以使用第 7 步与第 11 步来完成。 第 7 步与第 11 步的初始化与销毁操作它无耦合，推荐使用的。但是必须在配置文件中指定 初始化与销毁的方法 &lt;bean id=&quot;beanLifeCycle&quot; class=&quot;com.lhs.bean.BeanLifeCycle&quot; init-method=&quot;myInit&quot; destory-method=&quot;myDestory&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;itcast&quot;&gt; &lt;/property&gt; &lt;/bean&gt; 总结: 对于 bean 的生命周期，我们需要关注的主要有两个方法: 1. 增强 bean 的功能可以使用后处理 Bean, BeanPostProcessor 2. 如果需要初始化或销毁操作我们可以使用 init-method destroy-method 注意:destroy-method 只对 scope=singleTon 有效果。 四、 Bean 属性注入 在 spring 中 bean 的属性注入有两种 1、构造器注入 &lt;bean id=&quot;car&quot; class=&quot;com.lhs.di.Car&quot;&gt; &lt;construtor-arg index=&quot;0&quot; type=&quot;java.lang.String&quot; value=&quot;弹窗&quot;&gt; &lt;/construtor-arg&gt; &lt;construtor-arg index=&quot;1&quot; type=&quot;double&quot; value=&quot;1000000&quot;&gt; &lt;/construtor-arg&gt; &lt;/bean&gt; 2、Setter方法注入 &lt;!-- 使用setter方法对car的属性进行注入 --&gt; &lt;bean id=&quot;car1&quot; class=&quot;com.lhs.di.Car&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;宝马&quot; /&gt; &lt;property name=&quot;price&quot; value=&quot;500000&quot; /&gt; &lt;/bean&gt; 关于 ref属性作用 &lt;bean id=&quot;person&quot; class=&quot;com.lhs.do.Person&quot;&gt; &lt;property name=&quot;name&quot; value=&quot;张三&quot; /&gt; &lt;property name=&quot;car&quot; ref=&quot;car1&quot; /&gt; &lt;/bean&gt; 使用 ref 来引入另一个 bean 对象，完成 bean 之间注入 3、集合属性的注入 在 spring 中对于集合属性，可以使用专门的标签来完成注入例如:list set map properties 等集合元素来完成集合属性注入 ![你想输入的替代文字](框架-spring详解/15.png) 3.1． List 属性注入 ![你想输入的替代文字](框架-spring详解/16.png) 如果属性是数组类型也可以使用 list 完成注入 3.2． Set 属性注入 ![你想输入的替代文字](框架-spring详解/17.png) 3.3． Map 属性注入 ![你想输入的替代文字](框架-spring详解/18.png) 3.4． Properties 属性注入 Java.util.Properties 是 java.utilsMap 的实现类，它的 key 与 value 都是 String 类型. ![你想输入的替代文字](框架-spring详解/19.png)]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>框架-spring详解</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[访问控制符public,protected,private,以及默认的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public%2Cprotected%2Cprivate%2C%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[访问控制符public,protected,private,以及默认的区别： private只有在本类中才能访问； public在任何地方都能访问； protected在同包内的类及包外的子类能访问； 默认不写在同包内能访问。 是否可以继承String类？？？ String类是final类故不可以继承，一切由final修饰过的都不能继承。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Java的四个基本特性（抽象、封装、继承，多态）]]></title>
+    <url>%2F2015%2F10%2F08%2FJava%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%88%E6%8A%BD%E8%B1%A1%E3%80%81%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%A4%9A%E6%80%81%EF%BC%89%2F</url>
+    <content type="text"><![CDATA[Java的四个基本特性（抽象、封装、继承，多态）： –抽象：就是把现实生活中的某一类东西提取出来，用程序代码表示，我们通常叫做类或者接口。 抽象包括两个方面：一个是数据抽象，一个是过程抽象。数据抽象也就是对象的属性。过程抽象是对象的行为特征。 –封装：把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信 的进行封装隐藏。 封装分为属性的封装和方法的封装。 –继承：是对有着共同特性的多类事物，进行再抽象成一个类。这个类就是多类事物的父类。父类的意义在于 抽取多类事物的共性。 –多态：允许不同类的对象对同一消息做出响应。方法的重载、类的覆盖正体现了多态。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[什么是泛型、为什么要使用以及泛型擦除]]></title>
+    <url>%2F2015%2F10%2F08%2F%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4%2F</url>
+    <content type="text"><![CDATA[什么是泛型、为什么要使用以及泛型擦除： 泛型，即“参数化类型”。 创建集合时就指定集合元素的类型，该集合只能保存其指定类型的元素，避免使用强制类型转换。 Java编译器生成的字节码是不包涵泛型信息的，泛型类型信息将在编译处理是被擦除，这个过程即类型擦 除。泛型擦除可以简单的理解为将泛型java代码转换为普通java代码，只不过编译器更直接点，将泛型java 代码直接转换成普通java字节码。 类型擦除的主要过程如下： 1）.将所有的泛型参数用其 2）.移除所有的类型参数。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[页面动态输入框可点击增加，下拉列表可点击增加]]></title>
+    <url>%2F2015%2F08%2F10%2F%E9%A1%B5%E9%9D%A2%E5%8A%A8%E6%80%81%E8%BE%93%E5%85%A5%E6%A1%86%E5%8F%AF%E7%82%B9%E5%87%BB%E5%A2%9E%E5%8A%A0%EF%BC%8C%E4%B8%8B%E6%8B%89%E5%88%97%E8%A1%A8%E5%8F%AF%E7%82%B9%E5%87%BB%E5%A2%9E%E5%8A%A0%2F</url>
+    <content type="text"><![CDATA[页面效果如下： 定义好下列两个方法，给 var addConfigList = function (index) { var $div = &apos; &lt;div class=&quot;t-list-search t-columns-2&quot; id=&quot;config&apos;+index+&apos;&quot; style=&quot;margin: 10px;&quot;&gt;&apos; + &apos; &lt;ul class=&quot;t-columns-group&quot; id = &quot;configContent&apos;+index+&apos;&quot;&gt;&apos; + &apos; &lt;li class=&quot;robcss-select&quot; &gt;&apos; + &apos; &lt;label &gt;字段类型&lt;/label&gt;&apos; + &apos; &lt;div&gt;&apos; + &apos; &lt;input type=&quot;radio&quot; name = &quot;configType&apos;+index+&apos;&quot; checked = &quot;true&quot; id = &quot;textType&apos;+index+&apos;&quot; value=&quot;0&quot; style=&quot;margin-top: 15px;&quot;&gt;文本框&apos; + &apos; &lt;input type=&quot;radio&quot; name = &quot;configType&apos;+index+&apos;&quot; id= &quot;selectType&apos;+index+&apos;&quot; value=&quot;1&quot; style=&quot;margin-top: 15px&quot;&gt;下拉框&apos; + &apos; &lt;/div&gt;&apos; + &apos; &lt;/li&gt;&apos; + &apos; &lt;li class=&quot;robcss-select&quot; id = &quot;configTitleArea&apos; +index+ &apos;&quot;&gt;&apos; + &apos; &lt;label style=&quot;width:10%&quot;&gt;字段标题&lt;/label&gt;&apos; + &apos; &lt;div&gt;&apos; + &apos; &lt;input name=&quot;configTitle&quot; id=&quot;configTitle&apos;+ index+&apos;&quot; type=&quot;text&quot; value=&quot;&quot; style=&quot;width: 60%;margin-right: 40px&quot; &gt;&apos; + &apos; &lt;a href=&quot;#nogo&quot; class = &quot;t-btn t-btn-xs t-btn-blue&quot; id = &quot;deleteName&apos;+index+&apos;&quot;&gt;删除此字段&lt;/a&gt;&apos; + &apos; &lt;/div&gt;&apos; + &apos; &lt;/li&gt;&apos; + &apos; &lt;/ul&gt;&apos; + &apos; &lt;/div&gt;&apos;; $(&quot;#configList&quot;).append($div); //绑定删除配置事件 $(&apos;#deleteName&apos;+ index, $el).on(&apos;click&apos;, function () { if ($(&apos;#configList&apos;).children().length &lt; 2) { crossAPI.tips(&quot;至少保留一行&quot;, 1500); }else{ $(&quot;#config&quot; + index, $el).remove(); } }); //绑定选中文本框事件 $(&apos;#textType&apos;+ index, $el).on(&apos;click&apos;, function () { $(&quot;#configTitleArea&quot; + index, $el).nextAll().remove(); }); //绑定选中下拉框事件 $(&apos;#selectType&apos;+ index, $el).on(&apos;click&apos;, function () { if($(&quot;#configContent&quot; +index).children().length &gt; 2){ return; }else{ addSelectInfo(index); } }); } //下拉框新增选项 var addSelectInfo = function (index,createIndex) { if(createIndex == &quot;&quot; || createIndex == null){ createIndex = index; } var $li = &apos; &lt;li class=&quot;robcss-select&quot; id = &quot;selectItem&apos;+ createIndex+ &apos;&quot; style=&quot;width: 30%;padding-left:65px&quot;&gt;&apos; + &apos; &lt;label&gt;选项:&lt;/label&gt;&apos; + &apos; &lt;div&gt;&apos; + &apos; &lt;input name = &quot;selectName&quot;&gt;&apos; + &apos; &lt;/div&gt;&apos; + &apos; &lt;/li&gt;&apos; + &apos; &lt;li class=&quot;robcss-select&quot; id = &quot;selectInfo&apos;+ createIndex+&apos;&quot; &gt;&apos; + &apos; &lt;div&gt;&apos; + &apos; &lt;a href=&quot;#nogo&quot; id = &quot;addSelectInfo&apos;+ createIndex+&apos;&quot; class = &quot;t-btn t-btn-xs t-btn-blue&quot;&gt;新增&lt;/a&gt;&apos; + &apos; &lt;a href=&quot;#nogo&quot; id = &quot;delSelectInfo&apos;+ createIndex+&apos;&quot; class = &quot;t-btn t-btn-xs t-btn-blue&quot;&gt;删除&lt;/a&gt;&apos; + &apos; &lt;/div&gt;&apos; + &apos; &lt;/li&gt;&apos;; $(&quot;#configContent&quot;+index).append($li); //绑定新增事件 $(&apos;#addSelectInfo&apos;+ createIndex, $el).on(&apos;click&apos;, function () { if($(&apos;#configContent&apos;+ index).children().length &gt;= 12){ crossAPI.tips(&quot;最多新建5个选项&quot;, 1500); }else{ var createIndex = ++num; addSelectInfo(index,createIndex); } }); //绑定删除事件 $(&apos;#delSelectInfo&apos;+ createIndex, $el).on(&apos;click&apos;, function () { if ($(&apos;#configContent&apos;+ index).children().length &lt; 6) { crossAPI.tips(&quot;至少保留一行&quot;, 1500); }else{ $(&quot;#selectItem&quot; + createIndex, $el).remove(); $(&quot;#selectInfo&quot; + createIndex, $el).remove(); } }); }]]></content>
+      <categories>
+        <category>javascript</category>
+      </categories>
+      <tags>
+        <tag>javascript页面效果</tag>
+      </tags>
+  </entry>
 </search>

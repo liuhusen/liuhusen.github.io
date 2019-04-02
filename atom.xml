@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://liuhusen.com/"/>
-  <updated>2019-01-18T07:06:06.361Z</updated>
+  <updated>2019-03-22T03:14:57.769Z</updated>
   <id>https://liuhusen.com/</id>
   
   <author>
@@ -15,6 +15,85 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>多线程访问成员变量与局部变量</title>
+    <link href="https://liuhusen.com/2018/10/11/%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    <id>https://liuhusen.com/2018/10/11/成员变量和局部变量与多线程/</id>
+    <published>2018-10-11T08:21:30.000Z</published>
+    <updated>2019-03-22T03:14:57.769Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>       public class HelloThreadTest    {        public static void main(String[] args)        {            HelloThread r = new HelloThread();            Thread t1 = new Thread(r);            Thread t2 = new Thread(r);            t1.start();            t2.start();        }    }    class HelloThread implements Runnable    {        int i;        @Override        public void run()        {            while (true)            {                System.out.println(&quot;Hello number: &quot; + i++);                try                {                    Thread.sleep((long) Math.random() * 1000);                }                catch (InterruptedException e)                {                    e.printStackTrace();                }                if (50 == i)                {                    break;                }            }        }    }该例子中，HelloThread类实现了Runnable接口，其中run()方法的主要工作是输出&quot;Hello number: &quot;字符串加数字i，并且同时递增i，当i到达50时，退出循环。　　main()方法中生成了一个HelloThread类的对象r，并且利用这个一个对象生成了两个线程。　　程序的执行结果是：顺次打印了0到49的数字，共50个数字。　　这是因为，i是成员变量，则HelloThread的对象r只包含这一个i，两个Thread对象因为由r构造，所以共享了同一个i。　　当我们改变代码如下时（原先的成员变量i被注释掉，增加了方法中的局部变量i）：public class HelloThreadTest    {        public static void main(String[] args)        {            HelloThread r = new HelloThread();            Thread t1 = new Thread(r);            Thread t2 = new Thread(r);            t1.start();            t2.start();        }    }    class HelloThread implements Runnable    {        // int i;        // 若i是成员变量，则HelloThread的对象r只包含这一个i，两个Thread对象因为由r构造，所以共享了同一个i        // 打印结果是0到49的数字        @Override        public void run()        {            int i = 0;            // 每一个线程都会拥有自己的一份局部变量的拷贝            // 线程之间互不影响            // 所以会打印100个数字，0到49每个数字都是两遍            while (true)            {                System.out.println(&quot;Hello number: &quot; + i++);                try                {                    Thread.sleep((long) Math.random() * 1000);                }                catch (InterruptedException e)                {                    e.printStackTrace();                }                if (50 == i)                {                    break;                }            }        }    }    如注释中所述，由于局部变量对于每一个线程来说都有自己的拷贝，所以各个线程之间不再共享同一个变量，    输出结果为100个数字，实际上是两组，每组都是0到49的50个数字，并且两组数字之间随意地穿插在一起。　得到的结论如下：　　如果一个变量是成员变量，那么多个线程对同一个对象的成员变量进行操作时，它们对该成员变量是彼此影响的，也就是说一个线程对成员变量的改变会影响到另一个线程。　　如果一个变量是局部变量，那么每个线程都会有一个该局部变量的拷贝（即便是同一个对象中的方法的局部变量，也会对每一个线程有一个拷贝），一个线程对该局部变量的改变不会影响到其他线程。</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;       public class HelloThreadTest
+    {
+        public static void main(String[] args)
+        {
+            HelloThread r = ne
+      
+    
+    </summary>
+    
+      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
+    
+    
+      <category term="多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Solr单机版服务搭建</title>
+    <link href="https://liuhusen.com/2018/10/08/Solr%E5%8D%95%E6%9C%BA%E7%89%88%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+    <id>https://liuhusen.com/2018/10/08/Solr单机版服务搭建/</id>
+    <published>2018-10-08T05:01:30.000Z</published>
+    <updated>2019-03-01T06:48:45.132Z</updated>
+    
+    <content type="html"><![CDATA[<p>   Solr服务搭建<br>      1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。<br>      2、搭建步骤：<br>            第一步： 把solr的压缩包上传到Linux系统<br>            第二步： 解压solr<br>            第三步： 安装Tomcat，解压缩即可。<br>            第四步： 把solr部署到Tomcat下。<br>            第五步： 解压缩war包。启动<br>            第六步： 把/root/solr-4.10.3/example/lib/ext 目录下的所有的jar包，添加到 solr 工程中。<br>            [root@localhost ext]# pwd<br>            /root/solr-4.10.3/example/lib/ext<br>            [root@localhost ext]# cp* /usr/local/solr/tomcat/webapps/solr/WEB-INF/lib/<br>            第七步： 创建一个 solrhome. /exanple/solr 目录就是一个 solrhome. 复制此目录到 /usr/local/solr/solrhome<br>            [root@localhost example]# pwd<br>            /root/solr-4.10.3/example<br>            [root@localhost example]# cp -r solr /usr/local/solr/solrhome<br>            [root@localhost example]#<br>            第八步：关联solr及solrhome。需要修改solr工程的web.xml文件<br>             <img src="/2018/10/08/Solr单机版服务搭建/01.png" alt="你想输入的替代文字"><br>            第九步：启动Tomcat<br>                    <a href="http://192.168.25.154:8080/solr/" target="_blank" rel="noopener">http://192.168.25.154:8080/solr/</a><br>                    和windows下的配置完全一样。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   Solr服务搭建&lt;br&gt;      1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。&lt;br&gt;      2、搭建步骤：&lt;br&gt;            第一步： 把solr的压缩包上传到Linux系统&lt;br&gt;    
+      
+    
+    </summary>
+    
+      <category term="服务搭建" scheme="https://liuhusen.com/categories/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+    
+    
+      <category term="Solr单机版服务搭建" scheme="https://liuhusen.com/tags/Solr%E5%8D%95%E6%9C%BA%E7%89%88%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Solr单机版服务搭建</title>
+    <link href="https://liuhusen.com/2018/10/08/Solr%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%9C%A8%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8%E4%BB%8B%E7%BB%8D/"/>
+    <id>https://liuhusen.com/2018/10/08/Solr搜索引擎在代码中的简单入门使用介绍/</id>
+    <published>2018-10-08T05:01:30.000Z</published>
+    <updated>2019-03-01T06:48:45.132Z</updated>
+    
+    <content type="html"><![CDATA[<p>   Solr服务搭建<br>      1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。<br>      2、搭建步骤：<br>            第一步： 把solr的压缩包上传到Linux系统<br>            第二步： 解压solr<br>            第三步： 安装Tomcat，解压缩即可。<br>            第四步： 把solr部署到Tomcat下。<br>            第五步： 解压缩war包。启动<br>            第六步： 把/root/solr-4.10.3/example/lib/ext 目录下的所有的jar包，添加到 solr 工程中。<br>            [root@localhost ext]# pwd<br>            /root/solr-4.10.3/example/lib/ext<br>            [root@localhost ext]# cp* /usr/local/solr/tomcat/webapps/solr/WEB-INF/lib/<br>            第七步： 创建一个 solrhome. /exanple/solr 目录就是一个 solrhome. 复制此目录到 /usr/local/solr/solrhome<br>            [root@localhost example]# pwd<br>            /root/solr-4.10.3/example<br>            [root@localhost example]# cp -r solr /usr/local/solr/solrhome<br>            [root@localhost example]#<br>            第八步：关联solr及solrhome。需要修改solr工程的web.xml文件<br>             <img src="/2018/10/08/Solr搜索引擎在代码中的简单入门使用介绍/Solr单机版服务搭建/01.png" alt="你想输入的替代文字"><br>            第九步：启动Tomcat<br>                    <a href="http://192.168.25.154:8080/solr/" target="_blank" rel="noopener">http://192.168.25.154:8080/solr/</a><br>                    和windows下的配置完全一样。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   Solr服务搭建&lt;br&gt;      1、solr的环境:solr是Java开发，需要安装JDK，安装环境Linux，需要安装Tomcat。&lt;br&gt;      2、搭建步骤：&lt;br&gt;            第一步： 把solr的压缩包上传到Linux系统&lt;br&gt;    
+      
+    
+    </summary>
+    
+      <category term="服务搭建" scheme="https://liuhusen.com/categories/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+    
+    
+      <category term="Solr单机版服务搭建" scheme="https://liuhusen.com/tags/Solr%E5%8D%95%E6%9C%BA%E7%89%88%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/"/>
+    
+  </entry>
   
   <entry>
     <title>常用的扒拉后台日志操作命令</title>
@@ -38,6 +117,59 @@
     
     
       <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>常见框架单例、多例与线程安全性总结</title>
+    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93/"/>
+    <id>https://liuhusen.com/2018/08/08/常见框架单例、多例与线程安全性总结/</id>
+    <published>2018-08-08T05:01:30.000Z</published>
+    <updated>2019-03-22T03:23:51.435Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>   单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是线程安全的;若有可能影响，则是线程不安全的。现在对 HttpServlet、HttpSession、SpingMVC、Struts2 中的 Action、Hibernate 中的 SessionFactory与 Session，进行总结。 (1)HttpServlet    其是单例的。即无论多少用户访问同一个业务，如 LoginServlet，Web 容器只会创建一个该 Servlet 实例。而该实例是允许多用户访问的。    若 Servlet 中包含成员变量，则每个用户对于成员变量的修改，均会影响到其他用户所看到的该变量的值，所以这时是线程不安全的。    若不包含成员变量，则是线程安全的。(2)HttpSession    其是多例的。Web 容器会为每个用户开辟一个 Session，多个用户会有多个 Session。而每个用户只能访问自己的 Session。    所以，对于 Session 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。(3)SpingMVC Controller    Spring MVC Controller默认是单例的：    单例的原因有二：    1、为了性能。    2、不需要多例。    如果需要多例，则需要在Controller类上加注解 @Scope(“prototype”)(4)Struts2 的 Action    其是多例的。对于同一个业务，例如 LoginAction，系统会为每一个用户创建一个LoginAction 的实例，    并使其成员变量 username 与 password 接收用户 交的数据。同一用户只能访问自己的 Action。    所以，对于 Action 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (5)Hibernate 的 SessionFactory    其是单例的。无论多少用户访问该项目，系统只会创建一个 SessionFactory 对象，即这个对象是可以被所有用户访问的。    SessionFactory实现类中所包含的成员变量基本都是 final常量，即任何用户均不能修改。所以，也就不存在用户的修改对其他用户的影响问题了，所以是线程安全的。 (6)Hibernate 的 Session    其是多例的。系统会为每个用户创建一个 Sessio。    Session 的实现类中定义了很多的非 final 成员变量，一个事务对成员变量所做的修改，会影响到另一个事务对同一数据的访问结果，所以是线程不安全的。 </code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;   单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。
+
+线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是
+      
+    
+    </summary>
+    
+      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
+    
+    
+      <category term="多例，多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E4%BE%8B%EF%BC%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redis的安装与集群搭建</title>
+    <link href="https://liuhusen.com/2018/02/08/redis%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/"/>
+    <id>https://liuhusen.com/2018/02/08/redis的安装与集群搭建/</id>
+    <published>2018-02-08T05:01:30.000Z</published>
+    <updated>2019-02-28T11:40:30.824Z</updated>
+    
+    <content type="html"><![CDATA[<p>   Redis是C语言开发的。<br>   安装Redis需要C语言的编译环境。如果没有gcc 需要在线安装。 Yum install gcc-c++</p><p>   安装步骤：<br>        第一步： Redis的源码包上传到Linux系统。<br>        第二步： 解压缩Redis。<br>        第三步： 编译  make<br>        第四步： 安装  make install PREFIX=/usr/local/redis</p><p>   连接Redis：<br>        1.Redis的启动：<br>            前端启动：[root@localhost bin]# ./redis-server<br>            后台启动： 把 /root/redis-3.0.0/redis.conf 复制到 /usr/local/redis/bin目录下<br>                      [root@localhost bin]# cp redis.conf  /usr/local/redis/bin/<br>            修改配置文件：<br>             <img src="/2018/02/08/redis的安装与集群搭建/01.png" alt="你想输入的替代文字"><br>             [root@localhost bin]# ./redis-server redis.conf<br>             查看Redis进程：<br>                            [root@localhost bin]# ps aux|grep redis<br>                            root      5190  0.1  0.3  33936  1712 ?        Ssl  18:23   0:00 ./redis-server *:6379<br>                            root      5196  0.0  0.1   4356   728 pts/0    S+   18:24   0:00 grep redis<br>                            [root@localhost bin]#<br>        2.Redis-cli<br>            [root@localhost bin]# ./redis-cli<br>            默认连接localhost运行在6379端口的Redis服务<br>            [root@localhost bin]# ./redis-cli -h 192.168.25.153 -p 6379<br>            -h : 连接的服务器地址<br>            -p : 服务的端口号</p><pre><code>3.Redis五种数据类型   String : key-value (做缓存)     Hash ：key-fields-values (做缓存)     List : 有顺序可重复      Set ：无顺序，不能重复SortedSet(zset) : 有顺序，不能重复4.Redis集群的搭建   （1） redis-cluster 架构图        ![你想输入的替代文字](redis的安装与集群搭建/02.png)        架构细节：             1.所有的Redis节点彼此互联（ping-pong机制），内部使用二进制协议优化传输速度和带宽             2.节点的fail是通过集群中超过半数的节点检测失效时才生效             3.客户端与Redis节点直连，不需要中间proxy层，客户端不需要连接集群所有节点，               连接集群中任何一个可用节点即可             4.redis-cluster 把所有的物理节点映射到 [0-16383] slot上，cluster负责维护               node&lt;-&gt;slot&lt;-&gt;node               Redis 集群中内置了 16384 个哈希槽，当需要在 redis集群中放置一个 key-value 时，               redis 先对 key 使用 crc16算法算出一个结果，然后把结果对 16384 求余，这样每个 key 都               会对应一个编号在 0-16383 之间的哈希槽，redis会根据节点数量大致均等的将哈希槽映射到               不同的节点   （2） 1、 使用ruby脚本搭建集群。需要ruby的运行环境。             安装 ruby             yum install ruby             yum install rubygems         2、 安装 ruby 脚本运行使用的包             [root@localhost ~]#  gem install redis-3.0.0.gem             Successfully installed redis-3.0.0             1 gem installed             Installing ri documentation for redis-3.0.0...             Installing RDoc documentation for redis-3.0.0...             [root@localhost ~]#              [root@localhost ~]#  redis-3.0.0/src             [root@localhost ~]#  ll*.rb             -rwxrwxr-x. 1 root root 48141 Apr  1  2015 redis-trib.rb         3、 搭建步骤             需要6台redis服务器。搭建伪分布式。             需要6个redis实例。             需要运行在不同的端口 7001-7006             第一步：创建6个redis实例，每个实例运行在不同的端口。需要修改redis.conf配置文件。                     配置文件中还需要把 cluster-enabled yes 前的注释去掉                     ![你想输入的替代文字](redis的安装与集群搭建/03.png)             第二步：启动每个redis实例。             第三步：使用ruby脚本搭建集群。                     ./redis-trib.rb create --replicas 1 192.168.25.153:7001 192.168.25.153:7002                       192.168.25.153:7003 192.168.25.153:7004 192.168.25.153:7005  192.168.25.153:7006                      创建关闭集群的脚本：                       [root@localhost redis-cluster]# vim shutdow-all.sh                      redis01/redis-cli -p 7001 shutdown                      redis01/redis-cli -p 7002 shutdown                      redis01/redis-cli -p 7003 shutdown                      redis01/redis-cli -p 7004 shutdown                      redis01/redis-cli -p 7005 shutdown                      redis01/redis-cli -p 7006 shutdown                      [root@localhost redis-cluster]# chomd u+x shutdown-all.sh                      [root@localhost redis-cluster]# ./redis-trib.rb create --replicas 1 192.168.25.153:7001                      192.168.25.153:7002 192.168.25.153:7003 192.168.25.153:7004 192.168.25.153:7005                      192.168.25.153:7006                      &gt;&gt;&gt; Creating cluster                      Connecting to node 192.168.25.153:7001: OK                      Connecting to node 192.168.25.153:7002: OK                      Connecting to node 192.168.25.153:7003: OK                      Connecting to node 192.168.25.153:7004: OK                      Connecting to node 192.168.25.153:7005: OK                      Connecting to node 192.168.25.153:7006: OK                      &gt;&gt;&gt; Performing hash slots allocation on 6 nodes...                      Using 3 masters:                      192.168.25.153:7001                      192.168.25.153:7002                      192.168.25.153:7003                      Adding replica 192.168.25.153:7004 to 192.168.25.153:7001                      Adding replica 192.168.25.153:7005 to 192.168.25.153:7002                      Adding replica 192.168.25.153:7006 to 192.168.25.153:7003                      M: 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3 192.168.25.153:7001                         slots:0-5460 (5461 slots) master                      M: 8cd93a9a943b4ef851af6a03edd699a6061ace01 192.168.25.153:7002                         slots:5461-10922 (5462 slots) master                      M: 2935007902d83f20b1253d7f43dae32aab9744e6 192.168.25.153:7003                         slots:10923-16383 (5461 slots) master                      S: 74f9d9706f848471583929fc8bbde3c8e99e211b 192.168.25.153:7004                         replicates 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3                      S: 42cc9e25ebb19dda92591364c1df4b3a518b795b 192.168.25.153:7005                         replicates 8cd93a9a943b4ef851af6a03edd699a6061ace01                      S: 8b1b11d509d29659c2831e7a9f6469c060dfcd39 192.168.25.153:7006                         replicates 2935007902d83f20b1253d7f43dae32aab9744e6                      Can I set the above configuration? (type &apos;yes&apos; to accept): yes                      &gt;&gt;&gt; Nodes configuration updated                      &gt;&gt;&gt; Assign a different config epoch to each node                      &gt;&gt;&gt; Sending CLUSTER MEET messages to join the cluster                      Waiting for the cluster to join.....                      &gt;&gt;&gt; Performing Cluster Check (using node 192.168.25.153:7001)                      M: 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3 192.168.25.153:7001                         slots:0-5460 (5461 slots) master                      M: 8cd93a9a943b4ef851af6a03edd699a6061ace01 192.168.25.153:7002                         slots:5461-10922 (5462 slots) master                      M: 2935007902d83f20b1253d7f43dae32aab9744e6 192.168.25.153:7003                         slots:10923-16383 (5461 slots) master                      M: 74f9d9706f848471583929fc8bbde3c8e99e211b 192.168.25.153:7004                         slots: (0 slots) master                         replicates 2e48ae301e9c32b04a7d4d92e15e98e78de8c1f3                      M: 42cc9e25ebb19dda92591364c1df4b3a518b795b 192.168.25.153:7005                         slots: (0 slots) master                         replicates 8cd93a9a943b4ef851af6a03edd699a6061ace01                      M: 8b1b11d509d29659c2831e7a9f6469c060dfcd39 192.168.25.153:7006                         slots: (0 slots) master                         replicates 2935007902d83f20b1253d7f43dae32aab9744e6                      [OK] All nodes agree about slots configuration.                      &gt;&gt;&gt; Check for open slots...                      &gt;&gt;&gt; Check slots coverage...                      [OK] All 16384 slots covered.                      [root@localhost redis-cluster]# 5、 集群的使用方法    Redis-cli 连接集群    。    [root@localhost redis-cluster]# redis01/redis-cli -p 7002 -c    -c: 代表连接的是redis集群</code></pre><p>   （3） Jedis<br>         需要把jedis依赖的jar包添加到工程中。Maven工程中需要把jedis的坐标添加到依赖。<br>         推荐添加到服务层。Taotao-content-Service 工程中</p><pre><code>     1. 连接单机版        第一步：创建一个Jedis对象。需要指定服务端的IP及端口。        第二步：使用Jedis对象操作数据库，每个Jedis命令对应一个方法。        第三步：打印结果。        第四步：关闭Jedis        代码如下：        @Test            public void testJedis() throws Exception {                // 第一步：创建一个Jedis对象。需要指定服务端的ip及端口。                Jedis jedis = new Jedis(&quot;192.168.25.153&quot;, 6379);                // 第二步：使用Jedis对象操作数据库，每个redis命令对应一个方法。                String result = jedis.get(&quot;hello&quot;);                // 第三步：打印结果。                System.out.println(result);                // 第四步：关闭Jedis                jedis.close();            }          2、连接单机版使用连接池          第一步： 创建一个JedisPool对象。需要指定服务器的IP及端口。          第二步： 从JedisPool中获取Jedis对象。          第三步： 使用Jedis操作redis服务器          第四步： 使用完毕后关闭jedis对象，连接池回收资源。          第五步： 关闭JedisPool对象。          代码如下：            @Test            public void testJedisPool() throws Exception {                // 第一步：创建一个JedisPool对象。需要指定服务端的ip及端口。                JedisPool jedisPool = new JedisPool(&quot;192.168.25.153&quot;, 6379);                // 第二步：从JedisPool中获得Jedis对象。                Jedis jedis = jedisPool.getResource();                // 第三步：使用Jedis操作redis服务器。                jedis.set(&quot;jedis&quot;, &quot;test&quot;);                String result = jedis.get(&quot;jedis&quot;);                System.out.println(result);                // 第四步：操作完毕后关闭jedis对象，连接池回收资源。                jedis.close();                // 第五步：关闭JedisPool对象。                jedisPool.close();            }           3、连接集群版         第一步: 使用JedisCluster对象。需要一个 Set&lt;HostAndPost&gt; 参数。Redis 节点列表。         第二步：直接使用JedisCluster对象操作redis。在系统中单例存在。         第三步：打印结果。                第四步：系统关闭前，关闭JedisCluster对象。         代码如下：        @Test        public void testJedisCluster() throws Exception {            // 第一步：使用JedisCluster对象。需要一个Set&lt;HostAndPort&gt;参数。Redis节点的列表。            Set&lt;HostAndPort&gt; nodes = new HashSet&lt;&gt;();            nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7001));            nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7002));            nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7003));            nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7004));            nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7005));            nodes.add(new HostAndPort(&quot;192.168.25.153&quot;, 7006));            JedisCluster jedisCluster = new JedisCluster(nodes);            // 第二步：直接使用JedisCluster对象操作redis。在系统中单例存在。            jedisCluster.set(&quot;hello&quot;, &quot;100&quot;);            String result = jedisCluster.get(&quot;hello&quot;);            // 第三步：打印结果            System.out.println(result);            // 第四步：系统关闭前，关闭JedisCluster对象。            jedisCluster.close();        }    （4）、实际使用案例：在实际业务逻辑的添加缓存            1、 接口封装            常用的操作redis的方法提取出一个接口，分别对应单机版和集群版创建两个实现类。        2、 单机版接口定义            public interface JedisClient {                String set(String key, String value);                String get(String key);                Boolean exists(String key);                Long expire(String key, int seconds);                Long ttl(String key);                Long incr(String key);                Long hset(String key, String field, String value);                String hget(String key, String field);                Long hdel(String key, String... field);            }            3、 单机版实现类             public class JedisClientPool implements JedisClient {                @Autowired                private JedisPool jedisPool;                @Override                public String set(String key, String value) {                    Jedis jedis = jedisPool.getResource();                    String result = jedis.set(key, value);                    jedis.close();                    return result;                }                @Override                public String get(String key) {                    Jedis jedis = jedisPool.getResource();                    String result = jedis.get(key);                    jedis.close();                    return result;                }                @Override                public Boolean exists(String key) {                    Jedis jedis = jedisPool.getResource();                    Boolean result = jedis.exists(key);                    jedis.close();                    return result;                }                @Override                public Long expire(String key, int seconds) {                    Jedis jedis = jedisPool.getResource();                    Long result = jedis.expire(key, seconds);                    jedis.close();                    return result;                }                @Override                public Long ttl(String key) {                    Jedis jedis = jedisPool.getResource();                    Long result = jedis.ttl(key);                    jedis.close();                    return result;                }                @Override                public Long incr(String key) {                    Jedis jedis = jedisPool.getResource();                    Long result = jedis.incr(key);                    jedis.close();                    return result;                }                @Override                public Long hset(String key, String field, String value) {                    Jedis jedis = jedisPool.getResource();                    Long result = jedis.hset(key, field, value);                    jedis.close();                    return result;                }                @Override                public String hget(String key, String field) {                    Jedis jedis = jedisPool.getResource();                    String result = jedis.hget(key, field);                    jedis.close();                    return result;                }                @Override                public Long hdel(String key, String... field) {                    Jedis jedis = jedisPool.getResource();                    Long result = jedis.hdel(key, field);                    jedis.close();                    return result;                }            }                    配置applicationContext-redis.xml         &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;            &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;                xmlns:context=&quot;http://www.springframework.org/schema/context&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;                xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;                xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;                xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans4.2.xsd                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context4.2.xsd                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop4.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx4.2.xsd                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util4.2.xsd&quot;&gt;                &lt;!--配置单机版的连接--&gt;                &lt;bean id=&quot;jedisPool&quot; class=&quot;redis.client.jedis.JedisPool&quot;&gt;                      &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt; &lt;/constructor-arg&gt;                      &lt;constructor-arg name=&quot;port&quot; value=&quot;6379&quot;&gt; &lt;/constructor-arg&gt;                &lt;/bean&gt;                &lt;bean id=&quot;jedisClientPool&quot; class=&quot;com.taotao.jedis.JedisClientPool&quot; /&gt;            &lt;/beans&gt;        集群版实现类：           代码如下：            package com.taotao.jedis;                import org.springframework.beans.factory.annotation.Autowired;                import redis.clients.jedis.JedisCluster;                public class JedisClientCluster implements JedisClient {                    @Autowired                    private JedisCluster jedisCluster;                    @Override                    public String set(String key, String value) {                        return jedisCluster.set(key, value);                    }                    @Override                    public String get(String key) {                        return jedisCluster.get(key);                    }                    @Override                    public Boolean exists(String key) {                        return jedisCluster.exists(key);                    }                    @Override                    public Long expire(String key, int seconds) {                        return jedisCluster.expire(key, seconds);                    }                    @Override                    public Long ttl(String key) {                        return jedisCluster.ttl(key);                    }                    @Override                    public Long incr(String key) {                        return jedisCluster.incr(key);                    }                    @Override                    public Long hset(String key, String field, String value) {                        return jedisCluster.hset(key, field, value);                    }                    @Override                    public String hget(String key, String field) {                        return jedisCluster.hget(key, field);                    }                    @Override                    public Long hdel(String key, String... field) {                        return jedisCluster.hdel(key, field);                    }                }            Spring的配置：                 &lt;!-- 集群版的配置 --&gt;                        &lt;bean id=&quot;jedisCluster&quot; class=&quot;redis.clients.jedis.JedisCluster&quot;&gt;                            &lt;constructor-arg&gt;                               &lt;set&gt;                                    &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt;                                          &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt; &lt;/constructor-arg&gt;                                          &lt;constructor-arg name=&quot;port&quot; value=&quot;7001&quot;&gt; &lt;/constructor-arg&gt;                                    &lt;/beans&gt;                                    &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt;                                          &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt; &lt;/constructor-arg&gt;                                          &lt;constructor-arg name=&quot;port&quot; value=&quot;7002&quot;&gt; &lt;/constructor-arg&gt;                                    &lt;/beans&gt;                                    &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt;                                        &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt;                                        &lt;constructor-arg name=&quot;port&quot; value=&quot;7003&quot;&gt;&lt;/constructor-arg&gt;                                    &lt;/bean&gt;                                    &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt;                                        &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt;                                        &lt;constructor-arg name=&quot;port&quot; value=&quot;7004&quot;&gt;&lt;/constructor-arg&gt;                                    &lt;/bean&gt;                                    &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt;                                        &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt;                                        &lt;constructor-arg name=&quot;port&quot; value=&quot;7005&quot;&gt;&lt;/constructor-arg&gt;                                    &lt;/bean&gt;                                    &lt;bean class=&quot;redis.clients.jedis.HostAndPort&quot;&gt;                                        &lt;constructor-arg name=&quot;host&quot; value=&quot;192.168.25.153&quot;&gt;&lt;/constructor-arg&gt;                                        &lt;constructor-arg name=&quot;port&quot; value=&quot;7006&quot;&gt;&lt;/constructor-arg&gt;                                    &lt;/bean&gt;                                &lt;/set&gt;                            &lt;/constructor-arg&gt;                        &lt;/bean&gt;                        &lt;bean id=&quot;jedisClientCluster&quot; class=&quot;com.taotao.jedis.JedisClientCluster&quot; /&gt;                        注意： 单机版和集群版不能共存，使用单机版时注释集群版的配置。使用集群版，把单机版注释。                        工作中常用的业务：（注意：添加缓存时不能影响正常业务逻辑）                            1.大数据量查询时:                                  查数据库之前先查询缓存，查到结果就直接响应结果，查不到则                                  缓存中没有，需要查询数据库，把查询结果添加到缓存中。                                  还需要考虑到一点  ： 缓存同步-- 对内容信息做增删改查操作后把对应缓存删除即可。</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   Redis是C语言开发的。&lt;br&gt;   安装Redis需要C语言的编译环境。如果没有gcc 需要在线安装。 Yum install gcc-c++&lt;/p&gt;
+&lt;p&gt;   安装步骤：&lt;br&gt;        第一步： Redis的源码包上传到Linux系统。&lt;br&gt;    
+      
+    
+    </summary>
+    
+      <category term="redis" scheme="https://liuhusen.com/categories/redis/"/>
+    
+    
+      <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
     
   </entry>
   
@@ -164,6 +296,37 @@ INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
   </entry>
   
   <entry>
+    <title>接口传输时对乱码的处理和post与个体的区别</title>
+    <link href="https://liuhusen.com/2017/05/26/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86%E5%92%8Cpost%E4%B8%8E%E4%B8%AA%E4%BD%93%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
+    <id>https://liuhusen.com/2017/05/26/接口传输时对乱码的处理和post与个体的区别/</id>
+    <published>2017-05-26T11:57:47.000Z</published>
+    <updated>2019-01-31T09:23:33.724Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;;表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;字段建唯一索引：create index idx_province_id on 表名 (表字段 );                               上为索引                create index 字段的索引 on 表名 (表字段 );               删除字段的索引：alter table 表名 drop index idx_province_id ;                                        上为索引                alter table 表名 drop 字段的索引 ;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &amp;apos;字段描述&amp;apos;;
+
+表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;
+      
+    
+    </summary>
+    
+      <category term="接口传输" scheme="https://liuhusen.com/categories/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
+    
+    
+      <category term="接口传输" scheme="https://liuhusen.com/tags/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
+    
+      <category term="post请求传输" scheme="https://liuhusen.com/tags/post%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
+    
+      <category term="get请求传输" scheme="https://liuhusen.com/tags/get%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
+    
+  </entry>
+  
+  <entry>
     <title>页面常用的设置：显示，隐藏，只读，不可编辑，取值，置空</title>
     <link href="https://liuhusen.com/2016/11/06/%E9%A1%B5%E9%9D%A2%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E7%BD%AE%EF%BC%9A%E6%98%BE%E7%A4%BA%EF%BC%8C%E9%9A%90%E8%97%8F%EF%BC%8C%E5%8F%AA%E8%AF%BB%EF%BC%8C%E4%B8%8D%E5%8F%AF%E7%BC%96%E8%BE%91%EF%BC%8C%E5%8F%96%E5%80%BC%EF%BC%8C%E7%BD%AE%E7%A9%BA/"/>
     <id>https://liuhusen.com/2016/11/06/页面常用的设置：显示，隐藏，只读，不可编辑，取值，置空/</id>
@@ -245,6 +408,34 @@ $(&amp;quot;#id&amp;quot;).val(&amp;apos;变量名&amp;apos;)   // 赋值
     
     
       <category term="虚拟机VMware安装教程" scheme="https://liuhusen.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BAVMware%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于FastDFS图片服务器详解</title>
+    <link href="https://liuhusen.com/2016/08/16/%E5%85%B3%E4%BA%8EFastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://liuhusen.com/2016/08/16/关于FastDFS图片服务器详解/</id>
+    <published>2016-08-16T08:22:30.000Z</published>
+    <updated>2019-02-27T08:30:51.775Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>首先，什么是FastDFS ?    fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的，    因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、    高性能等指标。使用fastDFS很容易搭建一套高性能的文件服务器集群提供文件上传    和下载功能。fastDFS的架构：    fastDFS的架构包括tracker server 和 stroage server 。客户端请求 tracker server 进    行文件上传/下载，通过tracker server 调度最终由 stroage server 完成文件上传和下载        tracker server ：作用是负载均衡和调度，通过tracker server 在文件上传时通过一些策略    找到stroage server提供文件上传下载服务，可以称tracker server 为追踪服务器或调度服务器。    stroage server : 作用是文件存储，客户端上传的文件最终存储在 stroage 服务器上，stroage server没有    实现自己的文件系统而是利用操作系统的文件系统来管理文件，可称stroage server为存储服务器。    ![你想输入的替代文字](关于FastDFS图片服务器详解/01.png)服务端两个角色：    Tracker：管理集群，tracker也可以实现集群。每个tracker节点地位平等。    收集Storage集群的状态。    Storage：实际保存文件，Storage分为多个组，每个组之间保存的文件是不同的。    每个组内部可以有多个成员，组成员内部保存的内容是一样的，组成员的地位是一致的，没有主从的概念。文件上传的流程：    ![你想输入的替代文字](关于FastDFS图片服务器详解/02.png)客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。    ![你想输入的替代文字](关于FastDFS图片服务器详解/03.png)  组名：文件上传后所在的storage组名称，在文件上传成功后由storage服务器返回，          需要客户端自行保存。 </code></pre><p>      虚拟磁盘路径：storage配置的虚拟路径，与磁盘选项store_path*对应。如果配置<br>                      了store_path0则是M00，如果配置了store_path1则是M01，以此类推。<br>      数据两级目录：storage服务器在每个虚拟磁盘路径下创建的两级目录，用于存储数据文件。<br>      文件名：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器<br>                IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。</p><pre><code>文件下载：    ![你想输入的替代文字](关于FastDFS图片服务器详解/04.png)最简单的FastDFS架构：    ![你想输入的替代文字](关于FastDFS图片服务器详解/05.png)图片服务器安装方法：    1.安装步骤        第一步：把图片服务器解压缩。        第二步：把图片服务器添加到Vmware中。        第三步：Vmware的网络配置。        ![你想输入的替代文字](关于FastDFS图片服务器详解/06.png)        第四步：开机        ![你想输入的替代文字](关于FastDFS图片服务器详解/07.png)        移动：网络配置不发生变化。要使用图片服务器，需要保证网络配置不变。        复制：重新生成一块网卡mac地址是新地址。        Ip地址：192.168.25.133        用户名root、itcast        密码：itcast图片服务器使用：            ![你想输入的替代文字](关于FastDFS图片服务器详解/08.png)        ![你想输入的替代文字](关于FastDFS图片服务器详解/09.png)上传图片：    1.上传步骤：        1、加载配置文件，配置文件中的内容就是tracker服务的地址。           配置文件内容：tracker_server=192.168.25.133:22122        2、创建一个TrackerClient对象。直接new一个。        3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。        4、创建一个StorageServer的引用，值为null        5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用        6、使用StorageClient对象上传图片。        7、返回数组。包含组名和图片的路径。        代码如下：        public class FastDFSTest {        @Test        public void testFileUpload() throws Exception {            // 1、加载配置文件，配置文件中的内容就是tracker服务的地址。            ClientGlobal.init(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;);            // 2、创建一个TrackerClient对象。直接new一个。            TrackerClient trackerClient = new TrackerClient();            // 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。            TrackerServer trackerServer = trackerClient.getConnection();            // 4、创建一个StorageServer的引用，值为null            StorageServer storageServer = null;            // 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用            StorageClient storageClient = new StorageClient(trackerServer, storageServer);            // 6、使用StorageClient对象上传图片。            //扩展名不带“.”            String[] strings = storageClient.upload_file(&quot;D:/Documents/Pictures/images/200811281555127886.jpg&quot;, &quot;jpg&quot;, null);            // 7、返回数组。包含组名和图片的路径。            for (String string : strings) {                System.out.println(string);            }        }    }使用工具类上传：            ![你想输入的替代文字](关于FastDFS图片服务器详解/10.png)            @Test            public void testFastDfsClient() throws Exception {                FastDFSClient fastDFSClient = new FastDFSClient(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;);                String file = fastDFSClient.uploadFile(&quot;D:/Documents/Pictures/images/2f2eb938943d.jpg&quot;);                System.out.println(file);            }</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;首先，什么是FastDFS ?
+    fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的，
+    因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、
+    高性能等指标。使用fastDFS很容易搭建一套高
+      
+    
+    </summary>
+    
+      <category term="服务器" scheme="https://liuhusen.com/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    
+      <category term="FastDFS图片服务器" scheme="https://liuhusen.com/tags/FastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     
   </entry>
   
@@ -388,207 +579,6 @@ $(&amp;quot;#id&amp;quot;).val(&amp;apos;变量名&amp;apos;)   // 赋值
       <category term="正则表达式" scheme="https://liuhusen.com/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/"/>
     
       <category term="输入框的输入限制效果" scheme="https://liuhusen.com/tags/%E8%BE%93%E5%85%A5%E6%A1%86%E7%9A%84%E8%BE%93%E5%85%A5%E9%99%90%E5%88%B6%E6%95%88%E6%9E%9C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>this 和super 关键字的区别</title>
-    <link href="https://liuhusen.com/2015/11/12/JAVA%E5%9F%BA%E7%A1%80%EF%BC%9Athis%20%E5%92%8Csuper%20%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>https://liuhusen.com/2015/11/12/JAVA基础：this 和super 关键字的区别/</id>
-    <published>2015-11-12T04:33:26.000Z</published>
-    <updated>2018-10-30T12:00:30.976Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>属性的区别：this访问本类中的属性，如果本类没有此属性则从父类中继续查找。super访问父类中的属性。 方法的区别：this访问本类中的方法，如果本类没有此方法则从父类中继续查找。super访问父类中的方法。 构造的区别：this调用本类构造，必须放在构造方法的首行。super调用父类构造，必须放在子类构造方法首行。 其他区别：this表示当前对象。super不能表示当前对象 1、this. 变量和super.变量     this.变量 调用的当前对象的变量；     super.变量 直接调用的是父类中的变量。     2、this(参数)和super(参数)方法     this(参数) 调用（转发）的是当前类中的构造器；     super(参数) 用于确认要使用父类中的哪一个构造器。 注意点：     1）在对拥有父类的子类进行初始化时，父类的构造方法也会执行，且优先于子类的构造函数执行；因为每一个子类的构造函数中的第一行都有一条默认的隐式语句super();     2）this() 和super()都只能写在构造函数的第一行；     3）this() 和super() 不能存在于同一个构造函数中。第一，this()和super()都必须写在构造函数的第一行；第二，this()语句调用的是当前类的另一个构造函数而这个另一个构造函数中必然有一个父类的构造器，再使用super()又调用一次父类的构造器， 就相当于调用了两次父类的构造器，编译器不会通过；     4）this和super不能用于static修饰的变量，方法，代码块；因为this和super都是指的是对象（实例）。</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;属性的区别：this访问本类中的属性，如果本类没有此属性则从父类中继续查找。super访问父类中的属性。 
-方法的区别：this访问本类中的方法，如果本类没有此方法则从父类中继续查找。super访问父类中的方法。 
-构造的区别：this调用本类构造，必须放在
-      
-    
-    </summary>
-    
-      <category term="JAVA基础" scheme="https://liuhusen.com/categories/JAVA%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="JAVA基础" scheme="https://liuhusen.com/tags/JAVA%E5%9F%BA%E7%A1%80/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>访问控制符public,protected,private,以及默认的区别</title>
-    <link href="https://liuhusen.com/2015/10/08/%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public,protected,private,%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>https://liuhusen.com/2015/10/08/访问控制符public,protected,private,以及默认的区别/</id>
-    <published>2015-10-08T05:01:30.000Z</published>
-    <updated>2018-11-14T08:20:34.057Z</updated>
-    
-    <content type="html"><![CDATA[<p>   访问控制符public,protected,private,以及默认的区别：</p><pre><code>private只有在本类中才能访问；public在任何地方都能访问；protected在同包内的类及包外的子类能访问；默认不写在同包内能访问。是否可以继承String类？？？String类是final类故不可以继承，一切由final修饰过的都不能继承。</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   访问控制符public,protected,private,以及默认的区别：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;private只有在本类中才能访问；
-public在任何地方都能访问；
-protected在同包内的类及包外的子类能访问；
-默认不写在同包内能访问。
-
-是否可以
-      
-    
-    </summary>
-    
-      <category term="java基础" scheme="https://liuhusen.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java基础" scheme="https://liuhusen.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>String和StringBuffer、StringBuilder的区别</title>
-    <link href="https://liuhusen.com/2015/10/08/String%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>https://liuhusen.com/2015/10/08/String和StringBuffer、StringBuilder的区别/</id>
-    <published>2015-10-08T05:01:30.000Z</published>
-    <updated>2018-11-14T08:24:46.645Z</updated>
-    
-    <content type="html"><![CDATA[<p>   String和StringBuffer、StringBuilder的区别：</p><p>   –可变性<br>    String类中使用字符数组保存字符串，private<br>    final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自<br>    AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[]<br>    value，这两种对象都是可变的。</p><p>  –线程安全性<br>    String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与<br>    StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf<br>    等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。<br>    StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。</p><p>  –性能<br>    每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。<br>    StringBuffer每次都会对<br>    StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用<br>    StirngBuilder 相比使用<br>    StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   String和StringBuffer、StringBuilder的区别：&lt;/p&gt;
-&lt;p&gt;   –可变性&lt;br&gt;    String类中使用字符数组保存字符串，private&lt;br&gt;    final char value[]，所以string对象是不可变的。Stri
-      
-    
-    </summary>
-    
-      <category term="java基础" scheme="https://liuhusen.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java基础" scheme="https://liuhusen.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>构造器Constructor是否可被override</title>
-    <link href="https://liuhusen.com/2015/10/08/%E6%9E%84%E9%80%A0%E5%99%A8Constructor%E6%98%AF%E5%90%A6%E5%8F%AF%E8%A2%ABoverride/"/>
-    <id>https://liuhusen.com/2015/10/08/构造器Constructor是否可被override/</id>
-    <published>2015-10-08T05:01:30.000Z</published>
-    <updated>2018-11-14T08:17:12.433Z</updated>
-    
-    <content type="html"><![CDATA[<p>   构造器Constructor是否可被override：</p><p>   构造器不能被重写，不能用static修饰构造器，只能用public<br>   private protected这三个权限修饰符，且不能有返回语句。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   构造器Constructor是否可被override：&lt;/p&gt;
-&lt;p&gt;   构造器不能被重写，不能用static修饰构造器，只能用public&lt;br&gt;   private protected这三个权限修饰符，且不能有返回语句。&lt;/p&gt;
-
-      
-    
-    </summary>
-    
-      <category term="java基础" scheme="https://liuhusen.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java基础" scheme="https://liuhusen.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java的四个基本特性（抽象、封装、继承，多态）</title>
-    <link href="https://liuhusen.com/2015/10/08/Java%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%88%E6%8A%BD%E8%B1%A1%E3%80%81%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%A4%9A%E6%80%81%EF%BC%89/"/>
-    <id>https://liuhusen.com/2015/10/08/Java的四个基本特性（抽象、封装、继承，多态）/</id>
-    <published>2015-10-08T05:01:30.000Z</published>
-    <updated>2018-11-14T08:13:16.754Z</updated>
-    
-    <content type="html"><![CDATA[<p>   Java的四个基本特性（抽象、封装、继承，多态）：</p><p>   –抽象：就是把现实生活中的某一类东西提取出来，用程序代码表示，我们通常叫做类或者接口。<br>     抽象包括两个方面：一个是数据抽象，一个是过程抽象。数据抽象也就是对象的属性。过程抽象是对象的行为特征。</p><p>  –封装：把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信<br>          的进行封装隐藏。<br>    封装分为属性的封装和方法的封装。</p><p>  –继承：是对有着共同特性的多类事物，进行再抽象成一个类。这个类就是多类事物的父类。父类的意义在于<br>          抽取多类事物的共性。</p><p>  –多态：允许不同类的对象对同一消息做出响应。方法的重载、类的覆盖正体现了多态。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   Java的四个基本特性（抽象、封装、继承，多态）：&lt;/p&gt;
-&lt;p&gt;   –抽象：就是把现实生活中的某一类东西提取出来，用程序代码表示，我们通常叫做类或者接口。&lt;br&gt;     抽象包括两个方面：一个是数据抽象，一个是过程抽象。数据抽象也就是对象的属性。过程抽象是对象的
-      
-    
-    </summary>
-    
-      <category term="java基础" scheme="https://liuhusen.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java基础" scheme="https://liuhusen.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>自动装箱与拆箱</title>
-    <link href="https://liuhusen.com/2015/10/08/%E8%87%AA%E5%8A%A8%E8%A3%85%E7%AE%B1%E4%B8%8E%E6%8B%86%E7%AE%B1/"/>
-    <id>https://liuhusen.com/2015/10/08/自动装箱与拆箱/</id>
-    <published>2015-10-08T05:01:30.000Z</published>
-    <updated>2018-11-14T08:29:28.246Z</updated>
-    
-    <content type="html"><![CDATA[<p>   自动装箱与拆箱：</p><p>   装箱：将基本类型用它们对应的引用类型包装起来；<br>   拆箱：将包装类型转换为基本数据类型；<br>   Java使用自动装箱和拆箱机制，节省了常用数值的内存开销和创建对象的开销，提高了效率，由编译器来完<br>   成，编译器会在编译期根据语法决定是否进行装箱和拆箱动作。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   自动装箱与拆箱：&lt;/p&gt;
-&lt;p&gt;   装箱：将基本类型用它们对应的引用类型包装起来；&lt;br&gt;   拆箱：将包装类型转换为基本数据类型；&lt;br&gt;   Java使用自动装箱和拆箱机制，节省了常用数值的内存开销和创建对象的开销，提高了效率，由编译器来完&lt;br&gt;   成，编译
-      
-    
-    </summary>
-    
-      <category term="java基础" scheme="https://liuhusen.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java基础" scheme="https://liuhusen.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>抽象类和接口的区别</title>
-    <link href="https://liuhusen.com/2015/10/08/%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB/"/>
-    <id>https://liuhusen.com/2015/10/08/抽象类和接口的区别/</id>
-    <published>2015-10-08T05:01:30.000Z</published>
-    <updated>2018-11-14T08:28:02.671Z</updated>
-    
-    <content type="html"><![CDATA[<p>   抽象类和接口的区别：</p><p>   –语法层次<br>    抽象类和接口分别给出了不同的语法定义。<br>   –设计层次<br>    抽象层次不同，抽象类是对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、<br>    行为，但是接口却是对类局部（行为）进行抽象。抽象类是自底向上抽象而来的，接口是自顶向下设计出来<br>    的。<br>   –跨域不同<br>    抽象类所体现的是一种继承关系，要想使得继承关系合理，父类和派生类之间必须存在”is-a” 关系，即父类和派生类在概念本质上应该是相同的。对于接口则不然，并不要求接口的实现者和接口定义在<br>    概念本质上是一致的，仅仅是实现了接口定义的契约而已，”like-a”的关系。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   抽象类和接口的区别：&lt;/p&gt;
-&lt;p&gt;   –语法层次&lt;br&gt;    抽象类和接口分别给出了不同的语法定义。&lt;br&gt;   –设计层次&lt;br&gt;    抽象层次不同，抽象类是对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、&lt;br&gt;    行为，但是接
-      
-    
-    </summary>
-    
-      <category term="java基础" scheme="https://liuhusen.com/categories/java%E5%9F%BA%E7%A1%80/"/>
-    
-    
-      <category term="java基础" scheme="https://liuhusen.com/tags/java%E5%9F%BA%E7%A1%80/"/>
-    
-      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
     
   </entry>
   
