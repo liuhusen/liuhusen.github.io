@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://liuhusen.com/"/>
-  <updated>2019-04-02T03:33:26.078Z</updated>
+  <updated>2019-04-08T08:21:55.685Z</updated>
   <id>https://liuhusen.com/</id>
   
   <author>
@@ -15,6 +15,161 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>springboot之日志配置记录</title>
+    <link href="https://liuhusen.com/2019/01/22/springboot%E4%B9%8B%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95/"/>
+    <id>https://liuhusen.com/2019/01/22/springboot之日志配置记录/</id>
+    <published>2019-01-22T11:31:20.000Z</published>
+    <updated>2019-04-08T08:21:55.685Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>springboot ---   日志使用首先，假设我们要开发一个大型系统；  那么关于日志： 1、System.out.println(&quot;&quot;)；将关键数据打印在控制台；去掉？写在一个文件？ 2、框架来记录系统的一些运行时信息；日志框架 ； zhanglogging.jar； 3、高大上的几个功能？异步模式？自动归档？xxxx？ zhanglogging-good.jar？ 4、将以前框架卸下来？换上新的框架，重新修改之前相关的API；zhanglogging-prefect.jar； 5、JDBC---数据库驱动； 写了一个统一的接口层；日志门面（日志的一个抽象层）；logging-abstract.jar； 给项目中导入具体的日志实现就行了；我们之前的日志框架都是实现的抽象层；所见到过的市面上的日志框架如下；     JUL、JCL、Jboss-logging、logback、log4j、log4j2、slf4j.... 日志门面 （日志的抽象层）                                          日志实现 JCL（Jakarta Commons Logging）、                                   Log4j  、JUL（java.util.logging）         SLF4j（Simple Logging Facade for Java）、                            Log4j2 、  Logback jboss-logging         左边选一个门面（抽象层）、右边来选一个实现； 日志门面： SLF4J； 日志实现：Logback； SpringBoot：底层是Spring框架，Spring框架默认是用 JCL； 默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。 添加日志依赖 假如maven依赖中添加了spring-boot-starter-logging：     &lt;dependency&gt;         &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;         &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;     &lt;/dependency&gt; 但是呢，实际开发中我们不需要直接添加该依赖。     你会发现spring-boot-starter其中包含了 spring-boot-starter-logging，该依赖内容就是 Spring Boot 默认的日志框架 logback。    工程中有用到了web，而web依赖包含了spring-boot-starter，最终我只要引入web即可。     &lt;dependency&gt;         &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;         &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;     &lt;/dependency&gt; 控制台输出日志级别从低到高分为：TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL 在选择相应的日志实现后，具体操作如下  1.依赖配置：使用如下：     1. 如果使用 SLF4j 做门面 和logback做日志实现；        那么，由于springboot默认情况下会用Logback来记录日志，所以无需多余配置，但如果想将日志打印在指定的文件里，请同意看后面的阐述     2. 如果使用 SLF4j 做门面 和 Log4j2 做日志实现；         那么首先排除springboot默认的日志实现，并且加入log4j2的依赖  ----如下：                  &lt;dependency&gt;                     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;                     &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;                     &lt;exclusions&gt;                         &lt;exclusion&gt;                             &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt;                             &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;                         &lt;/exclusion&gt;                     &lt;/exclusions&gt;                 &lt;/dependency&gt;                &lt;dependency&gt;                     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;                     &lt;artifactId&gt;spring-boot-starter-log4j2&lt;/artifactId&gt;                &lt;/dependency&gt; 2.代码里引用：注意：开发的时候，日志记录方法的调用，不应该来直接调用日志的实现类，而是调用日志抽象层里面的方法；               给系统里面导入slf4j的jar和 logback的实现jar                 图示；                     import org.slf4j.Logger;                     import org.slf4j.LoggerFactory;                     public class HelloWorld {                       public static void main(String[] args) {                         Logger logger = LoggerFactory.getLogger(HelloWorld.class);                         logger.info(&quot;Hello World&quot;);                       }                     }  前面说过    想把日志打印在指定的文件里，还有加入其它更详细的配置，看这里：     日志输出格式：         %d表示日期时间，                 %thread表示线程名，                 %‐5level：级别从左显示5个字符宽度                 %logger{50} 表示logger名字最长50个字符，否则按照句点分割。                  %msg：日志消息，                 %n是换行符                 如：d{yyyy‐MM‐dd HH:mm:ss.SSS} [%thread] %‐5level %logger{50} ‐ %msg%n             SpringBoot修改日志的默认配置         1.             logging.level.com.atguigu=trace             #logging.path=             # 不指定路径在当前项目下生成springboot.log日志             # 可以指定完整的路径；             #logging.file=G:/springboot.log             # 在当前磁盘的根路径下创建spring文件夹和里面的log文件夹；使用 spring.log 作为默认文件             logging.path=/spring/log             #  在控制台输出的日志的格式             logging.pattern.console=%d{yyyy‐MM‐dd} [%thread] %‐5level %logger{50} ‐ %msg%n             # 指定文件中日志输出的格式             logging.pattern.file=%d{yyyy‐MM‐dd} === [%thread] === %‐5level === %logger{50} ==== %msg%n             2、指定配置             给类路径下放上每个日志框架自己的配置文件即可；SpringBoot就不使用他默认配置的了             Logging System                         Customization             Logback                                logback-spring.xml ,  logback-spring.groovy ,  logback.xml or logback.groovy             Log4j2                                 log4j2-spring.xml or  log4j2.xml             JDK (Java Util Logging)                logging.properties             logback.xml：直接就被日志框架识别了；             logback-spring.xml：日志框架就不直接加载日志的配置项，由SpringBoot解析日志配置，                         Spring Boot官方推荐优先使用带有-spring的文件名作为你的日志配置（如使用logback-spring.xml，而不是logback.xml），             命名为logback-spring.xml的日志配置文件，spring boot可以为它添加一些spring boot特有的配置项（下面会提到）。              默认的命名规则，并且放在 src/main/resources 下面即可             如果你即想完全掌控日志配置，但又不想用logback.xml作为Logback配置的名字，application.yml可以通过logging.config属性指定自定义的名字：             logging.config=classpath:logging-config.xml             1             虽然一般并不需要改变配置文件的名字，但是如果你想针对不同运行时Profile使用不同的日志配置，这个功能会很有用。              一般不需要这个属性，而是直接在logback-spring.xml中使用springProfile配置，不需要logging.config指定不同环境使用不同配置文件。             springProfile配置在下面介绍。             &lt;springProfile name=&quot;staging&quot;&gt;                 &lt;!‐‐ configuration to be enabled when the &quot;staging&quot; profile is active ‐‐&gt;                        可以指定某段配置只在某个环境下生效               &lt;/springProfile&gt;             如：                &lt;appender name=&quot;stdout&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;                         &lt;!‐‐                         日志输出格式：                         %d表示日期时间，                                     %thread表示线程名，                                     %‐5level：级别从左显示5个字符宽度                                     %logger{50} 表示logger名字最长50个字符，否则按照句点分割。                                      %msg：日志消息，                                     %n是换行符                                     ‐‐&gt;                         &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt;                             &lt;springProfile name=&quot;dev&quot;&gt;                                 &lt;pattern&gt;%d{yyyy‐MM‐dd HH:mm:ss.SSS} ‐‐‐‐&gt; [%thread] ‐‐‐&gt; %‐5level%logger{50} ‐ %msg%n&lt;/pattern&gt;                             &lt;/springProfile&gt;                             &lt;springProfile name=&quot;!dev&quot;&gt;                                 &lt;pattern&gt;%d{yyyy‐MM‐dd HH:mm:ss.SSS} ==== [%thread] ==== %‐5level%logger{50} ‐ %msg%n&lt;/pattern&gt;                             &lt;/springProfile&gt;                         &lt;/layout&gt;                &lt;/appender&gt;                如果使用logback.xml作为日志配置文件，还要使用profile功能，会有以下错误                 no applicable action for [springProfile]             logback-spring.xml配置文件里配置教程：                  根节点包含的属性                     scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。                     scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。                     当scan为true时，此属性生效。默认的时间间隔为1分钟。                     debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。                     根节点&lt;configuration&gt;有5个子节点，下面一一会详细介绍                         子节点一                               &lt;root&gt;                                 root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性。                                 level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，不能设置为INHERITED或者同义词NULL。                                  默认是DEBUG。                                  可以包含零个或多个元素，标识这个appender将会添加到这个loger。                                 &lt;root level=&quot;debug&quot;&gt;                                   &lt;appender-ref ref=&quot;console&quot; /&gt;                                   &lt;appender-ref ref=&quot;file&quot; /&gt;                              &lt;/root&gt;                         子节点二：&lt;contextName&gt; 设置上下文名称                              每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用设置成其他名字，                              用于区分不同应用程序的记录。一旦设置，不能修改,可以通过%contextName来打印日志上下文名称，                              一般来说我们不用这个属性，可有可无。                              &lt;contextName&gt;logback&lt;/contextName&gt;                         子节点三：&lt;property&gt; 设置变量                             用来定义变量值的标签， 有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。                             通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。                             &lt;property name=&quot;logback.logdir&quot; value=&quot;/Users/inke/dev/log/tomcat&quot;/&gt;                             &lt;property name=&quot;logback.appname&quot; value=&quot;app&quot;/&gt;                             1                             2                             这里可以看后通过 application.yml 传递参数过来。                         子节点四：&lt;appender&gt;                             appender用来格式化日志输出节点，有俩个属性name和class，class用来指定哪种输出策略，                             常用就是控制台输出策略和文件输出策略。                             控制台输出ConsoleAppender：                             示例一：                                  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;                                     &lt;configuration scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt;                                         &lt;contextName&gt;logback-demo&lt;/contextName&gt;                                         &lt;!--输出到控制台 ConsoleAppender--&gt;                                         &lt;appender name=&quot;consoleLog1&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;                                             &lt;!--展示格式 layout--&gt;                                             &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt;                                                 &lt;pattern&gt;%d -1 %msg%n&lt;/pattern&gt;                                             &lt;/layout&gt;                                         &lt;/appender&gt;                                         &lt;!--输出到控制台 ConsoleAppender--&gt;                                         &lt;appender name=&quot;consoleLog2&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;                                             &lt;encoder&gt;                                                 &lt;pattern&gt;%d -2 %msg%n&lt;/pattern&gt;                                             &lt;/encoder&gt;                                         &lt;/appender&gt;                                         &lt;!--指定最基础的日志输出级别--&gt;                                         &lt;root level=&quot;INFO&quot;&gt;                                             &lt;!--appender将会添加到这个loger--&gt;                                             &lt;appender-ref ref=&quot;consoleLog1&quot;/&gt;                                             &lt;appender-ref ref=&quot;consoleLog2&quot;/&gt;                                         &lt;/root&gt;                                     &lt;/configuration&gt;                             可以看到layout和encoder，都可以将事件转换为格式化后的日志记录，但是控制台输出使用layout，文件输出使用encoder，                             具体原因可以看我百度到的这个答案，就不特意去说了http://blog.csdn.net/cw_hello1/article/details/51969554                             &lt;encoder&gt;表示对日志进行编码：                                 %d{HH: mm:ss.SSS}——日志输出时间                                 %thread——输出日志的进程名字，这在Web应用以及异步任务处理中很有用                                 %-5level——日志级别，并且使用5个字符靠左对齐                                 %logger{36}——日志输出者的名字                                 %msg——日志消息                                 %n——平台的换行符                                  ThresholdFilter为系统定义的拦截器，例如我们用ThresholdFilter来过滤掉ERROR级别以下的日志不输出到文件中。                                 如果不用记得注释掉，不然你控制台会发现没日志                             输出到文件 RollingFileAppender                             另一种常见的日志输出到文件，随着应用的运行时间越来越长，日志也会增长的越来越多，                             将他们输出到同一个文件并非一个好办法。RollingFileAppender用于切分文件日志：                             &lt;appender name=&quot;fileInfoLog&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;                                 &lt;!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，                                 所以我们使用下面的策略，可以避免输出 Error 的日志--&gt;                                 &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;                                     &lt;!--过滤 Error--&gt;                                     &lt;level&gt;ERROR&lt;/level&gt;                                     &lt;!--匹配到就禁止--&gt;                                     &lt;onMatch&gt;DENY&lt;/onMatch&gt;                                     &lt;!--没有匹配到就允许--&gt;                                     &lt;onMismatch&gt;ACCEPT&lt;/onMismatch&gt;                                 &lt;/filter&gt;                                 &lt;!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则                                     如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，那么当天日志是&lt;File&gt;，明天会自动把今天                                     的日志改名为今天的日期。即，&lt;File&gt; 的日志都是当天的。                                 --&gt;                                 &lt;File&gt;${logback.logdir}/info.${logback.appname}.log&lt;/File&gt;                                 &lt;!--滚动策略，按照时间滚动 TimeBasedRollingPolicy--&gt;                                 &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;                                     &lt;!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间--&gt;                                     &lt;FileNamePattern&gt;${logback.logdir}/info.${logback.appname}.%d{yyyy-MM-dd}.log&lt;/FileNamePattern&gt;                                     &lt;!--只保留最近90天的日志--&gt;                                     &lt;maxHistory&gt;90&lt;/maxHistory&gt;                                     &lt;!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志--&gt;                                     &lt;!--&lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;--&gt;                                 &lt;/rollingPolicy&gt;                                 &lt;!--日志输出编码格式化--&gt;                                 &lt;encoder&gt;                                     &lt;charset&gt;UTF-8&lt;/charset&gt;                                     &lt;pattern&gt;%d [%thread] %-5level %logger{36} %line - %msg%n&lt;/pattern&gt;                                 &lt;/encoder&gt;                             &lt;/appender&gt;                             &lt;appender name=&quot;fileErrorLog&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;                                 &lt;!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter--&gt;                                 &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;                                     &lt;level&gt;Error&lt;/level&gt;                                 &lt;/filter&gt;                                 &lt;!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则                                     如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，那么当天日志是&lt;File&gt;，明天会自动把今天                                     的日志改名为今天的日期。即，&lt;File&gt; 的日志都是当天的。                                 --&gt;                                 &lt;File&gt;${logback.logdir}/error.${logback.appname}.log&lt;/File&gt;                                 &lt;!--滚动策略，按照时间滚动 TimeBasedRollingPolicy--&gt;                                 &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;                                     &lt;!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间--&gt;                                     &lt;FileNamePattern&gt;${logback.logdir}/error.${logback.appname}.%d{yyyy-MM-dd}.log&lt;/FileNamePattern&gt;                                     &lt;!--只保留最近90天的日志--&gt;                                     &lt;maxHistory&gt;90&lt;/maxHistory&gt;                                     &lt;!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志--&gt;                                     &lt;!--&lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;--&gt;                                 &lt;/rollingPolicy&gt;                                 &lt;!--日志输出编码格式化--&gt;                                 &lt;encoder&gt;                                     &lt;charset&gt;UTF-8&lt;/charset&gt;                                     &lt;pattern&gt;%d [%thread] %-5level %logger{36} %line - %msg%n&lt;/pattern&gt;                                 &lt;/encoder&gt;                             &lt;/appender&gt;                             如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，根据日期分割日志，代码注释写的很清楚了。                              如果要区分 Info 和 Error 级别的日志，那么需要使用过滤规则的策略，代码注释写的很清楚了                         子节点五&lt;loger&gt;                             &lt;loger&gt;用来设置某一个包或者具体的某一个类的日志打印级别、以及指定&lt;appender&gt;。                             &lt;loger&gt;仅有一个name属性，一个可选的level和一个可选的addtivity属性。                             name:用来指定受此loger约束的某一个包或者具体的某一个类。                             level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，                             还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。如果未设置此属性，那么当前loger将会继承上级的级别。                             addtivity:是否向上级loger传递打印信息。默认是true。                             第一种：带有loger的配置，不指定级别，不指定appender                                     logback-spring.xml增加 loger 配置如下：                                     &lt;logger name=&quot;com.dudu.controller&quot;/&gt;                                     1                                     &lt;logger name=&quot;com.dudu.controller&quot; /&gt;将控制controller包下的所有类的日志的打印，                                     但是并没用设置打印级别，所以继承他的上级的日志级别“info”；                                      没有设置addtivity，默认为true，将此loger的打印信息向上级传递；                                      没有设置appender，此loger本身不打印任何信息。                                      &lt;root level=&quot;info&quot;&gt;将root的打印级别设置为“info”，指定了名字为“console”的appender。                                     当执行com.dudu.controller.LearnController类的login方法时，LearnController 在包com.dudu.controller中，                                     所以首先执行&lt;logger name=&quot;com.dudu.controller&quot;/&gt;，将级别为“info”及大于“info”的日志信息传递给root，本身并不打印；                                      root接到下级传递的信息，交给已经配置好的名为“console”的appender处理，“console” appender 将信息打印到控制台                             第二种：带有多个loger的配置，指定级别，指定appender，                                     logback-spring.xml增加 loger 配置如下：                                     &lt;configuration&gt;                                         ...                                         &lt;!--logback.LogbackDemo：类的全路径 --&gt;                                         &lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;                                             &lt;appender-ref ref=&quot;console&quot;/&gt;                                         &lt;/logger&gt;                                     &lt;/configuration&gt;                                     控制com.dudu.controller.LearnController类的日志打印，打印级别为“WARN”;                                      additivity属性为false，表示此loger的打印信息不再向上级传递;                                      指定了名字为“console”的appender;                                     这时候执行com.dudu.controller.LearnController类的login方法时，                                     先执行&lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;,                                     将级别为“WARN”及大于“WARN”的日志信息交给此loger指定的名为“console”的appender处理，                                     在控制台中打出日志，不再向上级root传递打印信息                                     当然如果你把additivity=&quot;false&quot;改成additivity=&quot;true&quot;的话，就会打印两次，                                     因为打印信息向上级传递，logger本身打印一次，root接到后又打印一次。                                     &lt;configuration&gt;                                         ...                                         &lt;logger name=&quot;com.example.demo.controller&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;                                            &lt;appender-ref ref=&quot;consoleLog&quot;/&gt;                                         &lt;/logger&gt;                                         &lt;logger name=&quot;com.example.demo.controller&quot;/&gt;                                         &lt;logger name=&quot;com.example.demo&quot;/&gt;                                     &lt;/configuration&gt;                                     范围有重叠的话，范围小的，有效。                 多环境日志输出：                      &lt;configuration&gt;                         ...                         &lt;!-- 测试环境+开发环境. 多个使用逗号隔开. --&gt;                         &lt;springProfile name=&quot;test,dev&quot;&gt;                             &lt;logger name=&quot;com.example.demo.controller&quot; level=&quot;DEBUG&quot; additivity=&quot;false&quot;&gt;                                 &lt;appender-ref ref=&quot;consoleLog&quot;/&gt;                             &lt;/logger&gt;                         &lt;/springProfile&gt;                         &lt;!-- 生产环境. --&gt;                         &lt;springProfile name=&quot;prod&quot;&gt;                             &lt;logger name=&quot;com.example.demo.controller&quot; level=&quot;INFO&quot; additivity=&quot;false&quot;&gt;                                 &lt;appender-ref ref=&quot;consoleLog&quot;/&gt;                             &lt;/logger&gt;                         &lt;/springProfile&gt;                     &lt;/configuration&gt;                 application.yml增加环境选择的配置active: dev                     server:                       port: 9010                     spring:                       profiles:                         active: dev                       datasource:                         url: jdbc:mysql://localhost:3306/test?characterEncoding=utf8                         username: root                         password: root                     mybatis:                         type-aliases-package: org.larry.springboot.entity                         mapper-locations: classpath:mapper/**/*.xml                         check-config-location: true                 active: 【test、dev、prod】，根据 active 的环境，自动采用上面配置的springProfile的 logger 日志                 使用application.yml 自定义日志路径（application.yml）                 application.yml增加日志相关自定义配置：                    logback:                       logdir: /Users/inke/dev/log/tomcat/sell                       appname: sell                 在logback-spring.xml                    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;                         &lt;configuration scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt;                             &lt;!--application.yml 传递参数，不能使用logback 自带的&lt;property&gt;标签 --&gt;                             &lt;springProperty scope=&quot;context&quot; name=&quot;appname&quot; source=&quot;logback.appname&quot;/&gt;                             &lt;springProperty scope=&quot;context&quot; name=&quot;logdir&quot; source=&quot;logback.logdir&quot;/&gt;                             &lt;contextName&gt;${appname}&lt;/contextName&gt;                             &lt;!--输出到控制台 ConsoleAppender--&gt;                             &lt;appender name=&quot;consoleLog&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;                                 &lt;!--展示格式 layout--&gt;                                 &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt;                                     &lt;pattern&gt;                                         &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;                                     &lt;/pattern&gt;                                 &lt;/layout&gt;                             &lt;/appender&gt;                 为了更全面一点总结日志配置，除了自己总结，也百度摘录归纳糅合进许多好的讲解点，可能有点多和杂，但绝对是必要的！！！</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;springboot ---   日志使用
+
+首先，假设我们要开发一个大型系统；
+  那么关于日志：
+ 1、System.out.println(&amp;quot;&amp;quot;)；将关键数据打印在控制台；去掉？写在一个文件？
+ 2、框架来记录系统的一些运行时信息；
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
+    
+    
+      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redis的aof，dump等</title>
+    <link href="https://liuhusen.com/2019/01/18/redis%E7%9A%84aof%EF%BC%8Cdump%E7%AD%89/"/>
+    <id>https://liuhusen.com/2019/01/18/redis的aof，dump等/</id>
+    <published>2019-01-18T07:01:30.000Z</published>
+    <updated>2019-04-06T12:29:32.844Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>Redis自动备份有两种方式，第一种是通过dump.rdb文件实现备份，另外一种使用aof文件实现自动备份。Dump.rdb备份Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，那么启动redis时，会默认从dump.rbd文件中读取原始数据.如何配置dump.rdb备份，在redis.conf文件中有命令：save 900 1save 300 10save 60 10000123它代表的意思是dump备份的条件，在900s内有一个key发生改变/300s中有10个key发生改变/60s内有10000个key发生改变时，redis将将当前数据库快照到dump.rdb文件中。也可以执行命令来实现手动备份SAVE1SAVE命令表示使用主进程将当前数据库快照到dump文件BGSAVE1BGSAVE命令表示，主进程会fork一个子进程来进行快照备份。两者的不同是，前者会阻塞主进程，而后者不会，所以一般使用BGSAVE进行手动备份。redis快照到dump文件时，会先生成一个temp.rdb文件，然后重命名为dump.rdb文件替换原来文件实现备份。redis.conf中的dbfilename dump.rdb  //修改dump文件名称dir ./    //修改dump文件的文件路径123aof文件备份redis默认关闭了aof文件备份，redis.conf文件中找到appendonly no1把no改为yesappendfilename appendonly.aof1可以修改默认的aof文件名appendfsync everysec1这里默认的everysec会在安全和效率之间权衡，redis默认会每隔1s就调用fsync函数，将缓冲区的数据写到磁盘里面，但是当fsync函数执行时间超过1s时，redis会适当延迟写操作。当appendfsync设置为always时，redis会针对每一个写操作都刷新到磁盘，这样虽然安全，但是性能会有所降低。当设置为no时，redis不会主动对数据进行备份，这时什么时候刷新备份，就依赖于操作系统的设置了。Aof bgrewriteaof操作aof文件备份，会备份数据库的历史记录，以及相应执行过的指令，相当于一个log文件，在恢复数据库的时候会回滚执行命令，同时恢复数据。这样带来的一个问题就是，aof文件会越来越大，如果有一百条指令，最后一条指令恢复的最终数据库，那么前99条指令及相应的数据也会存在在aof文件中。如何解决的这个问题呢？可以执行命令：bgrewriteaof1就会把当前数据库刷新到aof文件中，此时aof文件中将只会保存当前数据库的数据，所以如果数据库被入侵清空，请谨慎执行这个命令，因为它会数据库上的历史数据消失。redis也会自动调用bgwriteaof操作：auto-aof-rewrite-percentage 100auto-aof-rewrite-min-size 64mb12这里的设置针对redis自动进行rewriteaof操作。percentage是指，当redis当前的aof文件大小相对于上一次进行rewriteaof操作时的大小增长率大于100%时，就会进行rewrite，这里可以自己设置。但是，当增长率大于了100%，实际上aof文件其实很小，这样rewrite就没有必要了，所以，还需要设置一个min-size，当redis的增长率大于100%，并且min-size的大于64mb时，就会执行rewriteaof操作。如果想关闭rewriteaof操作，可以将percentage设置为0。redis会在以下三个时候进行rewrite操作Redis接收到客户端发送的bgrewriteaof命令Redis aof文件增长率和增长大小达到auto-aof-rewriteRedis接收到客户端发送的”CONFIG SET appendonly yes”命令aof与dump备份不同aof文件备份与dump文件备份不同。dump文件的编码格式和存储格式与数据库一致，而且dump文件中备份的是数据库的当前快照，意思就是，不管数据之前什么样，只要BGSAVE了，dump文件就会刷新成当前数据库数据。当redis重启时，会按照以下优先级进行启动：如果只配置AOF,重启时加载AOF文件恢复数据；如果同时 配置了RBD和AOF,启动是只加载AOF文件恢复数据;如果只配置RBD,启动时将加载dump文件恢复数据。注意：只要配置了aof，但是没有aof文件，这个时候启动的数据库会是空的在linux环境运行Redis时，如果系统的内存比较小，这个时候自动备份会有可能失败，需要修改系统的vm.overcommit_memory 参数，这个参数是干什么的呢，它有三个选值，是linux系统的内存分配策略：0， 表示内核将检查是否有足够的可用内存供应用进程使用；如果有足够的可用内存，内存申请允许；否则，内存申请失败，并把错误返回给应用进程。1， 表示内核允许分配所有的物理内存，而不管当前的内存状态如何。2， 表示内核允许分配超过所有物理内存和交换空间总和的内存Redis官方的说明是，建议将vm.overcommit_memory的值修改为1，可以用下面几种方式进行修改：（1）编辑/etc/sysctl.conf ，改vm.overcommit_memory=1，然后sysctl -p 使配置文件生效（2）sysctl vm.overcommit_memory=1（3）echo 1 &gt; /proc/sys/vm/overcommit_memory</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;Redis自动备份有两种方式，第一种是通过dump.rdb文件实现备份，另外一种使用aof文件实现自动备份。
+
+Dump.rdb备份
+Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，那么启动redis时，会默认从dump.rbd文件
+      
+    
+    </summary>
+    
+      <category term="redis" scheme="https://liuhusen.com/categories/redis/"/>
+    
+    
+      <category term="缓存数据库" scheme="https://liuhusen.com/tags/%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>springboot整合Spring Data JPA的遇到的问题</title>
+    <link href="https://liuhusen.com/2019/01/10/springboot%E6%95%B4%E5%90%88Spring%20Data%20JPA%E7%9A%84%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>https://liuhusen.com/2019/01/10/springboot整合Spring Data JPA的遇到的问题/</id>
+    <published>2019-01-10T05:01:30.000Z</published>
+    <updated>2019-04-06T09:31:57.548Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>声明： 以下问题仅针对使用jdk9的情况springboot整合Spring Data JPA的遇到的问题，报错如下：     Caused by: java.lang.ClassNotFoundException: javax.xml.bind.JAXBException             at java.base/jdk.internal.loader......................................             ............................................................此处省略 原因：jdk9缺少相应的jar 解决方案：手动导入对应的maven坐标，如下     &lt;!--jdk9需要导入如下坐标--&gt;     &lt;dependency&gt;         &lt;groupId&gt;javax.xml.bind&lt;/groupId&gt;         &lt;artifactId&gt;jaxb-api&lt;/artifactId&gt;         &lt;version&gt;2.3.0&lt;/version&gt;     &lt;/dependency&gt;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;声明： 以下问题仅针对使用jdk9的情况
+
+
+springboot整合Spring Data JPA的遇到的问题，报错如下：
+
+     Caused by: java.lang.ClassNotFoundException: javax.xml.bind.
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
+    
+    
+      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>springboot之创建后mysql连接报错</title>
+    <link href="https://liuhusen.com/2019/01/10/springboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99/"/>
+    <id>https://liuhusen.com/2019/01/10/springboot之创建后mysql连接报错/</id>
+    <published>2019-01-10T05:01:30.000Z</published>
+    <updated>2019-04-06T08:08:32.463Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>给springboot项目配置mysql出错，如下：    mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos;            at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]            ......................解决方法如下：            因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量            1. 在mysql数据库执行  select version() ， 查看mysql版本            2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;给springboot项目配置mysql出错，如下：
+
+    mysql 错误：java.sql.SQLException: Unknown system variable &amp;apos;language&amp;apos;
+            at com.m
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
+    
+    
+      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>springboot之创建后访问不到controller</title>
+    <link href="https://liuhusen.com/2019/01/08/springboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8E%E8%AE%BF%E9%97%AE%E4%B8%8D%E5%88%B0controller/"/>
+    <id>https://liuhusen.com/2019/01/08/springboot之创建后访问不到controller/</id>
+    <published>2019-01-08T05:01:30.000Z</published>
+    <updated>2019-04-04T08:41:30.871Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>SpringBoot有个Application入口能够让你从这里启动程序，但是新手往往容易出现一个问题，有了Application，但是程序就是一直有问题。比如：程序正常启动且没有报错，但是访问不到Controller这是因为SpringBoot大部分情况下是基于注解扫描。@SpringBootApplication自动会扫描大部分的注解，所以官方建议Application应该放在所有包的根包那里。这样@SpringBootApplication扫描的时候，才会把下属所有的子子孙孙包中的controller也好、dao也好，给扫出来。所以尼，如果访问不到，去检查一下你的Application放在那里了！！！</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;SpringBoot有个Application入口能够让你从这里启动程序，但是新手往往容易出现一个问题，有了Application，但是程序就是一直有问题。
+
+比如：程序正常启动且没有报错，但是访问不到Controller
+
+这是因为SpringBoot大部
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
+    
+    
+      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql存储过程和oracle存储过程对比</title>
@@ -34,6 +189,38 @@
       1      创建存储过程语句不同：
 
            ORACLE：  create or replace procedure P_ADD_FAC(id_fac_cd  IN ES_FAC_UNIT.FAC_CD%TYPE
+      
+    
+    </summary>
+    
+      <category term="数据库" scheme="https://liuhusen.com/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+      <category term="存储过程" scheme="https://liuhusen.com/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/"/>
+    
+      <category term="数据库相关操作" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E6%93%8D%E4%BD%9C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>oraclel存储过程------学习笔记</title>
+    <link href="https://liuhusen.com/2018/12/28/oraclel%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B------%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://liuhusen.com/2018/12/28/oraclel存储过程------学习笔记/</id>
+    <published>2018-12-28T07:22:52.000Z</published>
+    <updated>2019-04-02T06:24:26.740Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>Oracle存储过程实例如下：       过程： 就是高级程序设计语言中的模块的概念，将一些内部联系的命令组成一个个过程，通过             参数在过程之间传递数据是模块化设计思想的重要内容。      存储过程： 1.是预编译过的，并且经优化后存储于SQL内存中，使用时无需再次编译，提高了工作效率                 2.存储过程的代码直接存放于数据库中，一般由客户端直接通过存储过程的名字进行调用，                   减少了网络流量，加快了系统执行速度，例如在进行百万以上的大批量数据查询时，使                   用存储过程分页要比其他方式分页快的多                 3.使用存储过程可以减少SQL注入式攻击，提高系统的安全性，执行存储过程的用户要具有一定                   的权限才能使用存储过程，没有数据操作权限的用户只能在其控制下间接的存取数据                 4.在同时进行主，从表及多表之间的数据维护及有效性验证时，使用存储过程比较方便，而且                   可以有效利用SQL中的事务处理的机制                 5.使用存储过程，可以实现存储过程设计和编码工作分开进行，只要将存储过程名、参数、及返回信息                   告诉编码人员即可；                 6.但使用存储过程封装业务逻辑将限制应用程序的可移植性；另外，如果更改存储过程的参数或者其返回                   的数据及类型的话，需要修改应用程序的相关代码，比较繁琐。      过程的语法结构：          完整的过程结构如下：                   create or replace procedure 过程名 as                   声明语句段；                   begin                   执行语句段；                   exception                   异常处理语句段；                   end；          过程是有名称的程序块，as关键词代替了无名块的 declare；          创建过程实例：              * 创建名为 stu_proc的过程，create是创建过程的标识符，replace表示若同名过程存在将覆盖原过程，                该过程定义了一个变量，其类型和student数据表中的sname字段类型相同，都是字符型，将数据表中                的sno字段为 1 的sname字段内容送入变量中，然后输出结果。                ------学生表 student                  create table student (                  sno number(6),                  sname varchar2(25),                  pno number(6) primary key                  );                  select * from student;                  --create sequence student_seq;                ------存储过程                  create or replace procedure stu_proce as                   p_name varchar2(25);                  begin                    select sanme into p_name from student where sno=1;                    dbms_output.put_line(p_name);                  end;                --调用存储过程                  call stu_proc();</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;Oracle存储过程实例如下： 
+
+      过程： 就是高级程序设计语言中的模块的概念，将一些内部联系的命令组成一个个过程，通过
+             参数在过程之间传递数据是模块化设计思想的重要内容。
+
+      存储过程： 1.是预编译过的，并
       
     
     </summary>
@@ -165,6 +352,31 @@
   </entry>
   
   <entry>
+    <title>常用的扒拉后台日志操作命令</title>
+    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
+    <id>https://liuhusen.com/2018/08/08/常用的扒拉后台日志操作命令/</id>
+    <published>2018-08-08T05:01:30.000Z</published>
+    <updated>2019-01-18T07:06:06.361Z</updated>
+    
+    <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   翻找环境上的日志：&lt;br&gt;              ll                                     展示目录&lt;br&gt;              cd                                     进入含有日志文
+      
+    
+    </summary>
+    
+      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
+    
+    
+      <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
+    
+  </entry>
+  
+  <entry>
     <title>常见框架单例、多例与线程安全性总结</title>
     <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93/"/>
     <id>https://liuhusen.com/2018/08/08/常见框架单例、多例与线程安全性总结/</id>
@@ -188,31 +400,6 @@
     
     
       <category term="多例，多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E4%BE%8B%EF%BC%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>常用的扒拉后台日志操作命令</title>
-    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
-    <id>https://liuhusen.com/2018/08/08/常用的扒拉后台日志操作命令/</id>
-    <published>2018-08-08T05:01:30.000Z</published>
-    <updated>2019-01-18T07:06:06.361Z</updated>
-    
-    <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   翻找环境上的日志：&lt;br&gt;              ll                                     展示目录&lt;br&gt;              cd                                     进入含有日志文
-      
-    
-    </summary>
-    
-      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
-    
-    
-      <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
     
   </entry>
   
@@ -306,6 +493,37 @@
   </entry>
   
   <entry>
+    <title>MySQL的表增删字段和增删索引</title>
+    <link href="https://liuhusen.com/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95/"/>
+    <id>https://liuhusen.com/2017/05/26/MySQL的表增删字段和增删索引/</id>
+    <published>2017-05-26T11:57:47.000Z</published>
+    <updated>2018-10-28T19:13:31.613Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;;表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;字段建唯一索引：create index idx_province_id on 表名 (表字段 );                               上为索引                create index 字段的索引 on 表名 (表字段 );               删除字段的索引：alter table 表名 drop index idx_province_id ;                                        上为索引                alter table 表名 drop 字段的索引 ;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &amp;apos;字段描述&amp;apos;;
+
+表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
+    
+    
+      <category term="MySQL" scheme="https://liuhusen.com/tags/MySQL/"/>
+    
+      <category term="增删字段" scheme="https://liuhusen.com/tags/%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5/"/>
+    
+      <category term="增删索引" scheme="https://liuhusen.com/tags/%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>接口传输时对乱码的处理</title>
     <link href="https://liuhusen.com/2017/05/26/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86/"/>
     <id>https://liuhusen.com/2017/05/26/接口传输时对乱码的处理/</id>
@@ -336,37 +554,6 @@ us
       <category term="post请求传输" scheme="https://liuhusen.com/tags/post%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
     
       <category term="get请求传输" scheme="https://liuhusen.com/tags/get%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL的表增删字段和增删索引</title>
-    <link href="https://liuhusen.com/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95/"/>
-    <id>https://liuhusen.com/2017/05/26/MySQL的表增删字段和增删索引/</id>
-    <published>2017-05-26T11:57:47.000Z</published>
-    <updated>2018-10-28T19:13:31.613Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;;表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;字段建唯一索引：create index idx_province_id on 表名 (表字段 );                               上为索引                create index 字段的索引 on 表名 (表字段 );               删除字段的索引：alter table 表名 drop index idx_province_id ;                                        上为索引                alter table 表名 drop 字段的索引 ;</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &amp;apos;字段描述&amp;apos;;
-
-表删除字段： ALTER TABLE 表名 DROP COLUMN  表字段 ;
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
-    
-    
-      <category term="MySQL" scheme="https://liuhusen.com/tags/MySQL/"/>
-    
-      <category term="增删字段" scheme="https://liuhusen.com/tags/%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5/"/>
-    
-      <category term="增删索引" scheme="https://liuhusen.com/tags/%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95/"/>
     
   </entry>
   
@@ -424,177 +611,6 @@ INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
       <category term="编程" scheme="https://liuhusen.com/tags/%E7%BC%96%E7%A8%8B/"/>
     
       <category term="感悟" scheme="https://liuhusen.com/tags/%E6%84%9F%E6%82%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>页面常用的设置：显示，隐藏，只读，不可编辑，取值，置空</title>
-    <link href="https://liuhusen.com/2016/11/06/%E9%A1%B5%E9%9D%A2%E5%B8%B8%E7%94%A8%E7%9A%84%E8%AE%BE%E7%BD%AE%EF%BC%9A%E6%98%BE%E7%A4%BA%EF%BC%8C%E9%9A%90%E8%97%8F%EF%BC%8C%E5%8F%AA%E8%AF%BB%EF%BC%8C%E4%B8%8D%E5%8F%AF%E7%BC%96%E8%BE%91%EF%BC%8C%E5%8F%96%E5%80%BC%EF%BC%8C%E7%BD%AE%E7%A9%BA/"/>
-    <id>https://liuhusen.com/2016/11/06/页面常用的设置：显示，隐藏，只读，不可编辑，取值，置空/</id>
-    <published>2016-11-06T04:28:30.000Z</published>
-    <updated>2018-10-31T07:14:39.622Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>$(&quot;#id&quot;).val()   // 获取值$(&quot;#id&quot;).val(&apos;&apos;)   // 清空值$(&quot;#id&quot;).val(&apos;变量名&apos;)   // 赋值$(&quot;#id&quot;).css(&apos;display&apos;,&apos;block&apos;) // 显示选择的对象$(&quot;#id&quot;).css(&apos;display&apos;,&apos;none&apos;) // 隐藏选择的对象$(&quot;#msgIdTpl option[value=&apos;&quot;+msgIdTpl+&quot;&apos;]&quot;).attr(&quot;selected&quot;,true);  // 锁定下拉结果并是=使下拉不可编辑$(&quot;#id,#id2,#id3&quot;).attr(&quot;readonly&quot;,&quot;readonly&quot;); //多个选择设置只读属性$(&quot;#id,#id2).attr(&quot;disabled&quot;, true);  // 设置为不可用</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;$(&amp;quot;#id&amp;quot;).val()   // 获取值
-
-$(&amp;quot;#id&amp;quot;).val(&amp;apos;&amp;apos;)   // 清空值
-
-$(&amp;quot;#id&amp;quot;).val(&amp;apos;变量名&amp;apos;)   // 赋值
-      
-    
-    </summary>
-    
-      <category term="javascript" scheme="https://liuhusen.com/categories/javascript/"/>
-    
-    
-      <category term="javascript页面效果" scheme="https://liuhusen.com/tags/javascript%E9%A1%B5%E9%9D%A2%E6%95%88%E6%9E%9C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>工作中重名判断的注意事项</title>
-    <link href="https://liuhusen.com/2016/10/08/%E9%87%8D%E5%90%8D%E5%88%A4%E6%96%AD%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9/"/>
-    <id>https://liuhusen.com/2016/10/08/重名判断的注意事项/</id>
-    <published>2016-10-08T05:01:30.000Z</published>
-    <updated>2018-10-31T06:31:07.533Z</updated>
-    
-    <content type="html"><![CDATA[<p>   工作中重名判断的注意事项：</p><p>   信息记录修改页面中重名判断如下：<br>          首先定义一个js中的全局变量stillName，用于存储要修改的信息原名；<br>          修改时判断 修改后名称是否 == 修改的信息原名，若等于则不进行重名判断，不然则反之；<br>          但是这里所有的 == 判断 以及  数据的保存，都应该是“去除数据两边空格后”的结果，<br>          否则，增减一个空格，判断结果也是不重名，而页面效果可看不到空格，给客户的视觉感受就是重名</p><p>   代码如下：<br>    var stillName = “需要更改的信息原名”</p><pre><code>if(stillName != $.trim(newName) ) {    // 此处是去数据库查找是否有信息含有  修改后名称}然后，在执行修改后数据保存的方法时传值注意：一定要也去掉空格  newName = $.trim(newName);</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   工作中重名判断的注意事项：&lt;/p&gt;
-&lt;p&gt;   信息记录修改页面中重名判断如下：&lt;br&gt;          首先定义一个js中的全局变量stillName，用于存储要修改的信息原名；&lt;br&gt;          修改时判断 修改后名称是否 == 修改的信息原名，若等于则
-      
-    
-    </summary>
-    
-      <category term="javascript" scheme="https://liuhusen.com/categories/javascript/"/>
-    
-    
-      <category term="javascript页面效果" scheme="https://liuhusen.com/tags/javascript%E9%A1%B5%E9%9D%A2%E6%95%88%E6%9E%9C/"/>
-    
-      <category term="重名判断" scheme="https://liuhusen.com/tags/%E9%87%8D%E5%90%8D%E5%88%A4%E6%96%AD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用VMware安装CentOS 6.4</title>
-    <link href="https://liuhusen.com/2016/08/16/%E4%BD%BF%E7%94%A8VMware%E5%AE%89%E8%A3%85CentOS-6-4/"/>
-    <id>https://liuhusen.com/2016/08/16/使用VMware安装CentOS-6-4/</id>
-    <published>2016-08-16T08:22:30.000Z</published>
-    <updated>2018-11-01T05:58:16.393Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>环境：Windows7 , VMware Workstation10, CentOS6.4为什么选择CentOS ?1.主流： 目前的Linux操作系统主要应用于生产环境，主流企业级Linux系统仍旧是RedHat或者CentOS2.免费： RedHat 和CentOS差别不大，CentOS是一个基于Red Hat Linux 提供的可自由使用源代码的企业级Linux发行版本3.更新方便：CentOS独有的yum命令支持在线升级，可以即时更新系统，不像RED HAT那样需要花钱购买支持服务！安装步骤第1步：首先安装VMware Workstation，只需点下一步即可，安装过程略第2步：文件 → 新建虚拟机 或 直接点击 创建新的虚拟机 图标</code></pre><p><img src="/2016/08/16/使用VMware安装CentOS-6-4/01.png" alt="你想输入的替代文字"><br>    第3步：选择 典型（推荐）→ 下一步<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/02.png" alt="你想输入的替代文字"><br>    第4步：稍后安装操作系统<br><img src="/2016/08/16/使用VMware安装CentOS-6-4/03.png" alt="你想输入的替代文字"><br>    第5步：选择操作系统和版本<br><img src="/2016/08/16/使用VMware安装CentOS-6-4/04.png" alt="你想输入的替代文字"><br>    第6步：输入虚拟机名称和安装路径<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/05.png" alt="你想输入的替代文字"><br>    第7步：设置磁盘大小<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/06.png" alt="你想输入的替代文字"><br>    第8步：自定义硬件<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/07.png" alt="你想输入的替代文字"><br>    第9步：选择CentOS安装镜像文件<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/08.png" alt="你想输入的替代文字"><br>    第10步：点击完成<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/09.png" alt="你想输入的替代文字"><br>    第11步：启动虚拟机<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/10.png" alt="你想输入的替代文字"><br>    第12步：选择第一项，安装全新操作系统或升级现有操作系统<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/11.png" alt="你想输入的替代文字"><br>    第13步：Tab键进行选择，选择Skip，退出检测<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/12.png" alt="你想输入的替代文字"><br>    第14步：点击Next<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/13.png" alt="你想输入的替代文字"><br>    第15步：选择语言，这里选择的是中文简体<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/14.png" alt="你想输入的替代文字"><br>    第16步：选择键盘样式<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/15.png" alt="你想输入的替代文字"><br>    第17步：选择存储设备<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/16.png" alt="你想输入的替代文字"><br>     如果以前安装过虚拟机，会出现这个警告，选择是，忽略所有数据<br>     <img src="/2016/08/16/使用VMware安装CentOS-6-4/17.png" alt="你想输入的替代文字"><br>    第18步：输入主机名<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/18.png" alt="你想输入的替代文字"><br>    第19步：配置网络<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/19.png" alt="你想输入的替代文字"><br>    第20步：设置时区，勾选使用UTC时间<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/20.png" alt="你想输入的替代文字"><br>    第21步：输入根用户（root）的密码<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/21.png" alt="你想输入的替代文字"><br>      如果密码过于简单会出现提示，点击无论如何都使用<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/22.png" alt="你想输入的替代文字"><br>    第22步：根据此Linux具体功能，选择不同的方式<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/23.png" alt="你想输入的替代文字"><br>    第23步：选择现在自定义，自定义安装需要的软件，如桌面配置<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/24.png" alt="你想输入的替代文字"><br>      可以根据具体的情况来配置，如可安Eclipse<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/25.png" alt="你想输入的替代文字"><br>      还可以安装Java平台、Perl支持等<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/26.png" alt="你想输入的替代文字"><br>      选择语言支持<br>      <img src="/2016/08/16/使用VMware安装CentOS-6-4/27.png" alt="你想输入的替代文字"><br>    第24步：点击下一步，开始安装<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/28.png" alt="你想输入的替代文字"><br>    第25步：安装完成后，点击重新导引<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/29.png" alt="你想输入的替代文字"><br>    第26步：点击前进按钮<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/30.png" alt="你想输入的替代文字"><br>    第27步：点击是，同意许可，再点击前进按钮<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/31.png" alt="你想输入的替代文字"><br>    第28步：创建用户<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/32.png" alt="你想输入的替代文字"><br>    第29步：设置日期和时间，如果可以上网，勾选在网上同步日期和时间<br>    <img src="/2016/08/16/使用VMware安装CentOS-6-4/33.png" alt="你想输入的替代文字"><br>    最后点击前进，完成安装！</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;环境：Windows7 , VMware Workstation10, CentOS6.4
-为什么选择CentOS ?
-1.主流： 目前的Linux操作系统主要应用于生产环境，主流企业级Linux系统仍旧是RedHat或者CentOS
-2.免费： RedHa
-      
-    
-    </summary>
-    
-      <category term="虚拟机VMware" scheme="https://liuhusen.com/categories/%E8%99%9A%E6%8B%9F%E6%9C%BAVMware/"/>
-    
-    
-      <category term="虚拟机VMware安装教程" scheme="https://liuhusen.com/tags/%E8%99%9A%E6%8B%9F%E6%9C%BAVMware%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>关于FastDFS图片服务器详解</title>
-    <link href="https://liuhusen.com/2016/08/16/%E5%85%B3%E4%BA%8EFastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://liuhusen.com/2016/08/16/关于FastDFS图片服务器详解/</id>
-    <published>2016-08-16T08:22:30.000Z</published>
-    <updated>2019-02-27T08:30:51.775Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>首先，什么是FastDFS ?    fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的，    因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、    高性能等指标。使用fastDFS很容易搭建一套高性能的文件服务器集群提供文件上传    和下载功能。fastDFS的架构：    fastDFS的架构包括tracker server 和 stroage server 。客户端请求 tracker server 进    行文件上传/下载，通过tracker server 调度最终由 stroage server 完成文件上传和下载        tracker server ：作用是负载均衡和调度，通过tracker server 在文件上传时通过一些策略    找到stroage server提供文件上传下载服务，可以称tracker server 为追踪服务器或调度服务器。    stroage server : 作用是文件存储，客户端上传的文件最终存储在 stroage 服务器上，stroage server没有    实现自己的文件系统而是利用操作系统的文件系统来管理文件，可称stroage server为存储服务器。    ![你想输入的替代文字](关于FastDFS图片服务器详解/01.png)服务端两个角色：    Tracker：管理集群，tracker也可以实现集群。每个tracker节点地位平等。    收集Storage集群的状态。    Storage：实际保存文件，Storage分为多个组，每个组之间保存的文件是不同的。    每个组内部可以有多个成员，组成员内部保存的内容是一样的，组成员的地位是一致的，没有主从的概念。文件上传的流程：    ![你想输入的替代文字](关于FastDFS图片服务器详解/02.png)客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。    ![你想输入的替代文字](关于FastDFS图片服务器详解/03.png)  组名：文件上传后所在的storage组名称，在文件上传成功后由storage服务器返回，          需要客户端自行保存。 </code></pre><p>      虚拟磁盘路径：storage配置的虚拟路径，与磁盘选项store_path*对应。如果配置<br>                      了store_path0则是M00，如果配置了store_path1则是M01，以此类推。<br>      数据两级目录：storage服务器在每个虚拟磁盘路径下创建的两级目录，用于存储数据文件。<br>      文件名：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器<br>                IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。</p><pre><code>文件下载：    ![你想输入的替代文字](关于FastDFS图片服务器详解/04.png)最简单的FastDFS架构：    ![你想输入的替代文字](关于FastDFS图片服务器详解/05.png)图片服务器安装方法：    1.安装步骤        第一步：把图片服务器解压缩。        第二步：把图片服务器添加到Vmware中。        第三步：Vmware的网络配置。        ![你想输入的替代文字](关于FastDFS图片服务器详解/06.png)        第四步：开机        ![你想输入的替代文字](关于FastDFS图片服务器详解/07.png)        移动：网络配置不发生变化。要使用图片服务器，需要保证网络配置不变。        复制：重新生成一块网卡mac地址是新地址。        Ip地址：192.168.25.133        用户名root、itcast        密码：itcast图片服务器使用：            ![你想输入的替代文字](关于FastDFS图片服务器详解/08.png)        ![你想输入的替代文字](关于FastDFS图片服务器详解/09.png)上传图片：    1.上传步骤：        1、加载配置文件，配置文件中的内容就是tracker服务的地址。           配置文件内容：tracker_server=192.168.25.133:22122        2、创建一个TrackerClient对象。直接new一个。        3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。        4、创建一个StorageServer的引用，值为null        5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用        6、使用StorageClient对象上传图片。        7、返回数组。包含组名和图片的路径。        代码如下：        public class FastDFSTest {        @Test        public void testFileUpload() throws Exception {            // 1、加载配置文件，配置文件中的内容就是tracker服务的地址。            ClientGlobal.init(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;);            // 2、创建一个TrackerClient对象。直接new一个。            TrackerClient trackerClient = new TrackerClient();            // 3、使用TrackerClient对象创建连接，获得一个TrackerServer对象。            TrackerServer trackerServer = trackerClient.getConnection();            // 4、创建一个StorageServer的引用，值为null            StorageServer storageServer = null;            // 5、创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用            StorageClient storageClient = new StorageClient(trackerServer, storageServer);            // 6、使用StorageClient对象上传图片。            //扩展名不带“.”            String[] strings = storageClient.upload_file(&quot;D:/Documents/Pictures/images/200811281555127886.jpg&quot;, &quot;jpg&quot;, null);            // 7、返回数组。包含组名和图片的路径。            for (String string : strings) {                System.out.println(string);            }        }    }使用工具类上传：            ![你想输入的替代文字](关于FastDFS图片服务器详解/10.png)            @Test            public void testFastDfsClient() throws Exception {                FastDFSClient fastDFSClient = new FastDFSClient(&quot;D:/workspaces-itcast/term197/taotao-manager-web/src/main/resources/resource/client.conf&quot;);                String file = fastDFSClient.uploadFile(&quot;D:/Documents/Pictures/images/2f2eb938943d.jpg&quot;);                System.out.println(file);            }</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;首先，什么是FastDFS ?
-    fastDFS是一款用C语言编写的开源的分布式文件系统，它就像是为互联网定制的，
-    因为它充分考虑到了 冗余备份、负载均衡、线性扩容等机制，并注重高可用、
-    高性能等指标。使用fastDFS很容易搭建一套高
-      
-    
-    </summary>
-    
-      <category term="服务器" scheme="https://liuhusen.com/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    
-    
-      <category term="FastDFS图片服务器" scheme="https://liuhusen.com/tags/FastDFS%E5%9B%BE%E7%89%87%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>基本的sql语句以及高级运算符和 多表查询</title>
-    <link href="https://liuhusen.com/2016/07/20/%E5%9F%BA%E6%9C%AC%E7%9A%84sql%E8%AF%AD%E5%8F%A5%E4%BB%A5%E5%8F%8A%E9%AB%98%E7%BA%A7%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%20%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/"/>
-    <id>https://liuhusen.com/2016/07/20/基本的sql语句以及高级运算符和 多表查询/</id>
-    <published>2016-07-20T11:57:47.000Z</published>
-    <updated>2018-10-28T19:10:15.798Z</updated>
-    
-    <content type="html"><![CDATA[<p>选择：select * from table1 where Id=1(Id=1为条件语句，根据自己情况自定义）</p><p>插入：insert into table1(field1,field2) values(value1,value2)</p><p>删除：delete from table1 where 范围</p><p>更新：update table1 set field1=value1 where 范围</p><p>查找：select * from table1 where field1 like ’%value1%’ —like的语法很精妙，查资料!</p><p>排序：select * from table1 order by field1,field2 [desc]</p><p>总数：select count * as totalcount from table1</p><p>求和：select sum(field1) as sumvalue from table1</p><p>平均：select avg(field1) as avgvalue from table1</p><p>最大：select max(field1) as maxvalue from table1</p><p>最小：select min(field1) as minvalue from table1</p><p>11、说明：几个高级查询运算词</p><p>A： UNION 运算符</p><p>UNION 运算符通过组合其他两个结果表(例如 TABLE1 和 TABLE2)并消去表中任何重复行而派生出一个结果表。当 ALL 随 UNION 一起使用时(即 UNION ALL)，不消除重复行。两种情况下，派生表的每一行不是来自 TABLE1 就是来自 TABLE2。</p><p>B： EXCEPT 运算符</p><p>EXCEPT 运算符通过包括所有在 TABLE1 中但不在 TABLE2 中的行并消除所有重复行而派生出一个结果表。当 ALL 随 EXCEPT 一起使用时 (EXCEPT ALL)，不消除重复行。</p><p>C： INTERSECT 运算符</p><p>INTERSECT 运算符通过只包括 TABLE1 和 TABLE2 中都有的行并消除所有重复行而派生出一个结果表。当 ALL 随 INTERSECT 一起使用时 (INTERSECT ALL)，不消除重复行。</p><p>注：使用运算词的几个查询结果行必须是一致的。</p><p>12、说明：使用外连接</p><p>A、left outer join：</p><p>左外连接(左连接)：结果集几包括连接表的匹配行，也包括左连接表的所有行。</p><p>SQL: select a.a, a.b, a.c, b.c, b.d, b.f from a LEFT OUT JOIN b ON a.a = b.c</p><p>B：right outer join:</p><p>右外连接(右连接)：结果集既包括连接表的匹配连接行，也包括右连接表的所有行。</p><p>C：full outer join：</p><p>全外连接：不仅包括符号连接表的匹配行，还包括两个连接表中的所有记录。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;选择：select * from table1 where Id=1(Id=1为条件语句，根据自己情况自定义）&lt;/p&gt;
-&lt;p&gt;插入：insert into table1(field1,field2) values(value1,value2)&lt;/p&gt;
-&lt;p&gt;删除：delet
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
-    
-    
-      <category term="SQL的各种基本操作" scheme="https://liuhusen.com/tags/SQL%E7%9A%84%E5%90%84%E7%A7%8D%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/"/>
-    
-      <category term="MySQL的高级运算符" scheme="https://liuhusen.com/tags/MySQL%E7%9A%84%E9%AB%98%E7%BA%A7%E8%BF%90%E7%AE%97%E7%AC%A6/"/>
-    
-      <category term="多表查询之左连接，右连接" scheme="https://liuhusen.com/tags/%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2%E4%B9%8B%E5%B7%A6%E8%BF%9E%E6%8E%A5%EF%BC%8C%E5%8F%B3%E8%BF%9E%E6%8E%A5/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MySQL建库建表建索引建视图建主键</title>
-    <link href="https://liuhusen.com/2016/05/20/MySQL%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BB%BA%E8%A7%86%E5%9B%BE%E5%BB%BA%E4%B8%BB%E9%94%AE/"/>
-    <id>https://liuhusen.com/2016/05/20/MySQL建库建表建索引建视图建主键/</id>
-    <published>2016-05-20T05:33:20.000Z</published>
-    <updated>2018-10-28T19:13:06.070Z</updated>
-    
-    <content type="html"><![CDATA[<p>1、说明：创建数据库<br>CREATE DATABASE db1(db1代表数据库表，可自命名)<br>2、说明：删除数据库<br>drop database db1(db1代表数据库表，可自命名)<br>3、说明：备份sql server<br>— 创建 备份数据的 device<br>USE master<br>EXEC sp_addumpdevice ‘disk’, ‘testBack’, ‘c:\mssql7backup\MyNwind_1.dat’<br>— 开始 备份<br>BACKUP DATABASE pubs TO testBack<br>4、说明：创建新表<br>create table tb1(Id int not null primary key,name varchar,..)(tb1为数据表名，ID为字段，int为数据类型整型，not null为数据是否可为空，Primary Key为主键设置，其中not null,primary key为可选项，字段，数据类型自定义。）<br>根据已有的表创建新表：<br>A：create table tab_new like tab_old (使用旧表创建新表)<br>B：create table tab_new as select col1,col2… from tab_old definition only<br>5、说明：<br>删除新表：drop table tb1<br>6、说明：<br>添加主键：Alter table tabname add primary key(ID)(设置某字段为主键，ID可自由设置，主键数据不可重复）<br>说明：<br>删除主键：Alter table tabname drop primary key(ID)（删除某字段主键）<br>7、说明：<br>创建索引：create [unique] index idxname on tabname(col….)<br>删除索引：drop index idxname<br>注：索引是不可更改的，想更改必须删除重新建。<br>8、说明：<br>创建视图：create view viewname as select statement<br>删除视图：drop view viewname</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;1、说明：创建数据库&lt;br&gt;CREATE DATABASE db1(db1代表数据库表，可自命名)&lt;br&gt;2、说明：删除数据库&lt;br&gt;drop database db1(db1代表数据库表，可自命名)&lt;br&gt;3、说明：备份sql server&lt;br&gt;— 创建 备份数据的 d
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
-    
-    
-      <category term="建库建表建索引建视图" scheme="https://liuhusen.com/tags/%E5%BB%BA%E5%BA%93%E5%BB%BA%E8%A1%A8%E5%BB%BA%E7%B4%A2%E5%BC%95%E5%BB%BA%E8%A7%86%E5%9B%BE/"/>
-    
-      <category term="备份数据库" scheme="https://liuhusen.com/tags/%E5%A4%87%E4%BB%BD%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
   </entry>
   
