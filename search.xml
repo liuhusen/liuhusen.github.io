@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Mybatis详解收集整理]]></title>
+    <url>%2F2019%2F03%2F10%2FMybatis%E8%AF%A6%E8%A7%A3%E6%94%B6%E9%9B%86%E6%95%B4%E7%90%86%2F</url>
+    <content type="text"><![CDATA[![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_01.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_02.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_03.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_04.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_05.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_06.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_07.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_08.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_09.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_10.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_11.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_12.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_13.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_14.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_15.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_16.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_17.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_18.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_19.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_20.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_21.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_22.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_23.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_24.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_25.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_26.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_27.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_28.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_29.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_30.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_31.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_32.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_33.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_34.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_35.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_36.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_37.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_38.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_39.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_40.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_41.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_42.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_43.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_44.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_45.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_46.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_47.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_48.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_49.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_50.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_51.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_52.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_53.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_54.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_55.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_56.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_57.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_58.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_59.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_60.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_61.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_62.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_63.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_64.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_65.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_66.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_67.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_68.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_69.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_70.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_71.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_72.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_73.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_74.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_75.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_76.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_77.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_78.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_79.png) ![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_80.png)]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>框架</tag>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mybatis开发dao层（持久层）的常用方式]]></title>
+    <url>%2F2019%2F02%2F10%2Fmybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%EF%BC%88%E6%8C%81%E4%B9%85%E5%B1%82%EF%BC%89%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E5%BC%8F%2F</url>
+    <content type="text"><![CDATA[首先介绍一下： 1、SqlSessionFactory： SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式 2、SqlSessionFactoryBuilder： SqlSessionFactoryBuilder用于创建SqlSessionFactory，又由于SqlSessionFactory以单例方式， 可以将SqlSessionFactoryBuilder简单的当成一个工具类来使用即可。 3、SqlSession： sqlSession是一个面向程序员接口。 SqlSession作用是操作数据库，sqlSession对象要存储数据库连接、事务、一级缓存结构等。 sqlSession对象是线程不安全的（多线程访问系统，当多线程同时使用一个sqlsession对象时会造成数据冲突问题） 注意： 由于sqlSession对象是线程不安全的，sqlSession最佳使用场合在方法体内作为局部变量来使用。 一： mybatis开发Dao的第一种方法 开发原始dao方法： 1、 ***.xml映射文件 ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/01.png) ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/02.png) 2、dao接口和dao实现类 编写dao接口及dao实现类： public interface UserDao{ // 根据用户ID查询用户信息 public User findUserById(int id)throws Exception; } 接口实现类中注入SqlSessionFactory。 public UserDaoImpl implements UserDao{ // 根据用户ID查询用户信息 //定义变量SqlSessionFactory private SqlSessionFactory sqlSessionFactory; // 通过构造方法注入 public UserDaoImpl(SqlSessionFactory sqlSessionFactory){ this.sqlSessionFactory = sqlSessionFactory; } @Override public User findUserById(int id)throws Exception(){ //Sqlsession定义为局部变量 SqlSession sqlSession = sqlSessionFactory.openSession(); User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id); return user; } } mapper代理开发方法: mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。 mapper代理类方法主要是对调用sqlsession的方法进行封装，如下： sqlSession.selectOne(&quot;test.findUserById&quot;, id) sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;) sqlSession.insert(&quot;test.insertUser&quot;, user); 对以上代码进行哪些封装？ 什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。 解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。 硬编码的statement的id如何封装。 解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。 mybatis要解决映射文件中statement和mapper接口的方法对应起来。 可以遵循一个开发规范让statement和mapper接口的方法对应起来： 1、映射文件和mapper接口类的对应 映射文件中namespace等于mapper接口类路径 ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/03.png) 2、statement和mapper接口的方法对应 注意： 将映射文件中statement的id和mapper中方法名一致 ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/04.png) 3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致 ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/05.png) 4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。 代码实现： mapper.java: public interface UserMapper{ public User findUserById(int id) throws Exception; } mapper.xml ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/06.png) ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/07.png)]]></content>
+      <categories>
+        <category>mybatis</category>
+      </categories>
+      <tags>
+        <tag>框架</tag>
+        <tag>mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[springboot之日志配置记录]]></title>
     <url>%2F2019%2F01%2F22%2Fspringboot%E4%B9%8B%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE%E8%AE%B0%E5%BD%95%2F</url>
     <content type="text"><![CDATA[springboot --- 日志使用 首先，假设我们要开发一个大型系统； 那么关于日志： 1、System.out.println(&quot;&quot;)；将关键数据打印在控制台；去掉？写在一个文件？ 2、框架来记录系统的一些运行时信息；日志框架 ； zhanglogging.jar； 3、高大上的几个功能？异步模式？自动归档？xxxx？ zhanglogging-good.jar？ 4、将以前框架卸下来？换上新的框架，重新修改之前相关的API；zhanglogging-prefect.jar； 5、JDBC---数据库驱动； 写了一个统一的接口层；日志门面（日志的一个抽象层）；logging-abstract.jar； 给项目中导入具体的日志实现就行了；我们之前的日志框架都是实现的抽象层； 所见到过的市面上的日志框架如下； JUL、JCL、Jboss-logging、logback、log4j、log4j2、slf4j.... 日志门面 （日志的抽象层） 日志实现 JCL（Jakarta Commons Logging）、 Log4j 、JUL（java.util.logging） SLF4j（Simple Logging Facade for Java）、 Log4j2 、 Logback jboss-logging 左边选一个门面（抽象层）、右边来选一个实现； 日志门面： SLF4J； 日志实现：Logback； SpringBoot：底层是Spring框架，Spring框架默认是用 JCL； 默认情况下，Spring Boot会用Logback来记录日志，并用INFO级别输出到控制台。在运行应用程序和其他例子时，你应该已经看到很多INFO级别的日志了。 添加日志依赖 假如maven依赖中添加了spring-boot-starter-logging： &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt; &lt;/dependency&gt; 但是呢，实际开发中我们不需要直接添加该依赖。 你会发现spring-boot-starter其中包含了 spring-boot-starter-logging，该依赖内容就是 Spring Boot 默认的日志框架 logback。 工程中有用到了web，而web依赖包含了spring-boot-starter，最终我只要引入web即可。 &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;/dependency&gt; 控制台输出日志级别从低到高分为：TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL 在选择相应的日志实现后，具体操作如下 1.依赖配置：使用如下： 1. 如果使用 SLF4j 做门面 和logback做日志实现； 那么，由于springboot默认情况下会用Logback来记录日志，所以无需多余配置，但如果想将日志打印在指定的文件里，请同意看后面的阐述 2. 如果使用 SLF4j 做门面 和 Log4j2 做日志实现； 那么首先排除springboot默认的日志实现，并且加入log4j2的依赖 ----如下： &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt; &lt;exclusions&gt; &lt;exclusion&gt; &lt;artifactId&gt;spring-boot-starter-logging&lt;/artifactId&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;/exclusion&gt; &lt;/exclusions&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-starter-log4j2&lt;/artifactId&gt; &lt;/dependency&gt; 2.代码里引用：注意：开发的时候，日志记录方法的调用，不应该来直接调用日志的实现类，而是调用日志抽象层里面的方法； 给系统里面导入slf4j的jar和 logback的实现jar 图示； import org.slf4j.Logger; import org.slf4j.LoggerFactory; public class HelloWorld { public static void main(String[] args) { Logger logger = LoggerFactory.getLogger(HelloWorld.class); logger.info(&quot;Hello World&quot;); } } 前面说过 想把日志打印在指定的文件里，还有加入其它更详细的配置，看这里： 日志输出格式： %d表示日期时间， %thread表示线程名， %‐5level：级别从左显示5个字符宽度 %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 %msg：日志消息， %n是换行符 如：d{yyyy‐MM‐dd HH:mm:ss.SSS} [%thread] %‐5level %logger{50} ‐ %msg%n SpringBoot修改日志的默认配置 1. logging.level.com.atguigu=trace #logging.path= # 不指定路径在当前项目下生成springboot.log日志 # 可以指定完整的路径； #logging.file=G:/springboot.log # 在当前磁盘的根路径下创建spring文件夹和里面的log文件夹；使用 spring.log 作为默认文件 logging.path=/spring/log # 在控制台输出的日志的格式 logging.pattern.console=%d{yyyy‐MM‐dd} [%thread] %‐5level %logger{50} ‐ %msg%n # 指定文件中日志输出的格式 logging.pattern.file=%d{yyyy‐MM‐dd} === [%thread] === %‐5level === %logger{50} ==== %msg%n 2、指定配置 给类路径下放上每个日志框架自己的配置文件即可；SpringBoot就不使用他默认配置的了 Logging System Customization Logback logback-spring.xml , logback-spring.groovy , logback.xml or logback.groovy Log4j2 log4j2-spring.xml or log4j2.xml JDK (Java Util Logging) logging.properties logback.xml：直接就被日志框架识别了； logback-spring.xml：日志框架就不直接加载日志的配置项，由SpringBoot解析日志配置， Spring Boot官方推荐优先使用带有-spring的文件名作为你的日志配置（如使用logback-spring.xml，而不是logback.xml）， 命名为logback-spring.xml的日志配置文件，spring boot可以为它添加一些spring boot特有的配置项（下面会提到）。 默认的命名规则，并且放在 src/main/resources 下面即可 如果你即想完全掌控日志配置，但又不想用logback.xml作为Logback配置的名字，application.yml可以通过logging.config属性指定自定义的名字： logging.config=classpath:logging-config.xml 1 虽然一般并不需要改变配置文件的名字，但是如果你想针对不同运行时Profile使用不同的日志配置，这个功能会很有用。 一般不需要这个属性，而是直接在logback-spring.xml中使用springProfile配置，不需要logging.config指定不同环境使用不同配置文件。 springProfile配置在下面介绍。 &lt;springProfile name=&quot;staging&quot;&gt; &lt;!‐‐ configuration to be enabled when the &quot;staging&quot; profile is active ‐‐&gt; 可以指定某段配置只在某个环境下生效 &lt;/springProfile&gt; 如： &lt;appender name=&quot;stdout&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt; &lt;!‐‐ 日志输出格式： %d表示日期时间， %thread表示线程名， %‐5level：级别从左显示5个字符宽度 %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 %msg：日志消息， %n是换行符 ‐‐&gt; &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt; &lt;springProfile name=&quot;dev&quot;&gt; &lt;pattern&gt;%d{yyyy‐MM‐dd HH:mm:ss.SSS} ‐‐‐‐&gt; [%thread] ‐‐‐&gt; %‐5level%logger{50} ‐ %msg%n&lt;/pattern&gt; &lt;/springProfile&gt; &lt;springProfile name=&quot;!dev&quot;&gt; &lt;pattern&gt;%d{yyyy‐MM‐dd HH:mm:ss.SSS} ==== [%thread] ==== %‐5level%logger{50} ‐ %msg%n&lt;/pattern&gt; &lt;/springProfile&gt; &lt;/layout&gt; &lt;/appender&gt; 如果使用logback.xml作为日志配置文件，还要使用profile功能，会有以下错误 no applicable action for [springProfile] logback-spring.xml配置文件里配置教程： 根节点包含的属性 scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。 当scan为true时，此属性生效。默认的时间间隔为1分钟。 debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 根节点&lt;configuration&gt;有5个子节点，下面一一会详细介绍 子节点一 &lt;root&gt; root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性。 level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF，不能设置为INHERITED或者同义词NULL。 默认是DEBUG。 可以包含零个或多个元素，标识这个appender将会添加到这个loger。 &lt;root level=&quot;debug&quot;&gt; &lt;appender-ref ref=&quot;console&quot; /&gt; &lt;appender-ref ref=&quot;file&quot; /&gt; &lt;/root&gt; 子节点二：&lt;contextName&gt; 设置上下文名称 每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用设置成其他名字， 用于区分不同应用程序的记录。一旦设置，不能修改,可以通过%contextName来打印日志上下文名称， 一般来说我们不用这个属性，可有可无。 &lt;contextName&gt;logback&lt;/contextName&gt; 子节点三：&lt;property&gt; 设置变量 用来定义变量值的标签， 有两个属性，name和value；其中name的值是变量的名称，value的值时变量定义的值。 通过定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。 &lt;property name=&quot;logback.logdir&quot; value=&quot;/Users/inke/dev/log/tomcat&quot;/&gt; &lt;property name=&quot;logback.appname&quot; value=&quot;app&quot;/&gt; 1 2 这里可以看后通过 application.yml 传递参数过来。 子节点四：&lt;appender&gt; appender用来格式化日志输出节点，有俩个属性name和class，class用来指定哪种输出策略， 常用就是控制台输出策略和文件输出策略。 控制台输出ConsoleAppender： 示例一： &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;configuration scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt; &lt;contextName&gt;logback-demo&lt;/contextName&gt; &lt;!--输出到控制台 ConsoleAppender--&gt; &lt;appender name=&quot;consoleLog1&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt; &lt;!--展示格式 layout--&gt; &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt; &lt;pattern&gt;%d -1 %msg%n&lt;/pattern&gt; &lt;/layout&gt; &lt;/appender&gt; &lt;!--输出到控制台 ConsoleAppender--&gt; &lt;appender name=&quot;consoleLog2&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt; &lt;encoder&gt; &lt;pattern&gt;%d -2 %msg%n&lt;/pattern&gt; &lt;/encoder&gt; &lt;/appender&gt; &lt;!--指定最基础的日志输出级别--&gt; &lt;root level=&quot;INFO&quot;&gt; &lt;!--appender将会添加到这个loger--&gt; &lt;appender-ref ref=&quot;consoleLog1&quot;/&gt; &lt;appender-ref ref=&quot;consoleLog2&quot;/&gt; &lt;/root&gt; &lt;/configuration&gt; 可以看到layout和encoder，都可以将事件转换为格式化后的日志记录，但是控制台输出使用layout，文件输出使用encoder， 具体原因可以看我百度到的这个答案，就不特意去说了http://blog.csdn.net/cw_hello1/article/details/51969554 &lt;encoder&gt;表示对日志进行编码： %d{HH: mm:ss.SSS}——日志输出时间 %thread——输出日志的进程名字，这在Web应用以及异步任务处理中很有用 %-5level——日志级别，并且使用5个字符靠左对齐 %logger{36}——日志输出者的名字 %msg——日志消息 %n——平台的换行符 ThresholdFilter为系统定义的拦截器，例如我们用ThresholdFilter来过滤掉ERROR级别以下的日志不输出到文件中。 如果不用记得注释掉，不然你控制台会发现没日志 输出到文件 RollingFileAppender 另一种常见的日志输出到文件，随着应用的运行时间越来越长，日志也会增长的越来越多， 将他们输出到同一个文件并非一个好办法。RollingFileAppender用于切分文件日志： &lt;appender name=&quot;fileInfoLog&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt; &lt;!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高， 所以我们使用下面的策略，可以避免输出 Error 的日志--&gt; &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt; &lt;!--过滤 Error--&gt; &lt;level&gt;ERROR&lt;/level&gt; &lt;!--匹配到就禁止--&gt; &lt;onMatch&gt;DENY&lt;/onMatch&gt; &lt;!--没有匹配到就允许--&gt; &lt;onMismatch&gt;ACCEPT&lt;/onMismatch&gt; &lt;/filter&gt; &lt;!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则 如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，那么当天日志是&lt;File&gt;，明天会自动把今天 的日志改名为今天的日期。即，&lt;File&gt; 的日志都是当天的。 --&gt; &lt;File&gt;${logback.logdir}/info.${logback.appname}.log&lt;/File&gt; &lt;!--滚动策略，按照时间滚动 TimeBasedRollingPolicy--&gt; &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt; &lt;!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间--&gt; &lt;FileNamePattern&gt;${logback.logdir}/info.${logback.appname}.%d{yyyy-MM-dd}.log&lt;/FileNamePattern&gt; &lt;!--只保留最近90天的日志--&gt; &lt;maxHistory&gt;90&lt;/maxHistory&gt; &lt;!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志--&gt; &lt;!--&lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;--&gt; &lt;/rollingPolicy&gt; &lt;!--日志输出编码格式化--&gt; &lt;encoder&gt; &lt;charset&gt;UTF-8&lt;/charset&gt; &lt;pattern&gt;%d [%thread] %-5level %logger{36} %line - %msg%n&lt;/pattern&gt; &lt;/encoder&gt; &lt;/appender&gt; &lt;appender name=&quot;fileErrorLog&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt; &lt;!--如果只是想要 Error 级别的日志，那么需要过滤一下，默认是 info 级别的，ThresholdFilter--&gt; &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt; &lt;level&gt;Error&lt;/level&gt; &lt;/filter&gt; &lt;!--日志名称，如果没有File 属性，那么只会使用FileNamePattern的文件路径规则 如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，那么当天日志是&lt;File&gt;，明天会自动把今天 的日志改名为今天的日期。即，&lt;File&gt; 的日志都是当天的。 --&gt; &lt;File&gt;${logback.logdir}/error.${logback.appname}.log&lt;/File&gt; &lt;!--滚动策略，按照时间滚动 TimeBasedRollingPolicy--&gt; &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt; &lt;!--文件路径,定义了日志的切分方式——把每一天的日志归档到一个文件中,以防止日志填满整个磁盘空间--&gt; &lt;FileNamePattern&gt;${logback.logdir}/error.${logback.appname}.%d{yyyy-MM-dd}.log&lt;/FileNamePattern&gt; &lt;!--只保留最近90天的日志--&gt; &lt;maxHistory&gt;90&lt;/maxHistory&gt; &lt;!--用来指定日志文件的上限大小，那么到了这个值，就会删除旧的日志--&gt; &lt;!--&lt;totalSizeCap&gt;1GB&lt;/totalSizeCap&gt;--&gt; &lt;/rollingPolicy&gt; &lt;!--日志输出编码格式化--&gt; &lt;encoder&gt; &lt;charset&gt;UTF-8&lt;/charset&gt; &lt;pattern&gt;%d [%thread] %-5level %logger{36} %line - %msg%n&lt;/pattern&gt; &lt;/encoder&gt; &lt;/appender&gt; 如果同时有&lt;File&gt;和&lt;FileNamePattern&gt;，根据日期分割日志，代码注释写的很清楚了。 如果要区分 Info 和 Error 级别的日志，那么需要使用过滤规则的策略，代码注释写的很清楚了 子节点五&lt;loger&gt; &lt;loger&gt;用来设置某一个包或者具体的某一个类的日志打印级别、以及指定&lt;appender&gt;。 &lt;loger&gt;仅有一个name属性，一个可选的level和一个可选的addtivity属性。 name:用来指定受此loger约束的某一个包或者具体的某一个类。 level:用来设置打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和 OFF， 还有一个特俗值INHERITED或者同义词NULL，代表强制执行上级的级别。如果未设置此属性，那么当前loger将会继承上级的级别。 addtivity:是否向上级loger传递打印信息。默认是true。 第一种：带有loger的配置，不指定级别，不指定appender logback-spring.xml增加 loger 配置如下： &lt;logger name=&quot;com.dudu.controller&quot;/&gt; 1 &lt;logger name=&quot;com.dudu.controller&quot; /&gt;将控制controller包下的所有类的日志的打印， 但是并没用设置打印级别，所以继承他的上级的日志级别“info”； 没有设置addtivity，默认为true，将此loger的打印信息向上级传递； 没有设置appender，此loger本身不打印任何信息。 &lt;root level=&quot;info&quot;&gt;将root的打印级别设置为“info”，指定了名字为“console”的appender。 当执行com.dudu.controller.LearnController类的login方法时，LearnController 在包com.dudu.controller中， 所以首先执行&lt;logger name=&quot;com.dudu.controller&quot;/&gt;，将级别为“info”及大于“info”的日志信息传递给root，本身并不打印； root接到下级传递的信息，交给已经配置好的名为“console”的appender处理，“console” appender 将信息打印到控制台 第二种：带有多个loger的配置，指定级别，指定appender， logback-spring.xml增加 loger 配置如下： &lt;configuration&gt; ... &lt;!--logback.LogbackDemo：类的全路径 --&gt; &lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt; &lt;appender-ref ref=&quot;console&quot;/&gt; &lt;/logger&gt; &lt;/configuration&gt; 控制com.dudu.controller.LearnController类的日志打印，打印级别为“WARN”; additivity属性为false，表示此loger的打印信息不再向上级传递; 指定了名字为“console”的appender; 这时候执行com.dudu.controller.LearnController类的login方法时， 先执行&lt;logger name=&quot;com.dudu.controller.LearnController&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt;, 将级别为“WARN”及大于“WARN”的日志信息交给此loger指定的名为“console”的appender处理， 在控制台中打出日志，不再向上级root传递打印信息 当然如果你把additivity=&quot;false&quot;改成additivity=&quot;true&quot;的话，就会打印两次， 因为打印信息向上级传递，logger本身打印一次，root接到后又打印一次。 &lt;configuration&gt; ... &lt;logger name=&quot;com.example.demo.controller&quot; level=&quot;WARN&quot; additivity=&quot;false&quot;&gt; &lt;appender-ref ref=&quot;consoleLog&quot;/&gt; &lt;/logger&gt; &lt;logger name=&quot;com.example.demo.controller&quot;/&gt; &lt;logger name=&quot;com.example.demo&quot;/&gt; &lt;/configuration&gt; 范围有重叠的话，范围小的，有效。 多环境日志输出： &lt;configuration&gt; ... &lt;!-- 测试环境+开发环境. 多个使用逗号隔开. --&gt; &lt;springProfile name=&quot;test,dev&quot;&gt; &lt;logger name=&quot;com.example.demo.controller&quot; level=&quot;DEBUG&quot; additivity=&quot;false&quot;&gt; &lt;appender-ref ref=&quot;consoleLog&quot;/&gt; &lt;/logger&gt; &lt;/springProfile&gt; &lt;!-- 生产环境. --&gt; &lt;springProfile name=&quot;prod&quot;&gt; &lt;logger name=&quot;com.example.demo.controller&quot; level=&quot;INFO&quot; additivity=&quot;false&quot;&gt; &lt;appender-ref ref=&quot;consoleLog&quot;/&gt; &lt;/logger&gt; &lt;/springProfile&gt; &lt;/configuration&gt; application.yml增加环境选择的配置active: dev server: port: 9010 spring: profiles: active: dev datasource: url: jdbc:mysql://localhost:3306/test?characterEncoding=utf8 username: root password: root mybatis: type-aliases-package: org.larry.springboot.entity mapper-locations: classpath:mapper/**/*.xml check-config-location: true active: 【test、dev、prod】，根据 active 的环境，自动采用上面配置的springProfile的 logger 日志 使用application.yml 自定义日志路径（application.yml） application.yml增加日志相关自定义配置： logback: logdir: /Users/inke/dev/log/tomcat/sell appname: sell 在logback-spring.xml &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; &lt;configuration scan=&quot;true&quot; scanPeriod=&quot;60 seconds&quot; debug=&quot;false&quot;&gt; &lt;!--application.yml 传递参数，不能使用logback 自带的&lt;property&gt;标签 --&gt; &lt;springProperty scope=&quot;context&quot; name=&quot;appname&quot; source=&quot;logback.appname&quot;/&gt; &lt;springProperty scope=&quot;context&quot; name=&quot;logdir&quot; source=&quot;logback.logdir&quot;/&gt; &lt;contextName&gt;${appname}&lt;/contextName&gt; &lt;!--输出到控制台 ConsoleAppender--&gt; &lt;appender name=&quot;consoleLog&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt; &lt;!--展示格式 layout--&gt; &lt;layout class=&quot;ch.qos.logback.classic.PatternLayout&quot;&gt; &lt;pattern&gt; &lt;pattern&gt;%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt; &lt;/pattern&gt; &lt;/layout&gt; &lt;/appender&gt; 为了更全面一点总结日志配置，除了自己总结，也百度摘录归纳糅合进许多好的讲解点，可能有点多和杂，但绝对是必要的！！！]]></content>
+      <categories>
+        <category>springboot</category>
+      </categories>
+      <tags>
+        <tag>微服务</tag>
+        <tag>springboot</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[SpringBoot之@Controller和@ResponseBody和@RestController的区别]]></title>
+    <url>%2F2019%2F01%2F22%2FSpringBoot%E4%B9%8B%40Controller%E5%92%8C%40ResponseBody%E5%92%8C%40RestController%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[@Controller表明该类所有的方法返回页面路径，但是在方法上加了@ResponseBody后，该方法返回的是数据。 @RestController则相当于@Controller和@ResponseBody同时使用的效果，返回的也是数据，不是界面 如果我们还想返回界面可以使用ModelAndView方法]]></content>
       <categories>
         <category>springboot</category>
       </categories>
@@ -20,14 +56,14 @@
         <category>redis</category>
       </categories>
       <tags>
-        <tag>缓存数据库</tag>
         <tag>redis</tag>
+        <tag>缓存数据库</tag>
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[springboot之创建后mysql连接报错]]></title>
-    <url>%2F2019%2F01%2F10%2Fspringboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99%2F</url>
-    <content type="text"><![CDATA[给springboot项目配置mysql出错，如下： mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos; at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46] at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46] at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46] ...................... 解决方法如下： 因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量 1. 在mysql数据库执行 select version() ， 查看mysql版本 2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可]]></content>
+    <title><![CDATA[springboot整合Spring Data JPA的遇到的问题]]></title>
+    <url>%2F2019%2F01%2F10%2Fspringboot%E6%95%B4%E5%90%88Spring%20Data%20JPA%E7%9A%84%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%2F</url>
+    <content type="text"><![CDATA[声明： 以下问题仅针对使用jdk9的情况 springboot整合Spring Data JPA的遇到的问题，报错如下： Caused by: java.lang.ClassNotFoundException: javax.xml.bind.JAXBException at java.base/jdk.internal.loader...................................... ............................................................此处省略 原因：jdk9缺少相应的jar 解决方案：手动导入对应的maven坐标，如下 &lt;!--jdk9需要导入如下坐标--&gt; &lt;dependency&gt; &lt;groupId&gt;javax.xml.bind&lt;/groupId&gt; &lt;artifactId&gt;jaxb-api&lt;/artifactId&gt; &lt;version&gt;2.3.0&lt;/version&gt; &lt;/dependency&gt;]]></content>
       <categories>
         <category>springboot</category>
       </categories>
@@ -37,9 +73,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[springboot整合Spring Data JPA的遇到的问题]]></title>
-    <url>%2F2019%2F01%2F10%2Fspringboot%E6%95%B4%E5%90%88Spring%20Data%20JPA%E7%9A%84%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%2F</url>
-    <content type="text"><![CDATA[声明： 以下问题仅针对使用jdk9的情况 springboot整合Spring Data JPA的遇到的问题，报错如下： Caused by: java.lang.ClassNotFoundException: javax.xml.bind.JAXBException at java.base/jdk.internal.loader...................................... ............................................................此处省略 原因：jdk9缺少相应的jar 解决方案：手动导入对应的maven坐标，如下 &lt;!--jdk9需要导入如下坐标--&gt; &lt;dependency&gt; &lt;groupId&gt;javax.xml.bind&lt;/groupId&gt; &lt;artifactId&gt;jaxb-api&lt;/artifactId&gt; &lt;version&gt;2.3.0&lt;/version&gt; &lt;/dependency&gt;]]></content>
+    <title><![CDATA[springboot之创建后mysql连接报错]]></title>
+    <url>%2F2019%2F01%2F10%2Fspringboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99%2F</url>
+    <content type="text"><![CDATA[给springboot项目配置mysql出错，如下： mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos; at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46] at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46] at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46] ...................... 解决方法如下： 因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量 1. 在mysql数据库执行 select version() ， 查看mysql版本 2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可]]></content>
       <categories>
         <category>springboot</category>
       </categories>
@@ -131,17 +167,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[常用的扒拉后台日志操作命令]]></title>
-    <url>%2F2018%2F08%2F08%2F%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%2F</url>
-    <content type="text"><![CDATA[翻找环境上的日志： ll 展示目录 cd 进入含有日志文件的文件夹目录 tail -200f 文件名 实时查看200行日志 cat 文件名 | grep “关键字” -A 页数 展示出含有关键字的后面的页数 cat 文件名 | grep “关键字” -B 页数 展示出含有关键字的前面的页数 cat 文件名 | grep “关键字” -C 页数 展示出含有关键字的上下文的页数]]></content>
-      <categories>
-        <category>关于日志</category>
-      </categories>
-      <tags>
-        <tag>生产日志</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[常见框架单例、多例与线程安全性总结]]></title>
     <url>%2F2018%2F08%2F08%2F%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93%2F</url>
     <content type="text"><![CDATA[单例与多例问题是指，当多个用户访问某个类时，系统是为每个用户创建一个该类实例，还是整个系统无论多少用户访问，只创建一个该类实例。 线程安全问题是指，多个用户同时在访问同一个程序时，其对于某一数据的修改，会不会影响到其他用户中的该数据。若没有影响，则是线程安全的; 若有可能影响，则是线程不安全的。 现在对 HttpServlet、HttpSession、SpingMVC、Struts2 中的 Action、Hibernate 中的 SessionFactory与 Session，进行总结。 (1)HttpServlet 其是单例的。即无论多少用户访问同一个业务，如 LoginServlet，Web 容器只会创建一个该 Servlet 实例。而该实例是允许多用户访问的。 若 Servlet 中包含成员变量，则每个用户对于成员变量的修改，均会影响到其他用户所看到的该变量的值，所以这时是线程不安全的。 若不包含成员变量，则是线程安全的。 (2)HttpSession 其是多例的。Web 容器会为每个用户开辟一个 Session，多个用户会有多个 Session。而每个用户只能访问自己的 Session。 所以，对于 Session 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (3)SpingMVC Controller Spring MVC Controller默认是单例的： 单例的原因有二： 1、为了性能。 2、不需要多例。 如果需要多例，则需要在Controller类上加注解 @Scope(“prototype”) (4)Struts2 的 Action 其是多例的。对于同一个业务，例如 LoginAction，系统会为每一个用户创建一个LoginAction 的实例， 并使其成员变量 username 与 password 接收用户 交的数据。同一用户只能访问自己的 Action。 所以，对于 Action 来说，就不存在并发访问的情况，也就不存在线程安全的问题了。所以可以说是线程安全的。 (5)Hibernate 的 SessionFactory 其是单例的。无论多少用户访问该项目，系统只会创建一个 SessionFactory 对象，即这个对象是可以被所有用户访问的。 SessionFactory实现类中所包含的成员变量基本都是 final常量，即任何用户均不能修改。所以，也就不存在用户的修改对其他用户的影响问题了，所以是线程安全的。 (6)Hibernate 的 Session 其是多例的。系统会为每个用户创建一个 Sessio。 Session 的实现类中定义了很多的非 final 成员变量，一个事务对成员变量所做的修改，会影响到另一个事务对同一数据的访问结果，所以是线程不安全的。]]></content>
@@ -150,6 +175,17 @@
       </categories>
       <tags>
         <tag>多例，多线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[常用的扒拉后台日志操作命令]]></title>
+    <url>%2F2018%2F08%2F08%2F%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[翻找环境上的日志： ll 展示目录 cd 进入含有日志文件的文件夹目录 tail -200f 文件名 实时查看200行日志 cat 文件名 | grep “关键字” -A 页数 展示出含有关键字的后面的页数 cat 文件名 | grep “关键字” -B 页数 展示出含有关键字的前面的页数 cat 文件名 | grep “关键字” -C 页数 展示出含有关键字的上下文的页数]]></content>
+      <categories>
+        <category>关于日志</category>
+      </categories>
+      <tags>
+        <tag>生产日志</tag>
       </tags>
   </entry>
   <entry>
@@ -200,16 +236,15 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[MySQL的表增删字段和增删索引]]></title>
-    <url>%2F2017%2F05%2F26%2FMySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95%2F</url>
-    <content type="text"><![CDATA[表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;; 表删除字段： ALTER TABLE 表名 DROP COLUMN 表字段 ; 字段建唯一索引：create index idx_province_id on 表名 (表字段 ); 上为索引 create index 字段的索引 on 表名 (表字段 ); 删除字段的索引：alter table 表名 drop index idx_province_id ; 上为索引 alter table 表名 drop 字段的索引 ;]]></content>
+    <title><![CDATA[自学编程成功概率有多少可能]]></title>
+    <url>%2F2017%2F05%2F26%2F%E5%85%B3%E4%BA%8E%2F</url>
+    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
       <categories>
-        <category>mysql</category>
+        <category>档案</category>
       </categories>
       <tags>
-        <tag>MySQL</tag>
-        <tag>增删字段</tag>
-        <tag>增删索引</tag>
+        <tag>编程</tag>
+        <tag>感悟</tag>
       </tags>
   </entry>
   <entry>
@@ -225,15 +260,16 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[自学编程成功概率有多少可能]]></title>
-    <url>%2F2017%2F05%2F26%2F%E5%85%B3%E4%BA%8E%2F</url>
-    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+    <title><![CDATA[MySQL的表增删字段和增删索引]]></title>
+    <url>%2F2017%2F05%2F26%2FMySQL%E7%9A%84%E8%A1%A8%E5%A2%9E%E5%88%A0%E5%AD%97%E6%AE%B5%E5%92%8C%E5%A2%9E%E5%88%A0%E7%B4%A2%E5%BC%95%2F</url>
+    <content type="text"><![CDATA[表添加字段： ALTER TABLE 表名 ADD COLUMN 表字段 varchar(50) DEFAULT NULL COMMENT &apos;字段描述&apos;; 表删除字段： ALTER TABLE 表名 DROP COLUMN 表字段 ; 字段建唯一索引：create index idx_province_id on 表名 (表字段 ); 上为索引 create index 字段的索引 on 表名 (表字段 ); 删除字段的索引：alter table 表名 drop index idx_province_id ; 上为索引 alter table 表名 drop 字段的索引 ;]]></content>
       <categories>
-        <category>档案</category>
+        <category>mysql</category>
       </categories>
       <tags>
-        <tag>编程</tag>
-        <tag>感悟</tag>
+        <tag>MySQL</tag>
+        <tag>增删字段</tag>
+        <tag>增删索引</tag>
       </tags>
   </entry>
   <entry>
@@ -366,57 +402,21 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[面向对象和面向过程的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[面向对象和面向过程的区别： –面向过程 优点：性能比面向对象高，因为类调用时需要实例化，比较消耗资源；比如单片机、嵌入式开发、Linux/Unix等一般采用面向过程开发，性能是最重要因素。 缺点：没有面向对象易于维护，易复用，易扩展 –面向对象 优点：易维护，易复用，易扩展，由于面向对象有封装，继承，多肽性的特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护 缺点：性能比面向过程低]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[抽象类和接口的区别]]></title>
     <url>%2F2015%2F10%2F08%2F%E6%8A%BD%E8%B1%A1%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
     <content type="text"><![CDATA[抽象类和接口的区别： –语法层次 抽象类和接口分别给出了不同的语法定义。 –设计层次 抽象层次不同，抽象类是对类抽象，而接口是对行为的抽象。抽象类是对整个类整体进行抽象，包括属性、 行为，但是接口却是对类局部（行为）进行抽象。抽象类是自底向上抽象而来的，接口是自顶向下设计出来 的。 –跨域不同 抽象类所体现的是一种继承关系，要想使得继承关系合理，父类和派生类之间必须存在”is-a” 关系，即父类和派生类在概念本质上应该是相同的。对于接口则不然，并不要求接口的实现者和接口定义在 概念本质上是一致的，仅仅是实现了接口定义的契约而已，”like-a”的关系。]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[String和StringBuffer、StringBuilder的区别]]></title>
-    <url>%2F2015%2F10%2F08%2FString%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[String和StringBuffer、StringBuilder的区别： –可变性 String类中使用字符数组保存字符串，private final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自 AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[] value，这两种对象都是可变的。 –线程安全性 String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与 StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf 等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。 StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。 –性能 每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。 StringBuffer每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用 StirngBuilder 相比使用 StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[hashCode和equals方法的关系]]></title>
-    <url>%2F2015%2F10%2F08%2FhashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB%2F</url>
-    <content type="text"><![CDATA[hashCode和equals方法的关系： –equals相等，hashcode必相等；hashcode相等，equals可能不相等]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[重载和重写的区别]]></title>
-    <url>%2F2015%2F10%2F08%2F%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[重载和重写的区别： –重载：发生在同一个类中，方法名必须相同，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰 符可以不同，发生在编译时。 –重写：发生在父子类中，方法名、参数列表必须相同，返回值小于等于父类，抛出的异常小于等于父类，访 问修饰符大于等于父类；如果父类方法访问修饰符为private则子类中就不是重写。]]></content>
-      <categories>
-        <category>java基础</category>
-      </categories>
-      <tags>
-        <tag>java基础</tag>
-        <tag>面试常问</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[访问控制符public,protected,private,以及默认的区别]]></title>
-    <url>%2F2015%2F10%2F08%2F%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public%2Cprotected%2Cprivate%2C%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[访问控制符public,protected,private,以及默认的区别： private只有在本类中才能访问； public在任何地方都能访问； protected在同包内的类及包外的子类能访问； 默认不写在同包内能访问。 是否可以继承String类？？？ String类是final类故不可以继承，一切由final修饰过的都不能继承。]]></content>
       <categories>
         <category>java基础</category>
       </categories>
@@ -438,9 +438,21 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[面向对象和面向过程的区别]]></title>
-    <url>%2F2015%2F10%2F08%2F%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E5%92%8C%E9%9D%A2%E5%90%91%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
-    <content type="text"><![CDATA[面向对象和面向过程的区别： –面向过程 优点：性能比面向对象高，因为类调用时需要实例化，比较消耗资源；比如单片机、嵌入式开发、Linux/Unix等一般采用面向过程开发，性能是最重要因素。 缺点：没有面向对象易于维护，易复用，易扩展 –面向对象 优点：易维护，易复用，易扩展，由于面向对象有封装，继承，多肽性的特性，可以设计出低耦合的系统，使系统更加灵活，更加易于维护 缺点：性能比面向过程低]]></content>
+    <title><![CDATA[重载和重写的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E9%87%8D%E8%BD%BD%E5%92%8C%E9%87%8D%E5%86%99%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[重载和重写的区别： –重载：发生在同一个类中，方法名必须相同，参数类型不同、个数不同、顺序不同，方法返回值和访问修饰 符可以不同，发生在编译时。 –重写：发生在父子类中，方法名、参数列表必须相同，返回值小于等于父类，抛出的异常小于等于父类，访 问修饰符大于等于父类；如果父类方法访问修饰符为private则子类中就不是重写。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[String和StringBuffer、StringBuilder的区别]]></title>
+    <url>%2F2015%2F10%2F08%2FString%E5%92%8CStringBuffer%E3%80%81StringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[String和StringBuffer、StringBuilder的区别： –可变性 String类中使用字符数组保存字符串，private final char value[]，所以string对象是不可变的。StringBuilder与StringBuffer都继承自 AbstractStringBuilder类，在AbstractStringBuilder中也是使用字符数组保存字符串，char[] value，这两种对象都是可变的。 –线程安全性 String中的对象是不可变的，也就可以理解为常量，线程安全。AbstractStringBuilder是StringBuilder与 StringBuffer的公共父类，定义了一些字符串的基本操作，如expandCapacity、append、insert、indexOf 等公共方法。StringBuffer对方法加了同步锁或者对调用的方法加了同步锁，所以是线程安全的。 StringBuilder并没有对方法进行加同步锁，所以是非线程安全的。 –性能 每次对String 类型进行改变的时候，都会生成一个新的String 对象，然后将指针指向新的String 对象。 StringBuffer每次都会对 StringBuffer 对象本身进行操作，而不是生成新的对象并改变对象引用。相同情况下使用 StirngBuilder 相比使用 StringBuffer 仅能获得10%~15% 左右的性能提升，但却要冒多线程不安全的风险。]]></content>
       <categories>
         <category>java基础</category>
       </categories>
@@ -461,9 +473,9 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Java的四个基本特性（抽象、封装、继承，多态）]]></title>
-    <url>%2F2015%2F10%2F08%2FJava%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%88%E6%8A%BD%E8%B1%A1%E3%80%81%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%A4%9A%E6%80%81%EF%BC%89%2F</url>
-    <content type="text"><![CDATA[Java的四个基本特性（抽象、封装、继承，多态）： –抽象：就是把现实生活中的某一类东西提取出来，用程序代码表示，我们通常叫做类或者接口。 抽象包括两个方面：一个是数据抽象，一个是过程抽象。数据抽象也就是对象的属性。过程抽象是对象的行为特征。 –封装：把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信 的进行封装隐藏。 封装分为属性的封装和方法的封装。 –继承：是对有着共同特性的多类事物，进行再抽象成一个类。这个类就是多类事物的父类。父类的意义在于 抽取多类事物的共性。 –多态：允许不同类的对象对同一消息做出响应。方法的重载、类的覆盖正体现了多态。]]></content>
+    <title><![CDATA[hashCode和equals方法的关系]]></title>
+    <url>%2F2015%2F10%2F08%2FhashCode%E5%92%8Cequals%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E7%B3%BB%2F</url>
+    <content type="text"><![CDATA[hashCode和equals方法的关系： –equals相等，hashcode必相等；hashcode相等，equals可能不相等]]></content>
       <categories>
         <category>java基础</category>
       </categories>
@@ -476,6 +488,30 @@
     <title><![CDATA[什么是泛型、为什么要使用以及泛型擦除]]></title>
     <url>%2F2015%2F10%2F08%2F%E4%BB%80%E4%B9%88%E6%98%AF%E6%B3%9B%E5%9E%8B%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E4%BB%A5%E5%8F%8A%E6%B3%9B%E5%9E%8B%E6%93%A6%E9%99%A4%2F</url>
     <content type="text"><![CDATA[什么是泛型、为什么要使用以及泛型擦除： 泛型，即“参数化类型”。 创建集合时就指定集合元素的类型，该集合只能保存其指定类型的元素，避免使用强制类型转换。 Java编译器生成的字节码是不包涵泛型信息的，泛型类型信息将在编译处理是被擦除，这个过程即类型擦 除。泛型擦除可以简单的理解为将泛型java代码转换为普通java代码，只不过编译器更直接点，将泛型java 代码直接转换成普通java字节码。 类型擦除的主要过程如下： 1）.将所有的泛型参数用其 2）.移除所有的类型参数。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Java的四个基本特性（抽象、封装、继承，多态）]]></title>
+    <url>%2F2015%2F10%2F08%2FJava%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7%EF%BC%88%E6%8A%BD%E8%B1%A1%E3%80%81%E5%B0%81%E8%A3%85%E3%80%81%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%A4%9A%E6%80%81%EF%BC%89%2F</url>
+    <content type="text"><![CDATA[Java的四个基本特性（抽象、封装、继承，多态）： –抽象：就是把现实生活中的某一类东西提取出来，用程序代码表示，我们通常叫做类或者接口。 抽象包括两个方面：一个是数据抽象，一个是过程抽象。数据抽象也就是对象的属性。过程抽象是对象的行为特征。 –封装：把客观事物封装成抽象的类，并且类可以把自己的数据和方法只让可信的类或者对象操作，对不可信 的进行封装隐藏。 封装分为属性的封装和方法的封装。 –继承：是对有着共同特性的多类事物，进行再抽象成一个类。这个类就是多类事物的父类。父类的意义在于 抽取多类事物的共性。 –多态：允许不同类的对象对同一消息做出响应。方法的重载、类的覆盖正体现了多态。]]></content>
+      <categories>
+        <category>java基础</category>
+      </categories>
+      <tags>
+        <tag>java基础</tag>
+        <tag>面试常问</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[访问控制符public,protected,private,以及默认的区别]]></title>
+    <url>%2F2015%2F10%2F08%2F%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E7%AC%A6public%2Cprotected%2Cprivate%2C%E4%BB%A5%E5%8F%8A%E9%BB%98%E8%AE%A4%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[访问控制符public,protected,private,以及默认的区别： private只有在本类中才能访问； public在任何地方都能访问； protected在同包内的类及包外的子类能访问； 默认不写在同包内能访问。 是否可以继承String类？？？ String类是final类故不可以继承，一切由final修饰过的都不能继承。]]></content>
       <categories>
         <category>java基础</category>
       </categories>
