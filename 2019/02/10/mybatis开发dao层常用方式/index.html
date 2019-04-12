@@ -124,10 +124,18 @@
 <meta property="og:site_name" content="藏书阁">
 <meta property="og:description" content="首先介绍一下：      1、SqlSessionFactory：              SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式       2、SqlSessionFactoryBuilder：              SqlSessionFactoryBuilder用于创建SqlSessionFacto">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-12T02:09:21.865Z">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/01.png">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/02.png">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/03.png">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/04.png">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/05.png">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/06.png">
+<meta property="og:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/07.png">
+<meta property="og:updated_time" content="2019-04-12T02:29:59.131Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mybatis开发dao层常用方式">
 <meta name="twitter:description" content="首先介绍一下：      1、SqlSessionFactory：              SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式       2、SqlSessionFactoryBuilder：              SqlSessionFactoryBuilder用于创建SqlSessionFacto">
+<meta name="twitter:image" content="https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/01.png">
 
 
 
@@ -445,7 +453,7 @@
                 </span>
                 文章字数：
                 <span title="字数统计">
-                  846 字
+                  713 字
                 </span>
               
 
@@ -459,7 +467,7 @@
                 </span>
                 阅读时间
                 <span title="阅读时长">
-                  3 分钟
+                  2 分钟
                 </span>
               
             </div>
@@ -499,82 +507,71 @@
  一： mybatis开发Dao的第一种方法
       开发原始dao方法：
           1、 ***.xml映射文件
-           ![你想输入的替代文字](mybatis开发dao层常用方式/01.png)
-           ![你想输入的替代文字](mybatis开发dao层常用方式/02.png)
+</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/01.png" alt="你想输入的替代文字"><br><img src="/2019/02/10/mybatis开发dao层常用方式/02.png" alt="你想输入的替代文字"></p>
+<pre><code>   2、dao接口和dao实现类
+        编写dao接口及dao实现类：
+         public interface UserDao{
+              // 根据用户ID查询用户信息
+              public User findUserById(int id)throws Exception;
 
-          2、dao接口和dao实现类
-               编写dao接口及dao实现类：
-                public interface UserDao{
-                     // 根据用户ID查询用户信息
-                     public User findUserById(int id)throws Exception;
+         }
 
-                }
+         接口实现类中注入SqlSessionFactory。
 
-                接口实现类中注入SqlSessionFactory。
+         public UserDaoImpl implements  UserDao{
+              // 根据用户ID查询用户信息
 
-                public UserDaoImpl implements  UserDao{
-                     // 根据用户ID查询用户信息
+                  //定义变量SqlSessionFactory
+                  private SqlSessionFactory sqlSessionFactory;
+                  // 通过构造方法注入
+                  public UserDaoImpl(SqlSessionFactory sqlSessionFactory){
+                      this.sqlSessionFactory = sqlSessionFactory;
+                  }
 
-                         //定义变量SqlSessionFactory
-                         private SqlSessionFactory sqlSessionFactory;
-                         // 通过构造方法注入
-                         public UserDaoImpl(SqlSessionFactory sqlSessionFactory){
-                             this.sqlSessionFactory = sqlSessionFactory;
-                         }
+                   @Override
+                   public User findUserById(int id)throws Exception(){
+                      //Sqlsession定义为局部变量
+                      SqlSession sqlSession = sqlSessionFactory.openSession();
+                      User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id);
+                      return user;
+                  }
 
-                          @Override
-                          public User findUserById(int id)throws Exception(){
-                             //Sqlsession定义为局部变量
-                             SqlSession sqlSession = sqlSessionFactory.openSession();
-                             User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id);
-                             return user;
-                         }
+         }
 
-                }
+mapper代理开发方法:
+      mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。
+      mapper代理类方法主要是对调用sqlsession的方法进行封装，如下：
+      sqlSession.selectOne(&quot;test.findUserById&quot;, id)
+      sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;)
+      sqlSession.insert(&quot;test.insertUser&quot;, user);
 
-       mapper代理开发方法:
-             mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。
-             mapper代理类方法主要是对调用sqlsession的方法进行封装，如下：
-             sqlSession.selectOne(&quot;test.findUserById&quot;, id)
-             sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;)
-             sqlSession.insert(&quot;test.insertUser&quot;, user);
+      对以上代码进行哪些封装？
+      什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。
+      解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。
 
-             对以上代码进行哪些封装？
-             什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。
-             解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。
+      硬编码的statement的id如何封装。
+      解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。
 
-             硬编码的statement的id如何封装。
-             解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。
+       mybatis要解决映射文件中statement和mapper接口的方法对应起来。
 
-              mybatis要解决映射文件中statement和mapper接口的方法对应起来。
+      可以遵循一个开发规范让statement和mapper接口的方法对应起来：
 
-             可以遵循一个开发规范让statement和mapper接口的方法对应起来：
+      1、映射文件和mapper接口类的对应
+      映射文件中namespace等于mapper接口类路径
+</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/03.png" alt="你想输入的替代文字"><br>                    2、statement和mapper接口的方法对应</p>
+<pre><code>注意： 将映射文件中statement的id和mapper中方法名一致
+</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/04.png" alt="你想输入的替代文字"></p>
+<pre><code>3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致
+</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/05.png" alt="你想输入的替代文字"><br>                     4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。<br>                     代码实现：<br>                          mapper.java:</p>
+<pre><code>   public interface UserMapper{
 
-             1、映射文件和mapper接口类的对应
-             映射文件中namespace等于mapper接口类路径
-               ![你想输入的替代文字](mybatis开发dao层常用方式/03.png)
-             2、statement和mapper接口的方法对应
-
-                 注意： 将映射文件中statement的id和mapper中方法名一致
-
-              ![你想输入的替代文字](mybatis开发dao层常用方式/04.png)
-
-              3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致
-              ![你想输入的替代文字](mybatis开发dao层常用方式/05.png)
-              4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。
-              代码实现：
-                   mapper.java:
-
-                     public interface UserMapper{
-
-                         public User findUserById(int id) throws Exception;
-                     }
+       public User findUserById(int id) throws Exception;
+   }
 
 
-                  mapper.xml
-                      ![你想输入的替代文字](mybatis开发dao层常用方式/06.png)
-                      ![你想输入的替代文字](mybatis开发dao层常用方式/07.png)
-</code></pre>
+mapper.xml
+</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/06.png" alt="你想输入的替代文字"><br><img src="/2019/02/10/mybatis开发dao层常用方式/07.png" alt="你想输入的替代文字"></p>
+
       
     </div>
     
@@ -876,7 +873,7 @@ show_date_time();
     
       本站总字数：
     
-    <span title="Site words total count">28.7k</span>
+    <span title="Site words total count">28.6k</span>
   
 </div>
 
