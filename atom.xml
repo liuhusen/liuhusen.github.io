@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://liuhusen.com/"/>
-  <updated>2019-04-11T09:55:49.199Z</updated>
+  <updated>2019-04-12T02:04:37.598Z</updated>
   <id>https://liuhusen.com/</id>
   
   <author>
@@ -21,17 +21,17 @@
     <link href="https://liuhusen.com/2019/03/10/Mybatis%E8%AF%A6%E8%A7%A3%E6%94%B6%E9%9B%86%E6%95%B4%E7%90%86/"/>
     <id>https://liuhusen.com/2019/03/10/Mybatis详解收集整理/</id>
     <published>2019-03-10T05:01:30.000Z</published>
-    <updated>2019-04-11T09:55:49.199Z</updated>
+    <updated>2019-04-12T02:04:37.598Z</updated>
     
-    <content type="html"><![CDATA[<pre><code>![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_01.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_02.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_03.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_04.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_05.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_06.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_07.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_08.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_09.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_10.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_11.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_12.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_13.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_14.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_15.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_16.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_17.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_18.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_19.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_20.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_21.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_22.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_23.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_24.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_25.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_26.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_27.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_28.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_29.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_30.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_31.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_32.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_33.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_34.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_35.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_36.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_37.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_38.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_39.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_40.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_41.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_42.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_43.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_44.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_45.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_46.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_47.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_48.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_49.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_50.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_51.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_52.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_53.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_54.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_55.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_56.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_57.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_58.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_59.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_60.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_61.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_62.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_63.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_64.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_65.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_66.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_67.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_68.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_69.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_70.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_71.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_72.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_73.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_74.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_75.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_76.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_77.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_78.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_79.png)![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_80.png)</code></pre>]]></content>
+    <content type="html"><![CDATA[<p><img src="/2019/03/10/Mybatis详解收集整理/使用VMware安装CentOS-6-4/01.png" alt="你想输入的替代文字"></p><pre><code>![你想输入的替代文字](Mybatis详解收集整理/01.png)![你想输入的替代文字](Mybatis详解收集整理/02.png)![你想输入的替代文字](Mybatis详解收集整理/03.png)![你想输入的替代文字](Mybatis详解收集整理/04.png)![你想输入的替代文字](Mybatis详解收集整理/05.png)![你想输入的替代文字](Mybatis详解收集整理/06.png)![你想输入的替代文字](Mybatis详解收集整理/07.png)![你想输入的替代文字](Mybatis详解收集整理/08.png)![你想输入的替代文字](Mybatis详解收集整理/09.png)![你想输入的替代文字](Mybatis详解收集整理/10.png)![你想输入的替代文字](Mybatis详解收集整理/11.png)![你想输入的替代文字](Mybatis详解收集整理/12.png)![你想输入的替代文字](Mybatis详解收集整理/13.png)![你想输入的替代文字](Mybatis详解收集整理/14.png)![你想输入的替代文字](Mybatis详解收集整理/15.png)![你想输入的替代文字](Mybatis详解收集整理/16.png)![你想输入的替代文字](Mybatis详解收集整理/17.png)![你想输入的替代文字](Mybatis详解收集整理/18.png)![你想输入的替代文字](Mybatis详解收集整理/19.png)![你想输入的替代文字](Mybatis详解收集整理/20.png)![你想输入的替代文字](Mybatis详解收集整理/21.png)![你想输入的替代文字](Mybatis详解收集整理/22.png)![你想输入的替代文字](Mybatis详解收集整理/23.png)![你想输入的替代文字](Mybatis详解收集整理/24.png)![你想输入的替代文字](Mybatis详解收集整理/25.png)![你想输入的替代文字](Mybatis详解收集整理/26.png)![你想输入的替代文字](Mybatis详解收集整理/27.png)![你想输入的替代文字](Mybatis详解收集整理/28.png)![你想输入的替代文字](Mybatis详解收集整理/29.png)![你想输入的替代文字](Mybatis详解收集整理/30.png)![你想输入的替代文字](Mybatis详解收集整理/31.png)![你想输入的替代文字](Mybatis详解收集整理/32.png)![你想输入的替代文字](Mybatis详解收集整理/33.png)![你想输入的替代文字](Mybatis详解收集整理/34.png)![你想输入的替代文字](Mybatis详解收集整理/35.png)![你想输入的替代文字](Mybatis详解收集整理/36.png)![你想输入的替代文字](Mybatis详解收集整理/37.png)![你想输入的替代文字](Mybatis详解收集整理/38.png)![你想输入的替代文字](Mybatis详解收集整理/39.png)![你想输入的替代文字](Mybatis详解收集整理/40.png)![你想输入的替代文字](Mybatis详解收集整理/41.png)![你想输入的替代文字](Mybatis详解收集整理/42.png)![你想输入的替代文字](Mybatis详解收集整理/43.png)![你想输入的替代文字](Mybatis详解收集整理/44.png)![你想输入的替代文字](Mybatis详解收集整理/45.png)![你想输入的替代文字](Mybatis详解收集整理/46.png)![你想输入的替代文字](Mybatis详解收集整理/47.png)![你想输入的替代文字](Mybatis详解收集整理/48.png)![你想输入的替代文字](Mybatis详解收集整理/49.png)![你想输入的替代文字](Mybatis详解收集整理/50.png)![你想输入的替代文字](Mybatis详解收集整理/51.png)![你想输入的替代文字](Mybatis详解收集整理/52.png)![你想输入的替代文字](Mybatis详解收集整理/53.png)![你想输入的替代文字](Mybatis详解收集整理/54.png)![你想输入的替代文字](Mybatis详解收集整理/55.png)![你想输入的替代文字](Mybatis详解收集整理/56.png)![你想输入的替代文字](Mybatis详解收集整理/57.png)![你想输入的替代文字](Mybatis详解收集整理/58.png)![你想输入的替代文字](Mybatis详解收集整理/59.png)![你想输入的替代文字](Mybatis详解收集整理/60.png)![你想输入的替代文字](Mybatis详解收集整理/61.png)![你想输入的替代文字](Mybatis详解收集整理/62.png)![你想输入的替代文字](Mybatis详解收集整理/63.png)![你想输入的替代文字](Mybatis详解收集整理/64.png)![你想输入的替代文字](Mybatis详解收集整理/65.png)![你想输入的替代文字](Mybatis详解收集整理/66.png)![你想输入的替代文字](Mybatis详解收集整理/67.png)![你想输入的替代文字](Mybatis详解收集整理/68.png)![你想输入的替代文字](Mybatis详解收集整理/69.png)![你想输入的替代文字](Mybatis详解收集整理/70.png)![你想输入的替代文字](Mybatis详解收集整理/71.png)![你想输入的替代文字](Mybatis详解收集整理/72.png)![你想输入的替代文字](Mybatis详解收集整理/73.png)![你想输入的替代文字](Mybatis详解收集整理/74.png)![你想输入的替代文字](Mybatis详解收集整理/75.png)![你想输入的替代文字](Mybatis详解收集整理/76.png)![你想输入的替代文字](Mybatis详解收集整理/77.png)![你想输入的替代文字](Mybatis详解收集整理/78.png)![你想输入的替代文字](Mybatis详解收集整理/79.png)![你想输入的替代文字](Mybatis详解收集整理/80.png)</code></pre>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;pre&gt;&lt;code&gt;![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_01.png)
-![你想输入的替代文字](Mybatis详解收集整理/Mybatis详解收集整理_02.png)
-![你想输入的替代文字](Mybatis详解收集整理/Myba
+        &lt;p&gt;&lt;img src=&quot;/2019/03/10/Mybatis详解收集整理/使用VMware安装CentOS-6-4/01.png&quot; alt=&quot;你想输入的替代文字&quot;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;![你想输入的替代文字](Mybatis详解收集整理/01.png)
+![你想输
       
     
     </summary>
@@ -46,13 +46,13 @@
   </entry>
   
   <entry>
-    <title>mybatis开发dao层（持久层）的常用方式</title>
-    <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%EF%BC%88%E6%8C%81%E4%B9%85%E5%B1%82%EF%BC%89%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E5%BC%8F/"/>
-    <id>https://liuhusen.com/2019/02/10/mybatis开发dao层（持久层）的常用方式/</id>
+    <title>mybatis开发dao层常用方式</title>
+    <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%E5%B8%B8%E7%94%A8%E6%96%B9%E5%BC%8F/"/>
+    <id>https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/</id>
     <published>2019-02-10T05:01:30.000Z</published>
-    <updated>2019-04-11T09:36:58.907Z</updated>
+    <updated>2019-04-12T02:09:21.865Z</updated>
     
-    <content type="html"><![CDATA[<pre><code>首先介绍一下：     1、SqlSessionFactory：             SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式     2、SqlSessionFactoryBuilder：             SqlSessionFactoryBuilder用于创建SqlSessionFactory，又由于SqlSessionFactory以单例方式，             可以将SqlSessionFactoryBuilder简单的当成一个工具类来使用即可。     3、SqlSession：             sqlSession是一个面向程序员接口。             SqlSession作用是操作数据库，sqlSession对象要存储数据库连接、事务、一级缓存结构等。             sqlSession对象是线程不安全的（多线程访问系统，当多线程同时使用一个sqlsession对象时会造成数据冲突问题）     注意： 由于sqlSession对象是线程不安全的，sqlSession最佳使用场合在方法体内作为局部变量来使用。 一： mybatis开发Dao的第一种方法      开发原始dao方法：          1、 ***.xml映射文件           ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/01.png)           ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/02.png)          2、dao接口和dao实现类               编写dao接口及dao实现类：                public interface UserDao{                     // 根据用户ID查询用户信息                     public User findUserById(int id)throws Exception;                }                接口实现类中注入SqlSessionFactory。                public UserDaoImpl implements  UserDao{                     // 根据用户ID查询用户信息                         //定义变量SqlSessionFactory                         private SqlSessionFactory sqlSessionFactory;                         // 通过构造方法注入                         public UserDaoImpl(SqlSessionFactory sqlSessionFactory){                             this.sqlSessionFactory = sqlSessionFactory;                         }                          @Override                          public User findUserById(int id)throws Exception(){                             //Sqlsession定义为局部变量                             SqlSession sqlSession = sqlSessionFactory.openSession();                             User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id);                             return user;                         }                }       mapper代理开发方法:             mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。             mapper代理类方法主要是对调用sqlsession的方法进行封装，如下：             sqlSession.selectOne(&quot;test.findUserById&quot;, id)             sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;)             sqlSession.insert(&quot;test.insertUser&quot;, user);             对以上代码进行哪些封装？             什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。             解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。             硬编码的statement的id如何封装。             解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。              mybatis要解决映射文件中statement和mapper接口的方法对应起来。             可以遵循一个开发规范让statement和mapper接口的方法对应起来：             1、映射文件和mapper接口类的对应             映射文件中namespace等于mapper接口类路径               ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/03.png)             2、statement和mapper接口的方法对应                 注意： 将映射文件中statement的id和mapper中方法名一致              ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/04.png)              3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致              ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/05.png)              4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。              代码实现：                   mapper.java:                     public interface UserMapper{                         public User findUserById(int id) throws Exception;                     }                  mapper.xml                      ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/06.png)                      ![你想输入的替代文字](mybatis开发dao层（持久层）的常用方式/07.png)</code></pre>]]></content>
+    <content type="html"><![CDATA[<pre><code>首先介绍一下：     1、SqlSessionFactory：             SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式     2、SqlSessionFactoryBuilder：             SqlSessionFactoryBuilder用于创建SqlSessionFactory，又由于SqlSessionFactory以单例方式，             可以将SqlSessionFactoryBuilder简单的当成一个工具类来使用即可。     3、SqlSession：             sqlSession是一个面向程序员接口。             SqlSession作用是操作数据库，sqlSession对象要存储数据库连接、事务、一级缓存结构等。             sqlSession对象是线程不安全的（多线程访问系统，当多线程同时使用一个sqlsession对象时会造成数据冲突问题）     注意： 由于sqlSession对象是线程不安全的，sqlSession最佳使用场合在方法体内作为局部变量来使用。 一： mybatis开发Dao的第一种方法      开发原始dao方法：          1、 ***.xml映射文件           ![你想输入的替代文字](mybatis开发dao层常用方式/01.png)           ![你想输入的替代文字](mybatis开发dao层常用方式/02.png)          2、dao接口和dao实现类               编写dao接口及dao实现类：                public interface UserDao{                     // 根据用户ID查询用户信息                     public User findUserById(int id)throws Exception;                }                接口实现类中注入SqlSessionFactory。                public UserDaoImpl implements  UserDao{                     // 根据用户ID查询用户信息                         //定义变量SqlSessionFactory                         private SqlSessionFactory sqlSessionFactory;                         // 通过构造方法注入                         public UserDaoImpl(SqlSessionFactory sqlSessionFactory){                             this.sqlSessionFactory = sqlSessionFactory;                         }                          @Override                          public User findUserById(int id)throws Exception(){                             //Sqlsession定义为局部变量                             SqlSession sqlSession = sqlSessionFactory.openSession();                             User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id);                             return user;                         }                }       mapper代理开发方法:             mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。             mapper代理类方法主要是对调用sqlsession的方法进行封装，如下：             sqlSession.selectOne(&quot;test.findUserById&quot;, id)             sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;)             sqlSession.insert(&quot;test.insertUser&quot;, user);             对以上代码进行哪些封装？             什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。             解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。             硬编码的statement的id如何封装。             解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。              mybatis要解决映射文件中statement和mapper接口的方法对应起来。             可以遵循一个开发规范让statement和mapper接口的方法对应起来：             1、映射文件和mapper接口类的对应             映射文件中namespace等于mapper接口类路径               ![你想输入的替代文字](mybatis开发dao层常用方式/03.png)             2、statement和mapper接口的方法对应                 注意： 将映射文件中statement的id和mapper中方法名一致              ![你想输入的替代文字](mybatis开发dao层常用方式/04.png)              3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致              ![你想输入的替代文字](mybatis开发dao层常用方式/05.png)              4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。              代码实现：                   mapper.java:                     public interface UserMapper{                         public User findUserById(int id) throws Exception;                     }                  mapper.xml                      ![你想输入的替代文字](mybatis开发dao层常用方式/06.png)                      ![你想输入的替代文字](mybatis开发dao层常用方式/07.png)</code></pre>]]></content>
     
     <summary type="html">
     
@@ -163,9 +163,9 @@ Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，�
       <category term="redis" scheme="https://liuhusen.com/categories/redis/"/>
     
     
-      <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
-    
       <category term="缓存数据库" scheme="https://liuhusen.com/tags/%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+      <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
     
   </entry>
   
@@ -584,36 +584,32 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
   </entry>
   
   <entry>
-    <title>接口传输时对乱码的处理</title>
-    <link href="https://liuhusen.com/2017/05/26/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93%E6%97%B6%E5%AF%B9%E4%B9%B1%E7%A0%81%E7%9A%84%E5%A4%84%E7%90%86/"/>
-    <id>https://liuhusen.com/2017/05/26/接口传输时对乱码的处理/</id>
+    <title>MySQL的表以及数据备份</title>
+    <link href="https://liuhusen.com/2017/05/26/MySQL%E7%9A%84%E8%A1%A8%E4%BB%A5%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
+    <id>https://liuhusen.com/2017/05/26/MySQL的表以及数据备份/</id>
     <published>2017-05-26T11:57:47.000Z</published>
-    <updated>2019-04-02T02:51:36.941Z</updated>
+    <updated>2018-10-28T19:14:11.519Z</updated>
     
-    <content type="html"><![CDATA[<pre><code>传输前编码：// 先对用户名进行解码得到%E7%8E%8B%E6%8C%AF%E5%9B%BD 这样的形式username = URLEncoder.encode(username, &quot;ISO-8859-1&quot;);获取后解码：username = URLDecoder.decode(username, &quot;UTF-8&quot;);System.out.println(&quot;乱码解决后用户名：&quot; + username)</code></pre>]]></content>
+    <content type="html"><![CDATA[<p>   备份表方法：  此方法索引和increment值也会同步</p><pre><code>CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表INSERT INTO tb_cab_bak SELECT * FROM tb_cab；// 同步数据</code></pre><p>   若只复制表中的部分内容的同时定义表中的字段信息：<br>                 CREATE TABLE tb_cab_bak<br>                  (<br>                  – 对copy的表中的ID进行主键约束<br>                 ID INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY<br>                   )<br>                 AS<br>                 ( SELECT ID,SNAME,SCORE FROM tb_cab_bak );</p>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;pre&gt;&lt;code&gt;传输前编码：
-// 先对用户名进行解码得到%E7%8E%8B%E6%8C%AF%E5%9B%BD 这样的形式
-username = URLEncoder.encode(username, &amp;quot;ISO-8859-1&amp;quot;);
+        &lt;p&gt;   备份表方法：  此方法索引和increment值也会同步&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CREATE TABLE tb_cab_bak LIKE tb_cab; // 同步建表
 
-获取后解码：
-us
+INSERT INTO tb_cab_bak SELECT * FROM tb_cab；
       
     
     </summary>
     
-      <category term="接口传输" scheme="https://liuhusen.com/categories/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
+      <category term="mysql" scheme="https://liuhusen.com/categories/mysql/"/>
     
     
-      <category term="接口传输" scheme="https://liuhusen.com/tags/%E6%8E%A5%E5%8F%A3%E4%BC%A0%E8%BE%93/"/>
+      <category term="MySQL" scheme="https://liuhusen.com/tags/MySQL/"/>
     
-      <category term="post请求传输" scheme="https://liuhusen.com/tags/post%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
-    
-      <category term="get请求传输" scheme="https://liuhusen.com/tags/get%E8%AF%B7%E6%B1%82%E4%BC%A0%E8%BE%93/"/>
+      <category term="数据备份" scheme="https://liuhusen.com/tags/%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD/"/>
     
   </entry>
   
