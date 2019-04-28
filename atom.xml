@@ -44,6 +44,33 @@
   </entry>
   
   <entry>
+    <title>注-hashMap的底层原理以及如何解决碰撞</title>
+    <link href="https://liuhusen.com/2019/03/08/%E6%B3%A8-hashMap%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%A2%B0%E6%92%9E/"/>
+    <id>https://liuhusen.com/2019/03/08/注-hashMap的底层原理以及如何解决碰撞/</id>
+    <published>2019-03-08T05:01:30.000Z</published>
+    <updated>2019-04-28T11:50:38.679Z</updated>
+    
+    <content type="html"><![CDATA[<p>   首先 先说说hashMap的底层原理：<br><img src="/2019/03/08/注-hashMap的底层原理以及如何解决碰撞/Mybatis详解收集整理/01.png" alt="你想输入的替代文字"><br>        看上图，可以发现hashMap的类继承AbstractMap，并实现了Map&lt;k,v&gt;,Clonetable,Serializable这三个接口；<br><img src="/2019/03/08/注-hashMap的底层原理以及如何解决碰撞/Mybatis详解收集整理/02.png" alt="你想输入的替代文字"><br>        上图中 看到默认构造方法中有一个DEFAULT_LOAD_FACTOR，称为负载因子，可以看下静态参数<br><img src="/2019/03/08/注-hashMap的底层原理以及如何解决碰撞/Mybatis详解收集整理/03.png" alt="你想输入的替代文字"><br>        负载因子默认为0.75，当键值对数量占总容量的值大于0.75时，就会扩容两倍，而默认容量是1&lt;&lt;4,，也就是16<br>        HashMap底层呢是一个数组，每个数组的元素是一个链表，而每个链表的节点都是一个映射，也就是键值对Entry，<br>        每个链表就是我们常说的“桶”，put和get方法都是从“桶”中进行的，如下图<br><img src="/2019/03/08/注-hashMap的底层原理以及如何解决碰撞/Mybatis详解收集整理/04.png" alt="你想输入的替代文字"><br>        往“桶”中存储时，也就是put时，会调用hash方法，对key的哈希码重新计算<br>         public V put(K key, V value) {<br>            return putVal(hash(key), key, value, false, true);<br>         }  </p><pre><code>     /*下面方法在put方法中被调用*/     static final int hash(Object key) {            int h;            return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);        }     /*下面方法在put方法中被调用*/        final V putVal(int hash, K key, V value, boolean onlyIfAbsent,               boolean evict) {    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; int n, i;    if ((tab = table) == null || (n = tab.length) == 0)        n = (tab = resize()).length;    if ((p = tab[i = (n - 1) &amp; hash]) == null)        tab[i] = newNode(hash, key, value, null);    else {        Node&lt;K,V&gt; e; K k;        if (p.hash == hash &amp;&amp;            ((k = p.key) == key || (key != null &amp;&amp; key.equals(k))))            e = p;        else if (p instanceof TreeNode)            e = ((TreeNode&lt;K,V&gt;)p).putTreeVal(this, tab, hash, key, value);        else {            for (int binCount = 0; ; ++binCount) {                if ((e = p.next) == null) {                    p.next = newNode(hash, key, value, null);                    if (binCount &gt;= TREEIFY_THRESHOLD - 1) // -1 for 1st                        treeifyBin(tab, hash);                    break;                }                if (e.hash == hash &amp;&amp;                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))                    break;                p = e;            }        }        if (e != null) { // existing mapping for key            V oldValue = e.value;            if (!onlyIfAbsent || oldValue == null)                e.value = value;            afterNodeAccess(e);            return oldValue;        }    }    ++modCount;    if (++size &gt; threshold)        resize();    afterNodeInsertion(evict);    return null;}可以看到计算方法是将key的哈希码与哈希码无符号右移16位之后的结果进行异或，这样的好处是保证key的高低位都参与哈希码的计算，高速少开销可靠性强，值得一提的是java8还有一个优化点，就是“桶”中的数量大于8时，就会将链表转换为一个二叉树，红黑树，这样做的直接好处时查询性能由O（logn）优化为O（nlogn），要实现红黑树就是进行比较，这也是HashMap实现Comparable接口的一个重要原因存储时由hash值来确定要放到哪个“桶”中，那么问题就出现了，如果两个key有相同的hash值，怎么进行存储，这就是碰撞问题。解决方法是“拉链法，其实也就是将entry键值对用链表来存储，一旦hash值相同，就会调用equals方法，如果为true，就会替代当前的entry，举个例子，比如public class PasswdKey {static String name=&quot;name&quot;; static String address=&quot;address&quot;;    public static void main(String[] args) {        Map&lt;String,Object&gt; map=new HashMap&lt;&gt;();        map.put(name, &quot;maze&quot;);        map.put(name, &quot;freg&quot;);            }}第一次存储键name时，无相同的hash值，直接存到合适freg的数组索引的位置，接着又存了一个键为name的entry，在进行hash比较时由于键都为name，hash值相同，然后对链表的每一个元素进行equals方法（此时已确定要存储的数组索引位置，与第一次的索引位置相同），如果相同，就替换当前位置的键值对，此时就会将键为name的value更换为“freg”，其实这就是我们所说的覆盖同样，get以及containsKey方法也是过hash值来找到value的 final Node&lt;K,V&gt; getNode(int hash, Object key) {    Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; first, e; int n; K k;    if ((tab = table) != null &amp;&amp; (n = tab.length) &gt; 0 &amp;&amp;        (first = tab[(n - 1) &amp; hash]) != null) {        if (first.hash == hash &amp;&amp; // always check first node            ((k = first.key) == key || (key != null &amp;&amp; key.equals(k))))            return first;        if ((e = first.next) != null) {            if (first instanceof TreeNode)                return ((TreeNode&lt;K,V&gt;)first).getTreeNode(hash, key);            do {                if (e.hash == hash &amp;&amp;                    ((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))                    return e;            } while ((e = e.next) != null);        }    }    return null;}注意：HashMap是支持键值对为null的，此时存在数组的第一个位置上，索引为0      还有碰撞问题非常影响map的性能，尽管java8相对于7有了很大的优化</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   首先 先说说hashMap的底层原理：&lt;br&gt;&lt;img src=&quot;/2019/03/08/注-hashMap的底层原理以及如何解决碰撞/Mybatis详解收集整理/01.png&quot; alt=&quot;你想输入的替代文字&quot;&gt;&lt;br&gt;        看上图，可以发现hashMap的
+      
+    
+    </summary>
+    
+      <category term="集合" scheme="https://liuhusen.com/categories/%E9%9B%86%E5%90%88/"/>
+    
+    
+      <category term="面试常问" scheme="https://liuhusen.com/tags/%E9%9D%A2%E8%AF%95%E5%B8%B8%E9%97%AE/"/>
+    
+      <category term="集合" scheme="https://liuhusen.com/tags/%E9%9B%86%E5%90%88/"/>
+    
+  </entry>
+  
+  <entry>
     <title>mybatis开发dao层常用方式</title>
     <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%E5%B8%B8%E7%94%A8%E6%96%B9%E5%BC%8F/"/>
     <id>https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/</id>
@@ -61,6 +88,40 @@
              SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式
 
      2、SqlSessionF
+      
+    
+    </summary>
+    
+      <category term="mybatis" scheme="https://liuhusen.com/categories/mybatis/"/>
+    
+    
+      <category term="框架" scheme="https://liuhusen.com/tags/%E6%A1%86%E6%9E%B6/"/>
+    
+      <category term="mybatis" scheme="https://liuhusen.com/tags/mybatis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mybatis开发dao层常用方式</title>
+    <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/"/>
+    <id>https://liuhusen.com/2019/02/10/mybatis开发dao层遇到的坑/</id>
+    <published>2019-02-10T05:01:30.000Z</published>
+    <updated>2019-04-25T14:49:30.135Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>首先介s绍一下：     使用映射方式时，传入Map,map里放了几个字段，还有一个list     这时使用foreach时，     注意：     1、首先  传入的集合，collection后的命名和 Map里塞list时的         key保持一致     2、list是集合，不能进行 != &quot;&quot; 的校验，因为它不是String，类型不同     3、如果Map里的list里放的是字符串，则 #{ groupCode} 里放的就是 和Item命名一致     4、如果Map里的list里放的是map，则 #{ groupCode} 里放的就是 Item命名.key        这个key和list里放的map的key保持一致     讲完入参，将返回值       如果要返回 List&lt;Map&lt;String,Object&gt;&gt;    ,       写 resultType = &quot;java.util.Map&quot;     或者 resultMap = &quot;resultMap&quot;           特别说明：resultMap里和实体类相互对应，如果写resultMap，则返回的map里字段必须是对应关系里有的，且字段名一致                 另外，之所以有resultMap ,也是因为mybatis封装在这个可以把返回的map转换为对应的实体类对象，                 所以，如果不写List&lt;Map&lt;String,Object&gt;&gt;接收返回的list，也可以使用List&lt;实体类名&gt;来接收     二：传的如果是实体类对象，则 paramterType=&quot;对象实体类的引用&quot;</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;首先介s绍一下：
+
+     使用映射方式时，传入Map,map里放了几个字段，还有一个list
+
+     这时使用foreach时，
+     注意：
+     1、首先  传入的集合，collection后的命名和 Map里塞list时的
+      
       
     
     </summary>
@@ -168,36 +229,6 @@ Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，�
   </entry>
   
   <entry>
-    <title>springboot之创建后mysql连接报错</title>
-    <link href="https://liuhusen.com/2019/01/10/springboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99/"/>
-    <id>https://liuhusen.com/2019/01/10/springboot之创建后mysql连接报错/</id>
-    <published>2019-01-10T05:01:30.000Z</published>
-    <updated>2019-04-06T08:08:32.463Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>给springboot项目配置mysql出错，如下：    mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos;            at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]            ......................解决方法如下：            因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量            1. 在mysql数据库执行  select version() ， 查看mysql版本            2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;给springboot项目配置mysql出错，如下：
-
-    mysql 错误：java.sql.SQLException: Unknown system variable &amp;apos;language&amp;apos;
-            at com.m
-      
-    
-    </summary>
-    
-      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
-    
-    
-      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
-    
-      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
-    
-  </entry>
-  
-  <entry>
     <title>springboot整合Spring Data JPA的遇到的问题</title>
     <link href="https://liuhusen.com/2019/01/10/springboot%E6%95%B4%E5%90%88Spring%20Data%20JPA%E7%9A%84%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
     <id>https://liuhusen.com/2019/01/10/springboot整合Spring Data JPA的遇到的问题/</id>
@@ -216,6 +247,36 @@ Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，�
 springboot整合Spring Data JPA的遇到的问题，报错如下：
 
      Caused by: java.lang.ClassNotFoundException: javax.xml.bind.
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
+    
+    
+      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>springboot之创建后mysql连接报错</title>
+    <link href="https://liuhusen.com/2019/01/10/springboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99/"/>
+    <id>https://liuhusen.com/2019/01/10/springboot之创建后mysql连接报错/</id>
+    <published>2019-01-10T05:01:30.000Z</published>
+    <updated>2019-04-06T08:08:32.463Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>给springboot项目配置mysql出错，如下：    mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos;            at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]            ......................解决方法如下：            因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量            1. 在mysql数据库执行  select version() ， 查看mysql版本            2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;给springboot项目配置mysql出错，如下：
+
+    mysql 错误：java.sql.SQLException: Unknown system variable &amp;apos;language&amp;apos;
+            at com.m
       
     
     </summary>
@@ -441,6 +502,31 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
   </entry>
   
   <entry>
+    <title>常用的扒拉后台日志操作命令</title>
+    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
+    <id>https://liuhusen.com/2018/08/08/常用的扒拉后台日志操作命令/</id>
+    <published>2018-08-08T05:01:30.000Z</published>
+    <updated>2019-01-18T07:06:06.361Z</updated>
+    
+    <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   翻找环境上的日志：&lt;br&gt;              ll                                     展示目录&lt;br&gt;              cd                                     进入含有日志文
+      
+    
+    </summary>
+    
+      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
+    
+    
+      <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
+    
+  </entry>
+  
+  <entry>
     <title>常见框架单例、多例与线程安全性总结</title>
     <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93/"/>
     <id>https://liuhusen.com/2018/08/08/常见框架单例、多例与线程安全性总结/</id>
@@ -464,31 +550,6 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
     
     
       <category term="多例，多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E4%BE%8B%EF%BC%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>常用的扒拉后台日志操作命令</title>
-    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
-    <id>https://liuhusen.com/2018/08/08/常用的扒拉后台日志操作命令/</id>
-    <published>2018-08-08T05:01:30.000Z</published>
-    <updated>2019-01-18T07:06:06.361Z</updated>
-    
-    <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   翻找环境上的日志：&lt;br&gt;              ll                                     展示目录&lt;br&gt;              cd                                     进入含有日志文
-      
-    
-    </summary>
-    
-      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
-    
-    
-      <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
     
   </entry>
   
@@ -519,40 +580,6 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
   </entry>
   
   <entry>
-    <title>简单有效的页面防止重复提交的操作</title>
-    <link href="https://liuhusen.com/2017/06/08/%E7%AE%80%E5%8D%95%E6%9C%89%E6%95%88%E7%9A%84%E9%A1%B5%E9%9D%A2%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4%E7%9A%84%E6%93%8D%E4%BD%9C/"/>
-    <id>https://liuhusen.com/2017/06/08/简单有效的页面防止重复提交的操作/</id>
-    <published>2017-06-08T05:01:30.000Z</published>
-    <updated>2018-10-31T07:41:51.026Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>操作如下：     var isSubmit = true; // 在js顶部定义全局变量    if(isSubmit){       save();    }else{       crossAPI.tips(&quot;请勿重复提交数据！&quot;,3000);       return false;    }    var save = function () {          isSubmit = false; // 进入方法后 isSubmit 置为 false，在后续的点击提交时，便不会执行save方法          。。。          。。。 // 此处为你自己的执行保存的方法          if( 保存成功 ){             关闭数据新增页面，并刷新查询页面的查询          }else{             // 保存失败，则页面提醒保存失败             isSubmit = true;  // isSubmit 置为 true ,用以再次提交当前数据使用          }    }</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;操作如下： 
-
-    var isSubmit = true; // 在js顶部定义全局变量
-
-    if(isSubmit){
-       save();
-    }else{
-       crossAPI.tips(&amp;quot;请勿重复提交数据！
-      
-    
-    </summary>
-    
-      <category term="javascript" scheme="https://liuhusen.com/categories/javascript/"/>
-    
-    
-      <category term="javascript页面效果" scheme="https://liuhusen.com/tags/javascript%E9%A1%B5%E9%9D%A2%E6%95%88%E6%9E%9C/"/>
-    
-      <category term="防止重复提交" scheme="https://liuhusen.com/tags/%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4/"/>
-    
-  </entry>
-  
-  <entry>
     <title>关于Hexo更换git账号的步骤记录</title>
     <link href="https://liuhusen.com/2017/06/08/%E5%85%B3%E4%BA%8EHexo%E6%9B%B4%E6%8D%A2git%E8%B4%A6%E5%8F%B7%E7%9A%84%E6%AD%A5%E9%AA%A4%E8%AE%B0%E5%BD%95/"/>
     <id>https://liuhusen.com/2017/06/08/关于Hexo更换git账号的步骤记录/</id>
@@ -578,33 +605,6 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
     
     
       <category term="hexo" scheme="https://liuhusen.com/tags/hexo/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>自学编程成功概率有多少可能</title>
-    <link href="https://liuhusen.com/2017/05/26/%E5%85%B3%E4%BA%8E/"/>
-    <id>https://liuhusen.com/2017/05/26/关于/</id>
-    <published>2017-05-26T11:57:47.000Z</published>
-    <updated>2018-10-25T06:24:46.244Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-      
-    
-    </summary>
-    
-      <category term="档案" scheme="https://liuhusen.com/categories/%E6%A1%A3%E6%A1%88/"/>
-    
-    
-      <category term="编程" scheme="https://liuhusen.com/tags/%E7%BC%96%E7%A8%8B/"/>
-    
-      <category term="感悟" scheme="https://liuhusen.com/tags/%E6%84%9F%E6%82%9F/"/>
     
   </entry>
   
