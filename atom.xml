@@ -72,37 +72,6 @@
   
   <entry>
     <title>mybatis开发dao层常用方式</title>
-    <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%E5%B8%B8%E7%94%A8%E6%96%B9%E5%BC%8F/"/>
-    <id>https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/</id>
-    <published>2019-02-10T05:01:30.000Z</published>
-    <updated>2019-04-12T02:29:59.131Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>首先介绍一下：     1、SqlSessionFactory：             SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式     2、SqlSessionFactoryBuilder：             SqlSessionFactoryBuilder用于创建SqlSessionFactory，又由于SqlSessionFactory以单例方式，             可以将SqlSessionFactoryBuilder简单的当成一个工具类来使用即可。     3、SqlSession：             sqlSession是一个面向程序员接口。             SqlSession作用是操作数据库，sqlSession对象要存储数据库连接、事务、一级缓存结构等。             sqlSession对象是线程不安全的（多线程访问系统，当多线程同时使用一个sqlsession对象时会造成数据冲突问题）     注意： 由于sqlSession对象是线程不安全的，sqlSession最佳使用场合在方法体内作为局部变量来使用。 一： mybatis开发Dao的第一种方法      开发原始dao方法：          1、 ***.xml映射文件</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/01.png" alt="你想输入的替代文字"><br><img src="/2019/02/10/mybatis开发dao层常用方式/02.png" alt="你想输入的替代文字"></p><pre><code>   2、dao接口和dao实现类        编写dao接口及dao实现类：         public interface UserDao{              // 根据用户ID查询用户信息              public User findUserById(int id)throws Exception;         }         接口实现类中注入SqlSessionFactory。         public UserDaoImpl implements  UserDao{              // 根据用户ID查询用户信息                  //定义变量SqlSessionFactory                  private SqlSessionFactory sqlSessionFactory;                  // 通过构造方法注入                  public UserDaoImpl(SqlSessionFactory sqlSessionFactory){                      this.sqlSessionFactory = sqlSessionFactory;                  }                   @Override                   public User findUserById(int id)throws Exception(){                      //Sqlsession定义为局部变量                      SqlSession sqlSession = sqlSessionFactory.openSession();                      User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id);                      return user;                  }         }mapper代理开发方法:      mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。      mapper代理类方法主要是对调用sqlsession的方法进行封装，如下：      sqlSession.selectOne(&quot;test.findUserById&quot;, id)      sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;)      sqlSession.insert(&quot;test.insertUser&quot;, user);      对以上代码进行哪些封装？      什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。      解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。      硬编码的statement的id如何封装。      解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。       mybatis要解决映射文件中statement和mapper接口的方法对应起来。      可以遵循一个开发规范让statement和mapper接口的方法对应起来：      1、映射文件和mapper接口类的对应      映射文件中namespace等于mapper接口类路径</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/03.png" alt="你想输入的替代文字"><br>                    2、statement和mapper接口的方法对应</p><pre><code>注意： 将映射文件中statement的id和mapper中方法名一致</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/04.png" alt="你想输入的替代文字"></p><pre><code>3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/05.png" alt="你想输入的替代文字"><br>                     4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。<br>                     代码实现：<br>                          mapper.java:</p><pre><code>   public interface UserMapper{       public User findUserById(int id) throws Exception;   }mapper.xml</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/06.png" alt="你想输入的替代文字"><br><img src="/2019/02/10/mybatis开发dao层常用方式/07.png" alt="你想输入的替代文字"></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;首先介绍一下：
-     1、SqlSessionFactory：
-             SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式
-
-     2、SqlSessionF
-      
-    
-    </summary>
-    
-      <category term="mybatis" scheme="https://liuhusen.com/categories/mybatis/"/>
-    
-    
-      <category term="框架" scheme="https://liuhusen.com/tags/%E6%A1%86%E6%9E%B6/"/>
-    
-      <category term="mybatis" scheme="https://liuhusen.com/tags/mybatis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mybatis开发dao层常用方式</title>
     <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91/"/>
     <id>https://liuhusen.com/2019/02/10/mybatis开发dao层遇到的坑/</id>
     <published>2019-02-10T05:01:30.000Z</published>
@@ -122,6 +91,37 @@
      注意：
      1、首先  传入的集合，collection后的命名和 Map里塞list时的
       
+      
+    
+    </summary>
+    
+      <category term="mybatis" scheme="https://liuhusen.com/categories/mybatis/"/>
+    
+    
+      <category term="框架" scheme="https://liuhusen.com/tags/%E6%A1%86%E6%9E%B6/"/>
+    
+      <category term="mybatis" scheme="https://liuhusen.com/tags/mybatis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mybatis开发dao层常用方式</title>
+    <link href="https://liuhusen.com/2019/02/10/mybatis%E5%BC%80%E5%8F%91dao%E5%B1%82%E5%B8%B8%E7%94%A8%E6%96%B9%E5%BC%8F/"/>
+    <id>https://liuhusen.com/2019/02/10/mybatis开发dao层常用方式/</id>
+    <published>2019-02-10T05:01:30.000Z</published>
+    <updated>2019-04-12T02:29:59.131Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>首先介绍一下：     1、SqlSessionFactory：             SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式     2、SqlSessionFactoryBuilder：             SqlSessionFactoryBuilder用于创建SqlSessionFactory，又由于SqlSessionFactory以单例方式，             可以将SqlSessionFactoryBuilder简单的当成一个工具类来使用即可。     3、SqlSession：             sqlSession是一个面向程序员接口。             SqlSession作用是操作数据库，sqlSession对象要存储数据库连接、事务、一级缓存结构等。             sqlSession对象是线程不安全的（多线程访问系统，当多线程同时使用一个sqlsession对象时会造成数据冲突问题）     注意： 由于sqlSession对象是线程不安全的，sqlSession最佳使用场合在方法体内作为局部变量来使用。 一： mybatis开发Dao的第一种方法      开发原始dao方法：          1、 ***.xml映射文件</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/01.png" alt="你想输入的替代文字"><br><img src="/2019/02/10/mybatis开发dao层常用方式/02.png" alt="你想输入的替代文字"></p><pre><code>   2、dao接口和dao实现类        编写dao接口及dao实现类：         public interface UserDao{              // 根据用户ID查询用户信息              public User findUserById(int id)throws Exception;         }         接口实现类中注入SqlSessionFactory。         public UserDaoImpl implements  UserDao{              // 根据用户ID查询用户信息                  //定义变量SqlSessionFactory                  private SqlSessionFactory sqlSessionFactory;                  // 通过构造方法注入                  public UserDaoImpl(SqlSessionFactory sqlSessionFactory){                      this.sqlSessionFactory = sqlSessionFactory;                  }                   @Override                   public User findUserById(int id)throws Exception(){                      //Sqlsession定义为局部变量                      SqlSession sqlSession = sqlSessionFactory.openSession();                      User user = sqlSession.selectOne(&quot;test.findUserById&quot;,id);                      return user;                  }         }mapper代理开发方法:      mapper代理方法要生成一个代理对象，代理对象内部执行的方法内容类似原始dao开发的dao实现类。      mapper代理类方法主要是对调用sqlsession的方法进行封装，如下：      sqlSession.selectOne(&quot;test.findUserById&quot;, id)      sqlSession.selectList(&quot;test.findUserByName&quot;, &quot;张&quot;)      sqlSession.insert(&quot;test.insertUser&quot;, user);      对以上代码进行哪些封装？      什么时候调用sqlSession 的selectOne方法、什么时候调用sqlSession 的selecList方法，什么时候 调用insert。。。。      解决方法：可以根据映射文件中标签类型一决定是执行select方法还是执行insert方法等。。      硬编码的statement的id如何封装。      解决方法：要解决映射文件中statement和mapper接口的方法的对应关系，在生成的代理对象方法中就知道该 代理对象的方法对应去调用哪个映射文件中statement。       mybatis要解决映射文件中statement和mapper接口的方法对应起来。      可以遵循一个开发规范让statement和mapper接口的方法对应起来：      1、映射文件和mapper接口类的对应      映射文件中namespace等于mapper接口类路径</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/03.png" alt="你想输入的替代文字"><br>                    2、statement和mapper接口的方法对应</p><pre><code>注意： 将映射文件中statement的id和mapper中方法名一致</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/04.png" alt="你想输入的替代文字"></p><pre><code>3、让mapper的接口方法的输入参数类型和statement的parameterType指定的参数类型保持一致</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/05.png" alt="你想输入的替代文字"><br>                     4、让mapper的接口方法返回值类型和statement的resultType指定的类型保持一致。<br>                     代码实现：<br>                          mapper.java:</p><pre><code>   public interface UserMapper{       public User findUserById(int id) throws Exception;   }mapper.xml</code></pre><p><img src="/2019/02/10/mybatis开发dao层常用方式/06.png" alt="你想输入的替代文字"><br><img src="/2019/02/10/mybatis开发dao层常用方式/07.png" alt="你想输入的替代文字"></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;首先介绍一下：
+     1、SqlSessionFactory：
+             SqlSessionFactory作为会话工厂，创建sqlSession，可以将SqlSessionFactory以单例方式
+
+     2、SqlSessionF
       
     
     </summary>
@@ -222,9 +222,39 @@ Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，�
       <category term="redis" scheme="https://liuhusen.com/categories/redis/"/>
     
     
+      <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
+    
       <category term="缓存数据库" scheme="https://liuhusen.com/tags/%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
     
-      <category term="redis" scheme="https://liuhusen.com/tags/redis/"/>
+  </entry>
+  
+  <entry>
+    <title>springboot之创建后mysql连接报错</title>
+    <link href="https://liuhusen.com/2019/01/10/springboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99/"/>
+    <id>https://liuhusen.com/2019/01/10/springboot之创建后mysql连接报错/</id>
+    <published>2019-01-10T05:01:30.000Z</published>
+    <updated>2019-04-06T08:08:32.463Z</updated>
+    
+    <content type="html"><![CDATA[<pre><code>给springboot项目配置mysql出错，如下：    mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos;            at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]            ......................解决方法如下：            因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量            1. 在mysql数据库执行  select version() ， 查看mysql版本            2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;pre&gt;&lt;code&gt;给springboot项目配置mysql出错，如下：
+
+    mysql 错误：java.sql.SQLException: Unknown system variable &amp;apos;language&amp;apos;
+            at com.m
+      
+    
+    </summary>
+    
+      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
+    
+    
+      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
     
   </entry>
   
@@ -247,36 +277,6 @@ Redis中默认使用dump.rdb文件实现备份，如果aof备份没有打开，�
 springboot整合Spring Data JPA的遇到的问题，报错如下：
 
      Caused by: java.lang.ClassNotFoundException: javax.xml.bind.
-      
-    
-    </summary>
-    
-      <category term="springboot" scheme="https://liuhusen.com/categories/springboot/"/>
-    
-    
-      <category term="微服务" scheme="https://liuhusen.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
-    
-      <category term="springboot" scheme="https://liuhusen.com/tags/springboot/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>springboot之创建后mysql连接报错</title>
-    <link href="https://liuhusen.com/2019/01/10/springboot%E4%B9%8B%E5%88%9B%E5%BB%BA%E5%90%8Emysql%E8%BF%9E%E6%8E%A5%E6%8A%A5%E9%94%99/"/>
-    <id>https://liuhusen.com/2019/01/10/springboot之创建后mysql连接报错/</id>
-    <published>2019-01-10T05:01:30.000Z</published>
-    <updated>2019-04-06T08:08:32.463Z</updated>
-    
-    <content type="html"><![CDATA[<pre><code>给springboot项目配置mysql出错，如下：    mysql 错误：java.sql.SQLException: Unknown system variable &apos;language&apos;            at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976) ~[mysql-connector-java-5.1.46.jar:5.1.46]            at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912) ~[mysql-connector-java-5.1.46.jar:5.1.46]            ......................解决方法如下：            因为数据库的pom配置或者引用的驱动jar包版本过高，而导致无法发现系统的变量            1. 在mysql数据库执行  select version() ， 查看mysql版本            2. 将查询到的版本与当前项目pom文件里引用版本对比。看是否版本一致。如果不一致，调整为一致的版本即可</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;pre&gt;&lt;code&gt;给springboot项目配置mysql出错，如下：
-
-    mysql 错误：java.sql.SQLException: Unknown system variable &amp;apos;language&amp;apos;
-            at com.m
       
     
     </summary>
@@ -502,31 +502,6 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
   </entry>
   
   <entry>
-    <title>常用的扒拉后台日志操作命令</title>
-    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
-    <id>https://liuhusen.com/2018/08/08/常用的扒拉后台日志操作命令/</id>
-    <published>2018-08-08T05:01:30.000Z</published>
-    <updated>2019-01-18T07:06:06.361Z</updated>
-    
-    <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;   翻找环境上的日志：&lt;br&gt;              ll                                     展示目录&lt;br&gt;              cd                                     进入含有日志文
-      
-    
-    </summary>
-    
-      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
-    
-    
-      <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
-    
-  </entry>
-  
-  <entry>
     <title>常见框架单例、多例与线程安全性总结</title>
     <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E8%A7%81%E6%A1%86%E6%9E%B6%E5%8D%95%E4%BE%8B%E3%80%81%E5%A4%9A%E4%BE%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E6%80%A7%E6%80%BB%E7%BB%93/"/>
     <id>https://liuhusen.com/2018/08/08/常见框架单例、多例与线程安全性总结/</id>
@@ -550,6 +525,31 @@ springboot整合Spring Data JPA的遇到的问题，报错如下：
     
     
       <category term="多例，多线程" scheme="https://liuhusen.com/tags/%E5%A4%9A%E4%BE%8B%EF%BC%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>常用的扒拉后台日志操作命令</title>
+    <link href="https://liuhusen.com/2018/08/08/%E5%B8%B8%E7%94%A8%E7%9A%84%E6%89%92%E6%8B%89%E5%90%8E%E5%8F%B0%E6%97%A5%E5%BF%97%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/"/>
+    <id>https://liuhusen.com/2018/08/08/常用的扒拉后台日志操作命令/</id>
+    <published>2018-08-08T05:01:30.000Z</published>
+    <updated>2019-01-18T07:06:06.361Z</updated>
+    
+    <content type="html"><![CDATA[<p>   翻找环境上的日志：<br>              ll                                     展示目录<br>              cd                                     进入含有日志文件的文件夹目录<br>              tail -200f 文件名                      实时查看200行日志<br>              cat 文件名 | grep “关键字” -A 页数     展示出含有关键字的后面的页数<br>              cat 文件名 | grep “关键字” -B 页数     展示出含有关键字的前面的页数<br>              cat 文件名 | grep “关键字” -C 页数     展示出含有关键字的上下文的页数</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;   翻找环境上的日志：&lt;br&gt;              ll                                     展示目录&lt;br&gt;              cd                                     进入含有日志文
+      
+    
+    </summary>
+    
+      <category term="关于日志" scheme="https://liuhusen.com/categories/%E5%85%B3%E4%BA%8E%E6%97%A5%E5%BF%97/"/>
+    
+    
+      <category term="生产日志" scheme="https://liuhusen.com/tags/%E7%94%9F%E4%BA%A7%E6%97%A5%E5%BF%97/"/>
     
   </entry>
   
